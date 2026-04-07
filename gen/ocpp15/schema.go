@@ -6,6 +6,7 @@ import "encoding/json"
 import "fmt"
 import "reflect"
 import "time"
+import "unicode/utf8"
 
 type Authorize struct {
 	// IDTag corresponds to the JSON schema field "idTag".
@@ -19,10 +20,10 @@ type AuthorizeResponse struct {
 
 type AuthorizeResponseIDTagInfo struct {
 	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty"`
+	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
 
 	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status AuthorizeResponseIDTagInfoStatus `json:"status"`
@@ -45,9 +46,9 @@ var enumValues_AuthorizeResponseIDTagInfoStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizeResponseIDTagInfoStatus) UnmarshalJSON(b []byte) error {
+func (j *AuthorizeResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -65,9 +66,9 @@ func (j *AuthorizeResponseIDTagInfoStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizeResponseIDTagInfo) UnmarshalJSON(b []byte) error {
+func (j *AuthorizeResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -75,10 +76,10 @@ func (j *AuthorizeResponseIDTagInfo) UnmarshalJSON(b []byte) error {
 	}
 	type Plain AuthorizeResponseIDTagInfo
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.ParentIDTag != nil && len(*plain.ParentIDTag) > 20 {
+	if plain.ParentIDTag != nil && utf8.RuneCountInString(string(*plain.ParentIDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "parentIdTag", 20)
 	}
 	*j = AuthorizeResponseIDTagInfo(plain)
@@ -86,9 +87,9 @@ func (j *AuthorizeResponseIDTagInfo) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizeResponse) UnmarshalJSON(b []byte) error {
+func (j *AuthorizeResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idTagInfo"]; raw != nil && !ok {
@@ -96,7 +97,7 @@ func (j *AuthorizeResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain AuthorizeResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = AuthorizeResponse(plain)
@@ -104,9 +105,9 @@ func (j *AuthorizeResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *Authorize) UnmarshalJSON(b []byte) error {
+func (j *Authorize) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idTag"]; raw != nil && !ok {
@@ -114,10 +115,10 @@ func (j *Authorize) UnmarshalJSON(b []byte) error {
 	}
 	type Plain Authorize
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IDTag) > 20 {
+	if utf8.RuneCountInString(string(plain.IDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "idTag", 20)
 	}
 	*j = Authorize(plain)
@@ -127,32 +128,32 @@ func (j *Authorize) UnmarshalJSON(b []byte) error {
 type BootNotification struct {
 	// ChargeBoxSerialNumber corresponds to the JSON schema field
 	// "chargeBoxSerialNumber".
-	ChargeBoxSerialNumber *string `json:"chargeBoxSerialNumber,omitempty"`
+	ChargeBoxSerialNumber *string `json:"chargeBoxSerialNumber,omitempty,omitzero"`
 
 	// ChargePointModel corresponds to the JSON schema field "chargePointModel".
 	ChargePointModel string `json:"chargePointModel"`
 
 	// ChargePointSerialNumber corresponds to the JSON schema field
 	// "chargePointSerialNumber".
-	ChargePointSerialNumber *string `json:"chargePointSerialNumber,omitempty"`
+	ChargePointSerialNumber *string `json:"chargePointSerialNumber,omitempty,omitzero"`
 
 	// ChargePointVendor corresponds to the JSON schema field "chargePointVendor".
 	ChargePointVendor string `json:"chargePointVendor"`
 
 	// FirmwareVersion corresponds to the JSON schema field "firmwareVersion".
-	FirmwareVersion *string `json:"firmwareVersion,omitempty"`
+	FirmwareVersion *string `json:"firmwareVersion,omitempty,omitzero"`
 
 	// Iccid corresponds to the JSON schema field "iccid".
-	Iccid *string `json:"iccid,omitempty"`
+	Iccid *string `json:"iccid,omitempty,omitzero"`
 
 	// Imsi corresponds to the JSON schema field "imsi".
-	Imsi *string `json:"imsi,omitempty"`
+	Imsi *string `json:"imsi,omitempty,omitzero"`
 
 	// MeterSerialNumber corresponds to the JSON schema field "meterSerialNumber".
-	MeterSerialNumber *string `json:"meterSerialNumber,omitempty"`
+	MeterSerialNumber *string `json:"meterSerialNumber,omitempty,omitzero"`
 
 	// MeterType corresponds to the JSON schema field "meterType".
-	MeterType *string `json:"meterType,omitempty"`
+	MeterType *string `json:"meterType,omitempty,omitzero"`
 }
 
 type BootNotificationResponse struct {
@@ -177,9 +178,9 @@ var enumValues_BootNotificationResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *BootNotificationResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *BootNotificationResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -197,9 +198,9 @@ func (j *BootNotificationResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *BootNotificationResponse) UnmarshalJSON(b []byte) error {
+func (j *BootNotificationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["currentTime"]; raw != nil && !ok {
@@ -213,7 +214,7 @@ func (j *BootNotificationResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain BootNotificationResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = BootNotificationResponse(plain)
@@ -221,9 +222,9 @@ func (j *BootNotificationResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *BootNotification) UnmarshalJSON(b []byte) error {
+func (j *BootNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargePointModel"]; raw != nil && !ok {
@@ -234,34 +235,34 @@ func (j *BootNotification) UnmarshalJSON(b []byte) error {
 	}
 	type Plain BootNotification
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.ChargeBoxSerialNumber != nil && len(*plain.ChargeBoxSerialNumber) > 25 {
+	if plain.ChargeBoxSerialNumber != nil && utf8.RuneCountInString(string(*plain.ChargeBoxSerialNumber)) > 25 {
 		return fmt.Errorf("field %s length: must be <= %d", "chargeBoxSerialNumber", 25)
 	}
-	if len(plain.ChargePointModel) > 20 {
+	if utf8.RuneCountInString(string(plain.ChargePointModel)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "chargePointModel", 20)
 	}
-	if plain.ChargePointSerialNumber != nil && len(*plain.ChargePointSerialNumber) > 25 {
+	if plain.ChargePointSerialNumber != nil && utf8.RuneCountInString(string(*plain.ChargePointSerialNumber)) > 25 {
 		return fmt.Errorf("field %s length: must be <= %d", "chargePointSerialNumber", 25)
 	}
-	if len(plain.ChargePointVendor) > 20 {
+	if utf8.RuneCountInString(string(plain.ChargePointVendor)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "chargePointVendor", 20)
 	}
-	if plain.FirmwareVersion != nil && len(*plain.FirmwareVersion) > 50 {
+	if plain.FirmwareVersion != nil && utf8.RuneCountInString(string(*plain.FirmwareVersion)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "firmwareVersion", 50)
 	}
-	if plain.Iccid != nil && len(*plain.Iccid) > 20 {
+	if plain.Iccid != nil && utf8.RuneCountInString(string(*plain.Iccid)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "iccid", 20)
 	}
-	if plain.Imsi != nil && len(*plain.Imsi) > 20 {
+	if plain.Imsi != nil && utf8.RuneCountInString(string(*plain.Imsi)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "imsi", 20)
 	}
-	if plain.MeterSerialNumber != nil && len(*plain.MeterSerialNumber) > 25 {
+	if plain.MeterSerialNumber != nil && utf8.RuneCountInString(string(*plain.MeterSerialNumber)) > 25 {
 		return fmt.Errorf("field %s length: must be <= %d", "meterSerialNumber", 25)
 	}
-	if plain.MeterType != nil && len(*plain.MeterType) > 25 {
+	if plain.MeterType != nil && utf8.RuneCountInString(string(*plain.MeterType)) > 25 {
 		return fmt.Errorf("field %s length: must be <= %d", "meterType", 25)
 	}
 	*j = BootNotification(plain)
@@ -289,9 +290,9 @@ var enumValues_CancelReservationResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CancelReservationResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *CancelReservationResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -309,9 +310,9 @@ func (j *CancelReservationResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CancelReservationResponse) UnmarshalJSON(b []byte) error {
+func (j *CancelReservationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -319,7 +320,7 @@ func (j *CancelReservationResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CancelReservationResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CancelReservationResponse(plain)
@@ -327,9 +328,9 @@ func (j *CancelReservationResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CancelReservation) UnmarshalJSON(b []byte) error {
+func (j *CancelReservation) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["reservationId"]; raw != nil && !ok {
@@ -337,7 +338,7 @@ func (j *CancelReservation) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CancelReservation
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CancelReservation(plain)
@@ -370,9 +371,9 @@ var enumValues_ChangeAvailabilityResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailabilityResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailabilityResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -390,9 +391,9 @@ func (j *ChangeAvailabilityResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailabilityResponse) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailabilityResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -400,7 +401,7 @@ func (j *ChangeAvailabilityResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChangeAvailabilityResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChangeAvailabilityResponse(plain)
@@ -418,9 +419,9 @@ var enumValues_ChangeAvailabilityType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailabilityType) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailabilityType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -438,9 +439,9 @@ func (j *ChangeAvailabilityType) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailability) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailability) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -451,7 +452,7 @@ func (j *ChangeAvailability) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChangeAvailability
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChangeAvailability(plain)
@@ -484,9 +485,9 @@ var enumValues_ChangeConfigurationResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeConfigurationResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *ChangeConfigurationResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -504,9 +505,9 @@ func (j *ChangeConfigurationResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeConfigurationResponse) UnmarshalJSON(b []byte) error {
+func (j *ChangeConfigurationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -514,7 +515,7 @@ func (j *ChangeConfigurationResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChangeConfigurationResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChangeConfigurationResponse(plain)
@@ -522,9 +523,9 @@ func (j *ChangeConfigurationResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeConfiguration) UnmarshalJSON(b []byte) error {
+func (j *ChangeConfiguration) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["key"]; raw != nil && !ok {
@@ -535,13 +536,13 @@ func (j *ChangeConfiguration) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChangeConfiguration
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Key) > 50 {
+	if utf8.RuneCountInString(string(plain.Key)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "key", 50)
 	}
-	if len(plain.Value) > 500 {
+	if utf8.RuneCountInString(string(plain.Value)) > 500 {
 		return fmt.Errorf("field %s length: must be <= %d", "value", 500)
 	}
 	*j = ChangeConfiguration(plain)
@@ -566,9 +567,9 @@ var enumValues_ClearCacheResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearCacheResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *ClearCacheResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -586,9 +587,9 @@ func (j *ClearCacheResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearCacheResponse) UnmarshalJSON(b []byte) error {
+func (j *ClearCacheResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -596,7 +597,7 @@ func (j *ClearCacheResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearCacheResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearCacheResponse(plain)
@@ -622,9 +623,9 @@ var enumValues_ContextEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ContextEnumType) UnmarshalJSON(b []byte) error {
+func (j *ContextEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -643,10 +644,10 @@ func (j *ContextEnumType) UnmarshalJSON(b []byte) error {
 
 type DataTransfer struct {
 	// Data corresponds to the JSON schema field "data".
-	Data *string `json:"data,omitempty"`
+	Data *string `json:"data,omitempty,omitzero"`
 
 	// MessageID corresponds to the JSON schema field "messageId".
-	MessageID *string `json:"messageId,omitempty"`
+	MessageID *string `json:"messageId,omitempty,omitzero"`
 
 	// VendorID corresponds to the JSON schema field "vendorId".
 	VendorID string `json:"vendorId"`
@@ -654,7 +655,7 @@ type DataTransfer struct {
 
 type DataTransferResponse struct {
 	// Data corresponds to the JSON schema field "data".
-	Data *string `json:"data,omitempty"`
+	Data *string `json:"data,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status DataTransferResponseStatus `json:"status"`
@@ -675,9 +676,9 @@ var enumValues_DataTransferResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataTransferResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *DataTransferResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -695,9 +696,9 @@ func (j *DataTransferResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataTransferResponse) UnmarshalJSON(b []byte) error {
+func (j *DataTransferResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -705,7 +706,7 @@ func (j *DataTransferResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DataTransferResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = DataTransferResponse(plain)
@@ -713,9 +714,9 @@ func (j *DataTransferResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataTransfer) UnmarshalJSON(b []byte) error {
+func (j *DataTransfer) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["vendorId"]; raw != nil && !ok {
@@ -723,13 +724,13 @@ func (j *DataTransfer) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DataTransfer
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.MessageID != nil && len(*plain.MessageID) > 50 {
+	if plain.MessageID != nil && utf8.RuneCountInString(string(*plain.MessageID)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "messageId", 50)
 	}
-	if len(plain.VendorID) > 255 {
+	if utf8.RuneCountInString(string(plain.VendorID)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "vendorId", 255)
 	}
 	*j = DataTransfer(plain)
@@ -758,9 +759,9 @@ var enumValues_DiagnosticsStatusNotificationStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DiagnosticsStatusNotificationStatus) UnmarshalJSON(b []byte) error {
+func (j *DiagnosticsStatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -778,9 +779,9 @@ func (j *DiagnosticsStatusNotificationStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DiagnosticsStatusNotification) UnmarshalJSON(b []byte) error {
+func (j *DiagnosticsStatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -788,7 +789,7 @@ func (j *DiagnosticsStatusNotification) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DiagnosticsStatusNotification
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = DiagnosticsStatusNotification(plain)
@@ -823,9 +824,9 @@ var enumValues_FirmwareStatusNotificationStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *FirmwareStatusNotificationStatus) UnmarshalJSON(b []byte) error {
+func (j *FirmwareStatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -843,9 +844,9 @@ func (j *FirmwareStatusNotificationStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *FirmwareStatusNotification) UnmarshalJSON(b []byte) error {
+func (j *FirmwareStatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -853,7 +854,7 @@ func (j *FirmwareStatusNotification) UnmarshalJSON(b []byte) error {
 	}
 	type Plain FirmwareStatusNotification
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = FirmwareStatusNotification(plain)
@@ -871,9 +872,9 @@ var enumValues_FormatEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *FormatEnumType) UnmarshalJSON(b []byte) error {
+func (j *FormatEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -892,15 +893,15 @@ func (j *FormatEnumType) UnmarshalJSON(b []byte) error {
 
 type GetConfiguration struct {
 	// Key corresponds to the JSON schema field "key".
-	Key []string `json:"key,omitempty"`
+	Key []string `json:"key,omitempty,omitzero"`
 }
 
 type GetConfigurationResponse struct {
 	// ConfigurationKey corresponds to the JSON schema field "configurationKey".
-	ConfigurationKey []GetConfigurationResponseConfigurationKeyElem `json:"configurationKey,omitempty"`
+	ConfigurationKey []GetConfigurationResponseConfigurationKeyElem `json:"configurationKey,omitempty,omitzero"`
 
 	// UnknownKey corresponds to the JSON schema field "unknownKey".
-	UnknownKey []string `json:"unknownKey,omitempty"`
+	UnknownKey []string `json:"unknownKey,omitempty,omitzero"`
 }
 
 type GetConfigurationResponseConfigurationKeyElem struct {
@@ -911,13 +912,13 @@ type GetConfigurationResponseConfigurationKeyElem struct {
 	Readonly bool `json:"readonly"`
 
 	// Value corresponds to the JSON schema field "value".
-	Value *string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetConfigurationResponseConfigurationKeyElem) UnmarshalJSON(b []byte) error {
+func (j *GetConfigurationResponseConfigurationKeyElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["key"]; raw != nil && !ok {
@@ -928,13 +929,13 @@ func (j *GetConfigurationResponseConfigurationKeyElem) UnmarshalJSON(b []byte) e
 	}
 	type Plain GetConfigurationResponseConfigurationKeyElem
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Key) > 50 {
+	if utf8.RuneCountInString(string(plain.Key)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "key", 50)
 	}
-	if plain.Value != nil && len(*plain.Value) > 500 {
+	if plain.Value != nil && utf8.RuneCountInString(string(*plain.Value)) > 500 {
 		return fmt.Errorf("field %s length: must be <= %d", "value", 500)
 	}
 	*j = GetConfigurationResponseConfigurationKeyElem(plain)
@@ -946,35 +947,31 @@ type GetDiagnostics struct {
 	Location string `json:"location"`
 
 	// Retries corresponds to the JSON schema field "retries".
-	Retries *int `json:"retries,omitempty"`
+	Retries *int `json:"retries,omitempty,omitzero"`
 
 	// RetryInterval corresponds to the JSON schema field "retryInterval".
-	RetryInterval *int `json:"retryInterval,omitempty"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
 
 	// StartTime corresponds to the JSON schema field "startTime".
-	StartTime *time.Time `json:"startTime,omitempty"`
+	StartTime *time.Time `json:"startTime,omitempty,omitzero"`
 
 	// StopTime corresponds to the JSON schema field "stopTime".
-	StopTime *time.Time `json:"stopTime,omitempty"`
+	StopTime *time.Time `json:"stopTime,omitempty,omitzero"`
 }
 
 type GetDiagnosticsResponse struct {
 	// FileName corresponds to the JSON schema field "fileName".
-	FileName *string `json:"fileName,omitempty"`
+	FileName *string `json:"fileName,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetDiagnosticsResponse) UnmarshalJSON(b []byte) error {
-	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
-		return err
-	}
+func (j *GetDiagnosticsResponse) UnmarshalJSON(value []byte) error {
 	type Plain GetDiagnosticsResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.FileName != nil && len(*plain.FileName) > 255 {
+	if plain.FileName != nil && utf8.RuneCountInString(string(*plain.FileName)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "fileName", 255)
 	}
 	*j = GetDiagnosticsResponse(plain)
@@ -982,9 +979,9 @@ func (j *GetDiagnosticsResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetDiagnostics) UnmarshalJSON(b []byte) error {
+func (j *GetDiagnostics) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["location"]; raw != nil && !ok {
@@ -992,7 +989,7 @@ func (j *GetDiagnostics) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetDiagnostics
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetDiagnostics(plain)
@@ -1007,9 +1004,9 @@ type GetLocalListVersionResponse struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetLocalListVersionResponse) UnmarshalJSON(b []byte) error {
+func (j *GetLocalListVersionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["listVersion"]; raw != nil && !ok {
@@ -1017,7 +1014,7 @@ func (j *GetLocalListVersionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetLocalListVersionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetLocalListVersionResponse(plain)
@@ -1032,9 +1029,9 @@ type HeartbeatResponse struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *HeartbeatResponse) UnmarshalJSON(b []byte) error {
+func (j *HeartbeatResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["currentTime"]; raw != nil && !ok {
@@ -1042,7 +1039,7 @@ func (j *HeartbeatResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain HeartbeatResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = HeartbeatResponse(plain)
@@ -1062,9 +1059,9 @@ var enumValues_LocationEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *LocationEnumType) UnmarshalJSON(b []byte) error {
+func (j *LocationEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1120,9 +1117,9 @@ var enumValues_MeasurandEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeasurandEnumType) UnmarshalJSON(b []byte) error {
+func (j *MeasurandEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1141,28 +1138,28 @@ func (j *MeasurandEnumType) UnmarshalJSON(b []byte) error {
 
 type MeterValueType struct {
 	// Context corresponds to the JSON schema field "context".
-	Context *ContextEnumType `json:"context,omitempty"`
+	Context *ContextEnumType `json:"context,omitempty,omitzero"`
 
 	// Format corresponds to the JSON schema field "format".
-	Format *FormatEnumType `json:"format,omitempty"`
+	Format *FormatEnumType `json:"format,omitempty,omitzero"`
 
 	// Location corresponds to the JSON schema field "location".
-	Location *LocationEnumType `json:"location,omitempty"`
+	Location *LocationEnumType `json:"location,omitempty,omitzero"`
 
 	// Measurand corresponds to the JSON schema field "measurand".
-	Measurand *MeasurandEnumType `json:"measurand,omitempty"`
+	Measurand *MeasurandEnumType `json:"measurand,omitempty,omitzero"`
 
 	// Unit corresponds to the JSON schema field "unit".
-	Unit *UnitEnumType `json:"unit,omitempty"`
+	Unit *UnitEnumType `json:"unit,omitempty,omitzero"`
 
 	// Value corresponds to the JSON schema field "value".
 	Value string `json:"value"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeterValueType) UnmarshalJSON(b []byte) error {
+func (j *MeterValueType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["value"]; raw != nil && !ok {
@@ -1170,7 +1167,7 @@ func (j *MeterValueType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MeterValueType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = MeterValueType(plain)
@@ -1182,10 +1179,10 @@ type MeterValues struct {
 	ConnectorID int `json:"connectorId"`
 
 	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID *int `json:"transactionId,omitempty"`
+	TransactionID *int `json:"transactionId,omitempty,omitzero"`
 
 	// Values corresponds to the JSON schema field "values".
-	Values []MeterValuesValuesElem `json:"values,omitempty"`
+	Values []MeterValuesValuesElem `json:"values,omitempty,omitzero"`
 }
 
 type MeterValuesResponse map[string]interface{}
@@ -1199,9 +1196,9 @@ type MeterValuesValuesElem struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeterValuesValuesElem) UnmarshalJSON(b []byte) error {
+func (j *MeterValuesValuesElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["timestamp"]; raw != nil && !ok {
@@ -1212,7 +1209,7 @@ func (j *MeterValuesValuesElem) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MeterValuesValuesElem
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = MeterValuesValuesElem(plain)
@@ -1220,9 +1217,9 @@ func (j *MeterValuesValuesElem) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeterValues) UnmarshalJSON(b []byte) error {
+func (j *MeterValues) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -1230,7 +1227,7 @@ func (j *MeterValues) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MeterValues
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = MeterValues(plain)
@@ -1239,7 +1236,7 @@ func (j *MeterValues) UnmarshalJSON(b []byte) error {
 
 type RemoteStartTransaction struct {
 	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID *int `json:"connectorId,omitempty"`
+	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
 
 	// IDTag corresponds to the JSON schema field "idTag".
 	IDTag string `json:"idTag"`
@@ -1261,9 +1258,9 @@ var enumValues_RemoteStartTransactionResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RemoteStartTransactionResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *RemoteStartTransactionResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1281,9 +1278,9 @@ func (j *RemoteStartTransactionResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RemoteStartTransactionResponse) UnmarshalJSON(b []byte) error {
+func (j *RemoteStartTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1291,7 +1288,7 @@ func (j *RemoteStartTransactionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RemoteStartTransactionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = RemoteStartTransactionResponse(plain)
@@ -1299,9 +1296,9 @@ func (j *RemoteStartTransactionResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RemoteStartTransaction) UnmarshalJSON(b []byte) error {
+func (j *RemoteStartTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idTag"]; raw != nil && !ok {
@@ -1309,10 +1306,10 @@ func (j *RemoteStartTransaction) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RemoteStartTransaction
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IDTag) > 20 {
+	if utf8.RuneCountInString(string(plain.IDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "idTag", 20)
 	}
 	*j = RemoteStartTransaction(plain)
@@ -1340,9 +1337,9 @@ var enumValues_RemoteStopTransactionResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RemoteStopTransactionResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *RemoteStopTransactionResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1360,9 +1357,9 @@ func (j *RemoteStopTransactionResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RemoteStopTransactionResponse) UnmarshalJSON(b []byte) error {
+func (j *RemoteStopTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1370,7 +1367,7 @@ func (j *RemoteStopTransactionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RemoteStopTransactionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = RemoteStopTransactionResponse(plain)
@@ -1378,9 +1375,9 @@ func (j *RemoteStopTransactionResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RemoteStopTransaction) UnmarshalJSON(b []byte) error {
+func (j *RemoteStopTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["transactionId"]; raw != nil && !ok {
@@ -1388,7 +1385,7 @@ func (j *RemoteStopTransaction) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RemoteStopTransaction
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = RemoteStopTransaction(plain)
@@ -1406,7 +1403,7 @@ type ReserveNow struct {
 	IDTag string `json:"idTag"`
 
 	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
 
 	// ReservationID corresponds to the JSON schema field "reservationId".
 	ReservationID int `json:"reservationId"`
@@ -1434,9 +1431,9 @@ var enumValues_ReserveNowResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReserveNowResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *ReserveNowResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1454,9 +1451,9 @@ func (j *ReserveNowResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReserveNowResponse) UnmarshalJSON(b []byte) error {
+func (j *ReserveNowResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1464,7 +1461,7 @@ func (j *ReserveNowResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReserveNowResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ReserveNowResponse(plain)
@@ -1472,9 +1469,9 @@ func (j *ReserveNowResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReserveNow) UnmarshalJSON(b []byte) error {
+func (j *ReserveNow) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -1491,13 +1488,13 @@ func (j *ReserveNow) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReserveNow
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IDTag) > 20 {
+	if utf8.RuneCountInString(string(plain.IDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "idTag", 20)
 	}
-	if plain.ParentIDTag != nil && len(*plain.ParentIDTag) > 20 {
+	if plain.ParentIDTag != nil && utf8.RuneCountInString(string(*plain.ParentIDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "parentIdTag", 20)
 	}
 	*j = ReserveNow(plain)
@@ -1525,9 +1522,9 @@ var enumValues_ResetResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *ResetResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1545,9 +1542,9 @@ func (j *ResetResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetResponse) UnmarshalJSON(b []byte) error {
+func (j *ResetResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1555,7 +1552,7 @@ func (j *ResetResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ResetResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ResetResponse(plain)
@@ -1573,9 +1570,9 @@ var enumValues_ResetType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetType) UnmarshalJSON(b []byte) error {
+func (j *ResetType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1593,9 +1590,9 @@ func (j *ResetType) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *Reset) UnmarshalJSON(b []byte) error {
+func (j *Reset) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["type"]; raw != nil && !ok {
@@ -1603,7 +1600,7 @@ func (j *Reset) UnmarshalJSON(b []byte) error {
 	}
 	type Plain Reset
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = Reset(plain)
@@ -1616,7 +1613,7 @@ type SendLocalList struct {
 
 	// LocalAuthorizationList corresponds to the JSON schema field
 	// "localAuthorizationList".
-	LocalAuthorizationList []SendLocalListLocalAuthorizationListElem `json:"localAuthorizationList,omitempty"`
+	LocalAuthorizationList []SendLocalListLocalAuthorizationListElem `json:"localAuthorizationList,omitempty,omitzero"`
 
 	// UpdateType corresponds to the JSON schema field "updateType".
 	UpdateType SendLocalListUpdateType `json:"updateType"`
@@ -1627,15 +1624,15 @@ type SendLocalListLocalAuthorizationListElem struct {
 	IDTag string `json:"idTag"`
 
 	// IDTagInfo corresponds to the JSON schema field "idTagInfo".
-	IDTagInfo *SendLocalListLocalAuthorizationListElemIDTagInfo `json:"idTagInfo,omitempty"`
+	IDTagInfo *SendLocalListLocalAuthorizationListElemIDTagInfo `json:"idTagInfo,omitempty,omitzero"`
 }
 
 type SendLocalListLocalAuthorizationListElemIDTagInfo struct {
 	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty"`
+	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
 
 	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status SendLocalListLocalAuthorizationListElemIDTagInfoStatus `json:"status"`
@@ -1658,9 +1655,9 @@ var enumValues_SendLocalListLocalAuthorizationListElemIDTagInfoStatus = []interf
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListLocalAuthorizationListElemIDTagInfoStatus) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListLocalAuthorizationListElemIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1678,9 +1675,9 @@ func (j *SendLocalListLocalAuthorizationListElemIDTagInfoStatus) UnmarshalJSON(b
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListLocalAuthorizationListElemIDTagInfo) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListLocalAuthorizationListElemIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1688,10 +1685,10 @@ func (j *SendLocalListLocalAuthorizationListElemIDTagInfo) UnmarshalJSON(b []byt
 	}
 	type Plain SendLocalListLocalAuthorizationListElemIDTagInfo
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.ParentIDTag != nil && len(*plain.ParentIDTag) > 20 {
+	if plain.ParentIDTag != nil && utf8.RuneCountInString(string(*plain.ParentIDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "parentIdTag", 20)
 	}
 	*j = SendLocalListLocalAuthorizationListElemIDTagInfo(plain)
@@ -1699,9 +1696,9 @@ func (j *SendLocalListLocalAuthorizationListElemIDTagInfo) UnmarshalJSON(b []byt
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListLocalAuthorizationListElem) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListLocalAuthorizationListElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idTag"]; raw != nil && !ok {
@@ -1709,10 +1706,10 @@ func (j *SendLocalListLocalAuthorizationListElem) UnmarshalJSON(b []byte) error 
 	}
 	type Plain SendLocalListLocalAuthorizationListElem
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IDTag) > 20 {
+	if utf8.RuneCountInString(string(plain.IDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "idTag", 20)
 	}
 	*j = SendLocalListLocalAuthorizationListElem(plain)
@@ -1721,7 +1718,7 @@ func (j *SendLocalListLocalAuthorizationListElem) UnmarshalJSON(b []byte) error 
 
 type SendLocalListResponse struct {
 	// Hash corresponds to the JSON schema field "hash".
-	Hash *string `json:"hash,omitempty"`
+	Hash *string `json:"hash,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status SendLocalListResponseStatus `json:"status"`
@@ -1744,9 +1741,9 @@ var enumValues_SendLocalListResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1764,9 +1761,9 @@ func (j *SendLocalListResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListResponse) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1774,10 +1771,10 @@ func (j *SendLocalListResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SendLocalListResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Hash != nil && len(*plain.Hash) > 64 {
+	if plain.Hash != nil && utf8.RuneCountInString(string(*plain.Hash)) > 64 {
 		return fmt.Errorf("field %s length: must be <= %d", "hash", 64)
 	}
 	*j = SendLocalListResponse(plain)
@@ -1795,9 +1792,9 @@ var enumValues_SendLocalListUpdateType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListUpdateType) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListUpdateType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1815,9 +1812,9 @@ func (j *SendLocalListUpdateType) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalList) UnmarshalJSON(b []byte) error {
+func (j *SendLocalList) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["listVersion"]; raw != nil && !ok {
@@ -1828,7 +1825,7 @@ func (j *SendLocalList) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SendLocalList
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SendLocalList(plain)
@@ -1846,7 +1843,7 @@ type StartTransaction struct {
 	MeterStart int `json:"meterStart"`
 
 	// ReservationID corresponds to the JSON schema field "reservationId".
-	ReservationID *int `json:"reservationId,omitempty"`
+	ReservationID *int `json:"reservationId,omitempty,omitzero"`
 
 	// Timestamp corresponds to the JSON schema field "timestamp".
 	Timestamp time.Time `json:"timestamp"`
@@ -1862,10 +1859,10 @@ type StartTransactionResponse struct {
 
 type StartTransactionResponseIDTagInfo struct {
 	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty"`
+	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
 
 	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status StartTransactionResponseIDTagInfoStatus `json:"status"`
@@ -1888,9 +1885,9 @@ var enumValues_StartTransactionResponseIDTagInfoStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StartTransactionResponseIDTagInfoStatus) UnmarshalJSON(b []byte) error {
+func (j *StartTransactionResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1908,9 +1905,9 @@ func (j *StartTransactionResponseIDTagInfoStatus) UnmarshalJSON(b []byte) error 
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StartTransactionResponseIDTagInfo) UnmarshalJSON(b []byte) error {
+func (j *StartTransactionResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1918,10 +1915,10 @@ func (j *StartTransactionResponseIDTagInfo) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StartTransactionResponseIDTagInfo
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.ParentIDTag != nil && len(*plain.ParentIDTag) > 20 {
+	if plain.ParentIDTag != nil && utf8.RuneCountInString(string(*plain.ParentIDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "parentIdTag", 20)
 	}
 	*j = StartTransactionResponseIDTagInfo(plain)
@@ -1929,9 +1926,9 @@ func (j *StartTransactionResponseIDTagInfo) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StartTransactionResponse) UnmarshalJSON(b []byte) error {
+func (j *StartTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idTagInfo"]; raw != nil && !ok {
@@ -1942,7 +1939,7 @@ func (j *StartTransactionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StartTransactionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = StartTransactionResponse(plain)
@@ -1950,9 +1947,9 @@ func (j *StartTransactionResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StartTransaction) UnmarshalJSON(b []byte) error {
+func (j *StartTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -1969,10 +1966,10 @@ func (j *StartTransaction) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StartTransaction
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IDTag) > 20 {
+	if utf8.RuneCountInString(string(plain.IDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "idTag", 20)
 	}
 	*j = StartTransaction(plain)
@@ -1987,19 +1984,19 @@ type StatusNotification struct {
 	ErrorCode StatusNotificationErrorCode `json:"errorCode"`
 
 	// Info corresponds to the JSON schema field "info".
-	Info *string `json:"info,omitempty"`
+	Info *string `json:"info,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status StatusNotificationStatus `json:"status"`
 
 	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp *time.Time `json:"timestamp,omitempty"`
+	Timestamp *time.Time `json:"timestamp,omitempty,omitzero"`
 
 	// VendorErrorCode corresponds to the JSON schema field "vendorErrorCode".
-	VendorErrorCode *string `json:"vendorErrorCode,omitempty"`
+	VendorErrorCode *string `json:"vendorErrorCode,omitempty,omitzero"`
 
 	// VendorID corresponds to the JSON schema field "vendorId".
-	VendorID *string `json:"vendorId,omitempty"`
+	VendorID *string `json:"vendorId,omitempty,omitzero"`
 }
 
 type StatusNotificationErrorCode string
@@ -2035,9 +2032,9 @@ var enumValues_StatusNotificationErrorCode = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StatusNotificationErrorCode) UnmarshalJSON(b []byte) error {
+func (j *StatusNotificationErrorCode) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2073,9 +2070,9 @@ var enumValues_StatusNotificationStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StatusNotificationStatus) UnmarshalJSON(b []byte) error {
+func (j *StatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2093,9 +2090,9 @@ func (j *StatusNotificationStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StatusNotification) UnmarshalJSON(b []byte) error {
+func (j *StatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -2109,16 +2106,16 @@ func (j *StatusNotification) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StatusNotification
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Info != nil && len(*plain.Info) > 50 {
+	if plain.Info != nil && utf8.RuneCountInString(string(*plain.Info)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "info", 50)
 	}
-	if plain.VendorErrorCode != nil && len(*plain.VendorErrorCode) > 50 {
+	if plain.VendorErrorCode != nil && utf8.RuneCountInString(string(*plain.VendorErrorCode)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "vendorErrorCode", 50)
 	}
-	if plain.VendorID != nil && len(*plain.VendorID) > 255 {
+	if plain.VendorID != nil && utf8.RuneCountInString(string(*plain.VendorID)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "vendorId", 255)
 	}
 	*j = StatusNotification(plain)
@@ -2127,7 +2124,7 @@ func (j *StatusNotification) UnmarshalJSON(b []byte) error {
 
 type StopTransaction struct {
 	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag *string `json:"idTag,omitempty"`
+	IDTag *string `json:"idTag,omitempty,omitzero"`
 
 	// MeterStop corresponds to the JSON schema field "meterStop".
 	MeterStop int `json:"meterStop"`
@@ -2136,7 +2133,7 @@ type StopTransaction struct {
 	Timestamp time.Time `json:"timestamp"`
 
 	// TransactionData corresponds to the JSON schema field "transactionData".
-	TransactionData []StopTransactionTransactionDataElem `json:"transactionData,omitempty"`
+	TransactionData []StopTransactionTransactionDataElem `json:"transactionData,omitempty,omitzero"`
 
 	// TransactionID corresponds to the JSON schema field "transactionId".
 	TransactionID int `json:"transactionId"`
@@ -2144,15 +2141,15 @@ type StopTransaction struct {
 
 type StopTransactionResponse struct {
 	// IDTagInfo corresponds to the JSON schema field "idTagInfo".
-	IDTagInfo *StopTransactionResponseIDTagInfo `json:"idTagInfo,omitempty"`
+	IDTagInfo *StopTransactionResponseIDTagInfo `json:"idTagInfo,omitempty,omitzero"`
 }
 
 type StopTransactionResponseIDTagInfo struct {
 	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty"`
+	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
 
 	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status StopTransactionResponseIDTagInfoStatus `json:"status"`
@@ -2175,9 +2172,9 @@ var enumValues_StopTransactionResponseIDTagInfoStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionResponseIDTagInfoStatus) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2195,9 +2192,9 @@ func (j *StopTransactionResponseIDTagInfoStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionResponseIDTagInfo) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -2205,10 +2202,10 @@ func (j *StopTransactionResponseIDTagInfo) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StopTransactionResponseIDTagInfo
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.ParentIDTag != nil && len(*plain.ParentIDTag) > 20 {
+	if plain.ParentIDTag != nil && utf8.RuneCountInString(string(*plain.ParentIDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "parentIdTag", 20)
 	}
 	*j = StopTransactionResponseIDTagInfo(plain)
@@ -2217,7 +2214,7 @@ func (j *StopTransactionResponseIDTagInfo) UnmarshalJSON(b []byte) error {
 
 type StopTransactionTransactionDataElem struct {
 	// Values corresponds to the JSON schema field "values".
-	Values []StopTransactionTransactionDataElemValuesElem `json:"values,omitempty"`
+	Values []StopTransactionTransactionDataElemValuesElem `json:"values,omitempty,omitzero"`
 }
 
 type StopTransactionTransactionDataElemValuesElem struct {
@@ -2230,19 +2227,19 @@ type StopTransactionTransactionDataElemValuesElem struct {
 
 type StopTransactionTransactionDataElemValuesElemValueElem struct {
 	// Context corresponds to the JSON schema field "context".
-	Context *StopTransactionTransactionDataElemValuesElemValueElemContext `json:"context,omitempty"`
+	Context *StopTransactionTransactionDataElemValuesElemValueElemContext `json:"context,omitempty,omitzero"`
 
 	// Format corresponds to the JSON schema field "format".
-	Format *StopTransactionTransactionDataElemValuesElemValueElemFormat `json:"format,omitempty"`
+	Format *StopTransactionTransactionDataElemValuesElemValueElemFormat `json:"format,omitempty,omitzero"`
 
 	// Location corresponds to the JSON schema field "location".
-	Location *StopTransactionTransactionDataElemValuesElemValueElemLocation `json:"location,omitempty"`
+	Location *StopTransactionTransactionDataElemValuesElemValueElemLocation `json:"location,omitempty,omitzero"`
 
 	// Measurand corresponds to the JSON schema field "measurand".
-	Measurand *StopTransactionTransactionDataElemValuesElemValueElemMeasurand `json:"measurand,omitempty"`
+	Measurand *StopTransactionTransactionDataElemValuesElemValueElemMeasurand `json:"measurand,omitempty,omitzero"`
 
 	// Unit corresponds to the JSON schema field "unit".
-	Unit *StopTransactionTransactionDataElemValuesElemValueElemUnit `json:"unit,omitempty"`
+	Unit *StopTransactionTransactionDataElemValuesElemValueElemUnit `json:"unit,omitempty,omitzero"`
 
 	// Value corresponds to the JSON schema field "value".
 	Value string `json:"value"`
@@ -2267,9 +2264,9 @@ var enumValues_StopTransactionTransactionDataElemValuesElemValueElemContext = []
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElemValueElemContext) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElemValueElemContext) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2297,9 +2294,9 @@ var enumValues_StopTransactionTransactionDataElemValuesElemValueElemFormat = []i
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElemValueElemFormat) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElemValueElemFormat) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2329,9 +2326,9 @@ var enumValues_StopTransactionTransactionDataElemValuesElemValueElemLocation = [
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElemValueElemLocation) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElemValueElemLocation) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2387,9 +2384,9 @@ var enumValues_StopTransactionTransactionDataElemValuesElemValueElemMeasurand = 
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElemValueElemMeasurand) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElemValueElemMeasurand) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2435,9 +2432,9 @@ var enumValues_StopTransactionTransactionDataElemValuesElemValueElemUnit = []int
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElemValueElemUnit) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElemValueElemUnit) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2455,9 +2452,9 @@ func (j *StopTransactionTransactionDataElemValuesElemValueElemUnit) UnmarshalJSO
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElemValueElem) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElemValueElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["value"]; raw != nil && !ok {
@@ -2465,7 +2462,7 @@ func (j *StopTransactionTransactionDataElemValuesElemValueElem) UnmarshalJSON(b 
 	}
 	type Plain StopTransactionTransactionDataElemValuesElemValueElem
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = StopTransactionTransactionDataElemValuesElemValueElem(plain)
@@ -2473,9 +2470,9 @@ func (j *StopTransactionTransactionDataElemValuesElemValueElem) UnmarshalJSON(b 
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransactionTransactionDataElemValuesElem) UnmarshalJSON(b []byte) error {
+func (j *StopTransactionTransactionDataElemValuesElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["timestamp"]; raw != nil && !ok {
@@ -2486,7 +2483,7 @@ func (j *StopTransactionTransactionDataElemValuesElem) UnmarshalJSON(b []byte) e
 	}
 	type Plain StopTransactionTransactionDataElemValuesElem
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = StopTransactionTransactionDataElemValuesElem(plain)
@@ -2494,9 +2491,9 @@ func (j *StopTransactionTransactionDataElemValuesElem) UnmarshalJSON(b []byte) e
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StopTransaction) UnmarshalJSON(b []byte) error {
+func (j *StopTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["meterStop"]; raw != nil && !ok {
@@ -2510,10 +2507,10 @@ func (j *StopTransaction) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StopTransaction
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.IDTag != nil && len(*plain.IDTag) > 20 {
+	if plain.IDTag != nil && utf8.RuneCountInString(string(*plain.IDTag)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "idTag", 20)
 	}
 	*j = StopTransaction(plain)
@@ -2549,9 +2546,9 @@ var enumValues_UnitEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnitEnumType) UnmarshalJSON(b []byte) error {
+func (j *UnitEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2589,9 +2586,9 @@ var enumValues_UnlockConnectorResponseStatus = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnlockConnectorResponseStatus) UnmarshalJSON(b []byte) error {
+func (j *UnlockConnectorResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2609,9 +2606,9 @@ func (j *UnlockConnectorResponseStatus) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnlockConnectorResponse) UnmarshalJSON(b []byte) error {
+func (j *UnlockConnectorResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -2619,7 +2616,7 @@ func (j *UnlockConnectorResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UnlockConnectorResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UnlockConnectorResponse(plain)
@@ -2627,9 +2624,9 @@ func (j *UnlockConnectorResponse) UnmarshalJSON(b []byte) error {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnlockConnector) UnmarshalJSON(b []byte) error {
+func (j *UnlockConnector) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -2637,7 +2634,7 @@ func (j *UnlockConnector) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UnlockConnector
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UnlockConnector(plain)
@@ -2649,21 +2646,21 @@ type UpdateFirmware struct {
 	Location string `json:"location"`
 
 	// Retries corresponds to the JSON schema field "retries".
-	Retries *int `json:"retries,omitempty"`
+	Retries *int `json:"retries,omitempty,omitzero"`
 
 	// RetrieveDate corresponds to the JSON schema field "retrieveDate".
 	RetrieveDate time.Time `json:"retrieveDate"`
 
 	// RetryInterval corresponds to the JSON schema field "retryInterval".
-	RetryInterval *int `json:"retryInterval,omitempty"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
 }
 
 type UpdateFirmwareResponse map[string]interface{}
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UpdateFirmware) UnmarshalJSON(b []byte) error {
+func (j *UpdateFirmware) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["location"]; raw != nil && !ok {
@@ -2674,7 +2671,7 @@ func (j *UpdateFirmware) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UpdateFirmware
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UpdateFirmware(plain)

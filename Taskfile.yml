@@ -24,4 +24,4 @@ tasks:
   install-tools:
     desc: Install required code generation tools.
     cmds:
-      - go install github.com/atombender/go-jsonschema@v0.18.0
+      - go install github.com/atombender/go-jsonschema@v0.23.0

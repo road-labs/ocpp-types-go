@@ -6,10 +6,11 @@ import "encoding/json"
 import "fmt"
 import "reflect"
 import "time"
+import "unicode/utf8"
 
 type ACChargingParametersType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// AC_ Charging_ Parameters. Energy_ Amount. Energy_ Amount
 	// urn:x-oca:ocpp:uid:1:569211
@@ -39,9 +40,9 @@ type ACChargingParametersType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ACChargingParametersType) UnmarshalJSON(b []byte) error {
+func (j *ACChargingParametersType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["energyAmount"]; raw != nil && !ok {
@@ -58,7 +59,7 @@ func (j *ACChargingParametersType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ACChargingParametersType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ACChargingParametersType(plain)
@@ -80,9 +81,9 @@ var enumValues_APNAuthenticationEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *APNAuthenticationEnumType) UnmarshalJSON(b []byte) error {
+func (j *APNAuthenticationEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -113,41 +114,41 @@ type APNType struct {
 	// urn:x-oca:ocpp:uid:1:568819
 	// APN Password.
 	//
-	ApnPassword *string `json:"apnPassword,omitempty"`
+	ApnPassword *string `json:"apnPassword,omitempty,omitzero"`
 
 	// APN. APN. User_ Name
 	// urn:x-oca:ocpp:uid:1:568818
 	// APN username.
 	//
-	ApnUserName *string `json:"apnUserName,omitempty"`
+	ApnUserName *string `json:"apnUserName,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// APN. Preferred_ Network. Mobile_ Network_ ID
 	// urn:x-oca:ocpp:uid:1:568822
 	// Preferred network, written as MCC and MNC concatenated. See note.
 	//
-	PreferredNetwork *string `json:"preferredNetwork,omitempty"`
+	PreferredNetwork *string `json:"preferredNetwork,omitempty,omitzero"`
 
 	// APN. SIMPIN. PIN_ Code
 	// urn:x-oca:ocpp:uid:1:568821
 	// SIM card pin code.
 	//
-	SimPin *int `json:"simPin,omitempty"`
+	SimPin *int `json:"simPin,omitempty,omitzero"`
 
 	// APN. Use_ Only_ Preferred_ Network. Indicator
 	// urn:x-oca:ocpp:uid:1:568824
 	// Default: false. Use only the preferred Network, do
 	// not dial in when not available. See Note.
 	//
-	UseOnlyPreferredNetwork bool `json:"useOnlyPreferredNetwork,omitempty"`
+	UseOnlyPreferredNetwork bool `json:"useOnlyPreferredNetwork,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *APNType) UnmarshalJSON(b []byte) error {
+func (j *APNType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["apn"]; raw != nil && !ok {
@@ -158,19 +159,19 @@ func (j *APNType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain APNType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Apn) > 512 {
+	if utf8.RuneCountInString(string(plain.Apn)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "apn", 512)
 	}
-	if plain.ApnPassword != nil && len(*plain.ApnPassword) > 20 {
+	if plain.ApnPassword != nil && utf8.RuneCountInString(string(*plain.ApnPassword)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "apnPassword", 20)
 	}
-	if plain.ApnUserName != nil && len(*plain.ApnUserName) > 20 {
+	if plain.ApnUserName != nil && utf8.RuneCountInString(string(*plain.ApnUserName)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "apnUserName", 20)
 	}
-	if plain.PreferredNetwork != nil && len(*plain.PreferredNetwork) > 6 {
+	if plain.PreferredNetwork != nil && utf8.RuneCountInString(string(*plain.PreferredNetwork)) > 6 {
 		return fmt.Errorf("field %s length: must be <= %d", "preferredNetwork", 6)
 	}
 	if v, ok := raw["useOnlyPreferredNetwork"]; !ok || v == nil {
@@ -186,7 +187,7 @@ type AdditionalInfoType struct {
 	AdditionalIDToken string `json:"additionalIdToken"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This defines the type of the additionalIdToken. This is a custom type, so the
 	// implementation needs to be agreed upon by all involved parties.
@@ -195,9 +196,9 @@ type AdditionalInfoType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AdditionalInfoType) UnmarshalJSON(b []byte) error {
+func (j *AdditionalInfoType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["additionalIdToken"]; raw != nil && !ok {
@@ -208,13 +209,13 @@ func (j *AdditionalInfoType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain AdditionalInfoType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.AdditionalIDToken) > 36 {
+	if utf8.RuneCountInString(string(plain.AdditionalIDToken)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "additionalIdToken", 36)
 	}
-	if len(plain.Type) > 50 {
+	if utf8.RuneCountInString(string(plain.Type)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "type", 50)
 	}
 	*j = AdditionalInfoType(plain)
@@ -236,9 +237,9 @@ var enumValues_AttributeEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AttributeEnumType) UnmarshalJSON(b []byte) error {
+func (j *AttributeEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -257,19 +258,19 @@ func (j *AttributeEnumType) UnmarshalJSON(b []byte) error {
 
 type AuthorizationData struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// IDToken corresponds to the JSON schema field "idToken".
 	IDToken IDTokenType `json:"idToken"`
 
 	// IDTokenInfo corresponds to the JSON schema field "idTokenInfo".
-	IDTokenInfo *IDTokenInfoType `json:"idTokenInfo,omitempty"`
+	IDTokenInfo *IDTokenInfoType `json:"idTokenInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizationData) UnmarshalJSON(b []byte) error {
+func (j *AuthorizationData) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idToken"]; raw != nil && !ok {
@@ -277,7 +278,7 @@ func (j *AuthorizationData) UnmarshalJSON(b []byte) error {
 	}
 	type Plain AuthorizationData
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = AuthorizationData(plain)
@@ -311,9 +312,9 @@ var enumValues_AuthorizationStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizationStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *AuthorizationStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -351,9 +352,9 @@ var enumValues_AuthorizeCertificateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizeCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *AuthorizeCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -373,23 +374,23 @@ func (j *AuthorizeCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
 type AuthorizeRequest struct {
 	// The X.509 certificated presented by EV and encoded in PEM format.
 	//
-	Certificate *string `json:"certificate,omitempty"`
+	Certificate *string `json:"certificate,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// IDToken corresponds to the JSON schema field "idToken".
 	IDToken IDTokenType `json:"idToken"`
 
 	// Iso15118CertificateHashData corresponds to the JSON schema field
 	// "iso15118CertificateHashData".
-	Iso15118CertificateHashData []OCSPRequestDataType `json:"iso15118CertificateHashData,omitempty"`
+	Iso15118CertificateHashData []OCSPRequestDataType `json:"iso15118CertificateHashData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizeRequest) UnmarshalJSON(b []byte) error {
+func (j *AuthorizeRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idToken"]; raw != nil && !ok {
@@ -397,10 +398,10 @@ func (j *AuthorizeRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain AuthorizeRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Certificate != nil && len(*plain.Certificate) > 5500 {
+	if plain.Certificate != nil && utf8.RuneCountInString(string(*plain.Certificate)) > 5500 {
 		return fmt.Errorf("field %s length: must be <= %d", "certificate", 5500)
 	}
 	if plain.Iso15118CertificateHashData != nil && len(plain.Iso15118CertificateHashData) < 1 {
@@ -415,19 +416,19 @@ func (j *AuthorizeRequest) UnmarshalJSON(b []byte) error {
 
 type AuthorizeResponse struct {
 	// CertificateStatus corresponds to the JSON schema field "certificateStatus".
-	CertificateStatus *AuthorizeCertificateStatusEnumType `json:"certificateStatus,omitempty"`
+	CertificateStatus *AuthorizeCertificateStatusEnumType `json:"certificateStatus,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// IDTokenInfo corresponds to the JSON schema field "idTokenInfo".
 	IDTokenInfo IDTokenInfoType `json:"idTokenInfo"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *AuthorizeResponse) UnmarshalJSON(b []byte) error {
+func (j *AuthorizeResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idTokenInfo"]; raw != nil && !ok {
@@ -435,7 +436,7 @@ func (j *AuthorizeResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain AuthorizeResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = AuthorizeResponse(plain)
@@ -447,16 +448,16 @@ type BootNotificationRequest struct {
 	ChargingStation ChargingStationType `json:"chargingStation"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Reason corresponds to the JSON schema field "reason".
 	Reason BootReasonEnumType `json:"reason"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *BootNotificationRequest) UnmarshalJSON(b []byte) error {
+func (j *BootNotificationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingStation"]; raw != nil && !ok {
@@ -467,7 +468,7 @@ func (j *BootNotificationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain BootNotificationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = BootNotificationRequest(plain)
@@ -480,7 +481,7 @@ type BootNotificationResponse struct {
 	CurrentTime time.Time `json:"currentTime"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// When &lt;&lt;cmn_registrationstatusenumtype,Status&gt;&gt; is Accepted, this
 	// contains the heartbeat interval in seconds. If the CSMS returns something other
@@ -493,13 +494,13 @@ type BootNotificationResponse struct {
 	Status RegistrationStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *BootNotificationResponse) UnmarshalJSON(b []byte) error {
+func (j *BootNotificationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["currentTime"]; raw != nil && !ok {
@@ -513,7 +514,7 @@ func (j *BootNotificationResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain BootNotificationResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = BootNotificationResponse(plain)
@@ -545,9 +546,9 @@ var enumValues_BootReasonEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *BootReasonEnumType) UnmarshalJSON(b []byte) error {
+func (j *BootReasonEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -566,7 +567,7 @@ func (j *BootReasonEnumType) UnmarshalJSON(b []byte) error {
 
 type CancelReservationRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Id of the reservation to cancel.
 	//
@@ -574,9 +575,9 @@ type CancelReservationRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CancelReservationRequest) UnmarshalJSON(b []byte) error {
+func (j *CancelReservationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["reservationId"]; raw != nil && !ok {
@@ -584,7 +585,7 @@ func (j *CancelReservationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CancelReservationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CancelReservationRequest(plain)
@@ -593,19 +594,19 @@ func (j *CancelReservationRequest) UnmarshalJSON(b []byte) error {
 
 type CancelReservationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status CancelReservationStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CancelReservationResponse) UnmarshalJSON(b []byte) error {
+func (j *CancelReservationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -613,7 +614,7 @@ func (j *CancelReservationResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CancelReservationResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CancelReservationResponse(plain)
@@ -631,9 +632,9 @@ var enumValues_CancelReservationStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CancelReservationStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *CancelReservationStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -661,9 +662,9 @@ var enumValues_CertificateActionEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateActionEnumType) UnmarshalJSON(b []byte) error {
+func (j *CertificateActionEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -689,16 +690,16 @@ type CertificateHashDataChainType struct {
 
 	// ChildCertificateHashData corresponds to the JSON schema field
 	// "childCertificateHashData".
-	ChildCertificateHashData []CertificateHashDataType `json:"childCertificateHashData,omitempty"`
+	ChildCertificateHashData []CertificateHashDataType `json:"childCertificateHashData,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateHashDataChainType) UnmarshalJSON(b []byte) error {
+func (j *CertificateHashDataChainType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["certificateHashData"]; raw != nil && !ok {
@@ -709,7 +710,7 @@ func (j *CertificateHashDataChainType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CertificateHashDataChainType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChildCertificateHashData != nil && len(plain.ChildCertificateHashData) < 1 {
@@ -724,7 +725,7 @@ func (j *CertificateHashDataChainType) UnmarshalJSON(b []byte) error {
 
 type CertificateHashDataType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// HashAlgorithm corresponds to the JSON schema field "hashAlgorithm".
 	HashAlgorithm HashAlgorithmEnumType `json:"hashAlgorithm"`
@@ -744,9 +745,9 @@ type CertificateHashDataType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateHashDataType) UnmarshalJSON(b []byte) error {
+func (j *CertificateHashDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["hashAlgorithm"]; raw != nil && !ok {
@@ -763,16 +764,16 @@ func (j *CertificateHashDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CertificateHashDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IssuerKeyHash) > 128 {
+	if utf8.RuneCountInString(string(plain.IssuerKeyHash)) > 128 {
 		return fmt.Errorf("field %s length: must be <= %d", "issuerKeyHash", 128)
 	}
-	if len(plain.IssuerNameHash) > 128 {
+	if utf8.RuneCountInString(string(plain.IssuerNameHash)) > 128 {
 		return fmt.Errorf("field %s length: must be <= %d", "issuerNameHash", 128)
 	}
-	if len(plain.SerialNumber) > 40 {
+	if utf8.RuneCountInString(string(plain.SerialNumber)) > 40 {
 		return fmt.Errorf("field %s length: must be <= %d", "serialNumber", 40)
 	}
 	*j = CertificateHashDataType(plain)
@@ -791,16 +792,16 @@ type CertificateSignedRequest struct {
 	CertificateChain string `json:"certificateChain"`
 
 	// CertificateType corresponds to the JSON schema field "certificateType".
-	CertificateType *CertificateSigningUseEnumType `json:"certificateType,omitempty"`
+	CertificateType *CertificateSigningUseEnumType `json:"certificateType,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateSignedRequest) UnmarshalJSON(b []byte) error {
+func (j *CertificateSignedRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["certificateChain"]; raw != nil && !ok {
@@ -808,10 +809,10 @@ func (j *CertificateSignedRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CertificateSignedRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.CertificateChain) > 10000 {
+	if utf8.RuneCountInString(string(plain.CertificateChain)) > 10000 {
 		return fmt.Errorf("field %s length: must be <= %d", "certificateChain", 10000)
 	}
 	*j = CertificateSignedRequest(plain)
@@ -820,19 +821,19 @@ func (j *CertificateSignedRequest) UnmarshalJSON(b []byte) error {
 
 type CertificateSignedResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status CertificateSignedStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateSignedResponse) UnmarshalJSON(b []byte) error {
+func (j *CertificateSignedResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -840,7 +841,7 @@ func (j *CertificateSignedResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CertificateSignedResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CertificateSignedResponse(plain)
@@ -858,9 +859,9 @@ var enumValues_CertificateSignedStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateSignedStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *CertificateSignedStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -888,9 +889,9 @@ var enumValues_CertificateSigningUseEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CertificateSigningUseEnumType) UnmarshalJSON(b []byte) error {
+func (j *CertificateSigningUseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -909,19 +910,19 @@ func (j *CertificateSigningUseEnumType) UnmarshalJSON(b []byte) error {
 
 type ChangeAvailabilityRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Evse corresponds to the JSON schema field "evse".
-	Evse *EVSEType `json:"evse,omitempty"`
+	Evse *EVSEType `json:"evse,omitempty,omitzero"`
 
 	// OperationalStatus corresponds to the JSON schema field "operationalStatus".
 	OperationalStatus OperationalStatusEnumType `json:"operationalStatus"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailabilityRequest) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailabilityRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["operationalStatus"]; raw != nil && !ok {
@@ -929,7 +930,7 @@ func (j *ChangeAvailabilityRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChangeAvailabilityRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChangeAvailabilityRequest(plain)
@@ -938,19 +939,19 @@ func (j *ChangeAvailabilityRequest) UnmarshalJSON(b []byte) error {
 
 type ChangeAvailabilityResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ChangeAvailabilityStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailabilityResponse) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailabilityResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -958,7 +959,7 @@ func (j *ChangeAvailabilityResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChangeAvailabilityResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChangeAvailabilityResponse(plain)
@@ -978,9 +979,9 @@ var enumValues_ChangeAvailabilityStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChangeAvailabilityStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChangeAvailabilityStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1012,9 +1013,9 @@ var enumValues_ChargingLimitSourceEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingLimitSourceEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChargingLimitSourceEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1036,19 +1037,19 @@ type ChargingLimitType struct {
 	ChargingLimitSource ChargingLimitSourceEnumType `json:"chargingLimitSource"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Charging_ Limit. Is_ Grid_ Critical. Indicator
 	// urn:x-enexis:ecdm:uid:1:570847
 	// Indicates whether the charging limit is critical for the grid.
 	//
-	IsGridCritical *bool `json:"isGridCritical,omitempty"`
+	IsGridCritical *bool `json:"isGridCritical,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingLimitType) UnmarshalJSON(b []byte) error {
+func (j *ChargingLimitType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingLimitSource"]; raw != nil && !ok {
@@ -1056,7 +1057,7 @@ func (j *ChargingLimitType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChargingLimitType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChargingLimitType(plain)
@@ -1066,20 +1067,20 @@ func (j *ChargingLimitType) UnmarshalJSON(b []byte) error {
 type ChargingNeedsType struct {
 	// AcChargingParameters corresponds to the JSON schema field
 	// "acChargingParameters".
-	AcChargingParameters *ACChargingParametersType `json:"acChargingParameters,omitempty"`
+	AcChargingParameters *ACChargingParametersType `json:"acChargingParameters,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// DcChargingParameters corresponds to the JSON schema field
 	// "dcChargingParameters".
-	DcChargingParameters *DCChargingParametersType `json:"dcChargingParameters,omitempty"`
+	DcChargingParameters *DCChargingParametersType `json:"dcChargingParameters,omitempty,omitzero"`
 
 	// Charging_ Needs. Departure_ Time. Date_ Time
 	// urn:x-oca:ocpp:uid:1:569223
 	// Estimated departure time of the EV.
 	//
-	DepartureTime *time.Time `json:"departureTime,omitempty"`
+	DepartureTime *time.Time `json:"departureTime,omitempty,omitzero"`
 
 	// RequestedEnergyTransfer corresponds to the JSON schema field
 	// "requestedEnergyTransfer".
@@ -1087,9 +1088,9 @@ type ChargingNeedsType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingNeedsType) UnmarshalJSON(b []byte) error {
+func (j *ChargingNeedsType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["requestedEnergyTransfer"]; raw != nil && !ok {
@@ -1097,7 +1098,7 @@ func (j *ChargingNeedsType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChargingNeedsType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChargingNeedsType(plain)
@@ -1108,7 +1109,7 @@ type ChargingProfileCriterionType struct {
 	// For which charging limit sources, charging profiles SHALL be reported. If
 	// omitted, the Charging Station SHALL not filter on chargingLimitSource.
 	//
-	ChargingLimitSource []ChargingLimitSourceEnumType `json:"chargingLimitSource,omitempty"`
+	ChargingLimitSource []ChargingLimitSourceEnumType `json:"chargingLimitSource,omitempty,omitzero"`
 
 	// List of all the chargingProfileIds requested. Any ChargingProfile that matches
 	// one of these profiles will be reported. If omitted, the Charging Station SHALL
@@ -1117,32 +1118,28 @@ type ChargingProfileCriterionType struct {
 	// &lt;&lt;configkey-charging-profile-entries,ChargingProfileEntries.maxLimit&gt;&gt;
 	//
 	//
-	ChargingProfileID []int `json:"chargingProfileId,omitempty"`
+	ChargingProfileID []int `json:"chargingProfileId,omitempty,omitzero"`
 
 	// ChargingProfilePurpose corresponds to the JSON schema field
 	// "chargingProfilePurpose".
-	ChargingProfilePurpose *ChargingProfilePurposeEnumType `json:"chargingProfilePurpose,omitempty"`
+	ChargingProfilePurpose *ChargingProfilePurposeEnumType `json:"chargingProfilePurpose,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Charging_ Profile. Stack_ Level. Counter
 	// urn:x-oca:ocpp:uid:1:569230
 	// Value determining level in hierarchy stack of profiles. Higher values have
 	// precedence over lower values. Lowest level is 0.
 	//
-	StackLevel *int `json:"stackLevel,omitempty"`
+	StackLevel *int `json:"stackLevel,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingProfileCriterionType) UnmarshalJSON(b []byte) error {
-	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
-		return err
-	}
+func (j *ChargingProfileCriterionType) UnmarshalJSON(value []byte) error {
 	type Plain ChargingProfileCriterionType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChargingLimitSource != nil && len(plain.ChargingLimitSource) < 1 {
@@ -1171,9 +1168,9 @@ var enumValues_ChargingProfileKindEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingProfileKindEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChargingProfileKindEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1205,9 +1202,9 @@ var enumValues_ChargingProfilePurposeEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingProfilePurposeEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChargingProfilePurposeEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1235,9 +1232,9 @@ var enumValues_ChargingProfileStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingProfileStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChargingProfileStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1266,7 +1263,7 @@ type ChargingProfileType struct {
 	ChargingSchedule []ChargingScheduleType `json:"chargingSchedule"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Identified_ Object. MRID. Numeric_ Identifier
 	// urn:x-enexis:ecdm:uid:1:569198
@@ -1275,7 +1272,7 @@ type ChargingProfileType struct {
 	ID int `json:"id"`
 
 	// RecurrencyKind corresponds to the JSON schema field "recurrencyKind".
-	RecurrencyKind *RecurrencyKindEnumType `json:"recurrencyKind,omitempty"`
+	RecurrencyKind *RecurrencyKindEnumType `json:"recurrencyKind,omitempty,omitzero"`
 
 	// Charging_ Profile. Stack_ Level. Counter
 	// urn:x-oca:ocpp:uid:1:569230
@@ -1287,27 +1284,27 @@ type ChargingProfileType struct {
 	// SHALL only be included if ChargingProfilePurpose is set to TxProfile. The
 	// transactionId is used to match the profile to a specific transaction.
 	//
-	TransactionID *string `json:"transactionId,omitempty"`
+	TransactionID *string `json:"transactionId,omitempty,omitzero"`
 
 	// Charging_ Profile. Valid_ From. Date_ Time
 	// urn:x-oca:ocpp:uid:1:569234
 	// Point in time at which the profile starts to be valid. If absent, the profile
 	// is valid as soon as it is received by the Charging Station.
 	//
-	ValidFrom *time.Time `json:"validFrom,omitempty"`
+	ValidFrom *time.Time `json:"validFrom,omitempty,omitzero"`
 
 	// Charging_ Profile. Valid_ To. Date_ Time
 	// urn:x-oca:ocpp:uid:1:569235
 	// Point in time at which the profile stops to be valid. If absent, the profile is
 	// valid until it is replaced by another profile.
 	//
-	ValidTo *time.Time `json:"validTo,omitempty"`
+	ValidTo *time.Time `json:"validTo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingProfileType) UnmarshalJSON(b []byte) error {
+func (j *ChargingProfileType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingProfileKind"]; raw != nil && !ok {
@@ -1327,7 +1324,7 @@ func (j *ChargingProfileType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChargingProfileType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChargingSchedule != nil && len(plain.ChargingSchedule) < 1 {
@@ -1336,7 +1333,7 @@ func (j *ChargingProfileType) UnmarshalJSON(b []byte) error {
 	if len(plain.ChargingSchedule) > 3 {
 		return fmt.Errorf("field %s length: must be <= %d", "chargingSchedule", 3)
 	}
-	if plain.TransactionID != nil && len(*plain.TransactionID) > 36 {
+	if plain.TransactionID != nil && utf8.RuneCountInString(string(*plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = ChargingProfileType(plain)
@@ -1354,9 +1351,9 @@ var enumValues_ChargingRateUnitEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingRateUnitEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChargingRateUnitEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1375,7 +1372,7 @@ func (j *ChargingRateUnitEnumType) UnmarshalJSON(b []byte) error {
 
 type ChargingSchedulePeriodType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Charging_ Schedule_ Period. Limit. Measure
 	// urn:x-oca:ocpp:uid:1:569241
@@ -1390,7 +1387,7 @@ type ChargingSchedulePeriodType struct {
 	// The number of phases that can be used for charging. If a number of phases is
 	// needed, numberPhases=3 will be assumed unless another number is given.
 	//
-	NumberPhases *int `json:"numberPhases,omitempty"`
+	NumberPhases *int `json:"numberPhases,omitempty,omitzero"`
 
 	// Values: 1..3, Used if numberPhases=1 and if the EVSE is capable of switching
 	// the phase connected to the EV, i.e. ACPhaseSwitchingSupported is defined and
@@ -1399,7 +1396,7 @@ type ChargingSchedulePeriodType struct {
 	// will make the selection on its own.
 	//
 	//
-	PhaseToUse *int `json:"phaseToUse,omitempty"`
+	PhaseToUse *int `json:"phaseToUse,omitempty,omitzero"`
 
 	// Charging_ Schedule_ Period. Start_ Period. Elapsed_ Time
 	// urn:x-oca:ocpp:uid:1:569240
@@ -1410,9 +1407,9 @@ type ChargingSchedulePeriodType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingSchedulePeriodType) UnmarshalJSON(b []byte) error {
+func (j *ChargingSchedulePeriodType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["limit"]; raw != nil && !ok {
@@ -1423,7 +1420,7 @@ func (j *ChargingSchedulePeriodType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChargingSchedulePeriodType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ChargingSchedulePeriodType(plain)
@@ -1439,7 +1436,7 @@ type ChargingScheduleType struct {
 	ChargingSchedulePeriod []ChargingSchedulePeriodType `json:"chargingSchedulePeriod"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Charging_ Schedule. Duration. Elapsed_ Time
 	// urn:x-oca:ocpp:uid:1:569236
@@ -1447,7 +1444,7 @@ type ChargingScheduleType struct {
 	// the last period will continue indefinitely or until end of the transaction if
 	// chargingProfilePurpose = TxProfile.
 	//
-	Duration *int `json:"duration,omitempty"`
+	Duration *int `json:"duration,omitempty,omitzero"`
 
 	// Identifies the ChargingSchedule.
 	//
@@ -1461,23 +1458,23 @@ type ChargingScheduleType struct {
 	// process is inefficient at lower charging rates. Accepts at most one digit
 	// fraction (e.g. 8.1)
 	//
-	MinChargingRate *float64 `json:"minChargingRate,omitempty"`
+	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero"`
 
 	// SalesTariff corresponds to the JSON schema field "salesTariff".
-	SalesTariff *SalesTariffType `json:"salesTariff,omitempty"`
+	SalesTariff *SalesTariffType `json:"salesTariff,omitempty,omitzero"`
 
 	// Charging_ Schedule. Start_ Schedule. Date_ Time
 	// urn:x-oca:ocpp:uid:1:569237
 	// Starting point of an absolute schedule. If absent the schedule will be relative
 	// to start of charging.
 	//
-	StartSchedule *time.Time `json:"startSchedule,omitempty"`
+	StartSchedule *time.Time `json:"startSchedule,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingScheduleType) UnmarshalJSON(b []byte) error {
+func (j *ChargingScheduleType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingRateUnit"]; raw != nil && !ok {
@@ -1491,7 +1488,7 @@ func (j *ChargingScheduleType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChargingScheduleType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChargingSchedulePeriod != nil && len(plain.ChargingSchedulePeriod) < 1 {
@@ -1521,9 +1518,9 @@ var enumValues_ChargingStateEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingStateEnumType) UnmarshalJSON(b []byte) error {
+func (j *ChargingStateEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1542,12 +1539,12 @@ func (j *ChargingStateEnumType) UnmarshalJSON(b []byte) error {
 
 type ChargingStationType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains the firmware version of the Charging Station.
 	//
 	//
-	FirmwareVersion *string `json:"firmwareVersion,omitempty"`
+	FirmwareVersion *string `json:"firmwareVersion,omitempty,omitzero"`
 
 	// Device. Model. CI20_ Text
 	// urn:x-oca:ocpp:uid:1:569325
@@ -1556,13 +1553,13 @@ type ChargingStationType struct {
 	Model string `json:"model"`
 
 	// Modem corresponds to the JSON schema field "modem".
-	Modem *ModemType `json:"modem,omitempty"`
+	Modem *ModemType `json:"modem,omitempty,omitzero"`
 
 	// Device. Serial_ Number. Serial_ Number
 	// urn:x-oca:ocpp:uid:1:569324
 	// Vendor-specific device identifier.
 	//
-	SerialNumber *string `json:"serialNumber,omitempty"`
+	SerialNumber *string `json:"serialNumber,omitempty,omitzero"`
 
 	// Identifies the vendor (not necessarily in a unique manner).
 	//
@@ -1570,9 +1567,9 @@ type ChargingStationType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ChargingStationType) UnmarshalJSON(b []byte) error {
+func (j *ChargingStationType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["model"]; raw != nil && !ok {
@@ -1583,19 +1580,19 @@ func (j *ChargingStationType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ChargingStationType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.FirmwareVersion != nil && len(*plain.FirmwareVersion) > 50 {
+	if plain.FirmwareVersion != nil && utf8.RuneCountInString(string(*plain.FirmwareVersion)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "firmwareVersion", 50)
 	}
-	if len(plain.Model) > 20 {
+	if utf8.RuneCountInString(string(plain.Model)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "model", 20)
 	}
-	if plain.SerialNumber != nil && len(*plain.SerialNumber) > 25 {
+	if plain.SerialNumber != nil && utf8.RuneCountInString(string(*plain.SerialNumber)) > 25 {
 		return fmt.Errorf("field %s length: must be <= %d", "serialNumber", 25)
 	}
-	if len(plain.VendorName) > 50 {
+	if utf8.RuneCountInString(string(plain.VendorName)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "vendorName", 50)
 	}
 	*j = ChargingStationType(plain)
@@ -1604,24 +1601,24 @@ func (j *ChargingStationType) UnmarshalJSON(b []byte) error {
 
 type ClearCacheRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ClearCacheResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ClearCacheStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearCacheResponse) UnmarshalJSON(b []byte) error {
+func (j *ClearCacheResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1629,7 +1626,7 @@ func (j *ClearCacheResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearCacheResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearCacheResponse(plain)
@@ -1647,9 +1644,9 @@ var enumValues_ClearCacheStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearCacheStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ClearCacheStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1669,31 +1666,31 @@ func (j *ClearCacheStatusEnumType) UnmarshalJSON(b []byte) error {
 type ClearChargingProfileRequest struct {
 	// ChargingProfileCriteria corresponds to the JSON schema field
 	// "chargingProfileCriteria".
-	ChargingProfileCriteria *ClearChargingProfileType `json:"chargingProfileCriteria,omitempty"`
+	ChargingProfileCriteria *ClearChargingProfileType `json:"chargingProfileCriteria,omitempty,omitzero"`
 
 	// The Id of the charging profile to clear.
 	//
-	ChargingProfileID *int `json:"chargingProfileId,omitempty"`
+	ChargingProfileID *int `json:"chargingProfileId,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ClearChargingProfileResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ClearChargingProfileStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearChargingProfileResponse) UnmarshalJSON(b []byte) error {
+func (j *ClearChargingProfileResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1701,7 +1698,7 @@ func (j *ClearChargingProfileResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearChargingProfileResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearChargingProfileResponse(plain)
@@ -1719,9 +1716,9 @@ var enumValues_ClearChargingProfileStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearChargingProfileStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ClearChargingProfileStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1741,10 +1738,10 @@ func (j *ClearChargingProfileStatusEnumType) UnmarshalJSON(b []byte) error {
 type ClearChargingProfileType struct {
 	// ChargingProfilePurpose corresponds to the JSON schema field
 	// "chargingProfilePurpose".
-	ChargingProfilePurpose *ChargingProfilePurposeEnumType `json:"chargingProfilePurpose,omitempty"`
+	ChargingProfilePurpose *ChargingProfilePurposeEnumType `json:"chargingProfilePurpose,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Identified_ Object. MRID. Numeric_ Identifier
 	// urn:x-enexis:ecdm:uid:1:569198
@@ -1754,19 +1751,19 @@ type ClearChargingProfileType struct {
 	// that match the other criteria in the request.
 	//
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 
 	// Charging_ Profile. Stack_ Level. Counter
 	// urn:x-oca:ocpp:uid:1:569230
 	// Specifies the stackLevel for which charging profiles will be cleared, if they
 	// meet the other criteria in the request.
 	//
-	StackLevel *int `json:"stackLevel,omitempty"`
+	StackLevel *int `json:"stackLevel,omitempty,omitzero"`
 }
 
 type ClearDisplayMessageRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Id of the message that SHALL be removed from the Charging Station.
 	//
@@ -1774,9 +1771,9 @@ type ClearDisplayMessageRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearDisplayMessageRequest) UnmarshalJSON(b []byte) error {
+func (j *ClearDisplayMessageRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -1784,7 +1781,7 @@ func (j *ClearDisplayMessageRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearDisplayMessageRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearDisplayMessageRequest(plain)
@@ -1793,19 +1790,19 @@ func (j *ClearDisplayMessageRequest) UnmarshalJSON(b []byte) error {
 
 type ClearDisplayMessageResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ClearMessageStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearDisplayMessageResponse) UnmarshalJSON(b []byte) error {
+func (j *ClearDisplayMessageResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -1813,7 +1810,7 @@ func (j *ClearDisplayMessageResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearDisplayMessageResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearDisplayMessageResponse(plain)
@@ -1831,9 +1828,9 @@ var enumValues_ClearMessageStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearMessageStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ClearMessageStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1852,7 +1849,7 @@ func (j *ClearMessageStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type ClearMonitoringResultType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Id of the monitor of which a clear was requested.
 	//
@@ -1863,13 +1860,13 @@ type ClearMonitoringResultType struct {
 	Status ClearMonitoringStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearMonitoringResultType) UnmarshalJSON(b []byte) error {
+func (j *ClearMonitoringResultType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -1880,7 +1877,7 @@ func (j *ClearMonitoringResultType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearMonitoringResultType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearMonitoringResultType(plain)
@@ -1900,9 +1897,9 @@ var enumValues_ClearMonitoringStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearMonitoringStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ClearMonitoringStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -1921,7 +1918,7 @@ func (j *ClearMonitoringStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type ClearVariableMonitoringRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// List of the monitors to be cleared, identified by there Id.
 	//
@@ -1929,9 +1926,9 @@ type ClearVariableMonitoringRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearVariableMonitoringRequest) UnmarshalJSON(b []byte) error {
+func (j *ClearVariableMonitoringRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -1939,7 +1936,7 @@ func (j *ClearVariableMonitoringRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearVariableMonitoringRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ID != nil && len(plain.ID) < 1 {
@@ -1955,13 +1952,13 @@ type ClearVariableMonitoringResponse struct {
 	ClearMonitoringResult []ClearMonitoringResultType `json:"clearMonitoringResult"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearVariableMonitoringResponse) UnmarshalJSON(b []byte) error {
+func (j *ClearVariableMonitoringResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["clearMonitoringResult"]; raw != nil && !ok {
@@ -1969,7 +1966,7 @@ func (j *ClearVariableMonitoringResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearVariableMonitoringResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ClearMonitoringResult != nil && len(plain.ClearMonitoringResult) < 1 {
@@ -1984,17 +1981,17 @@ type ClearedChargingLimitRequest struct {
 	ChargingLimitSource ChargingLimitSourceEnumType `json:"chargingLimitSource"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// EVSE Identifier.
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ClearedChargingLimitRequest) UnmarshalJSON(b []byte) error {
+func (j *ClearedChargingLimitRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingLimitSource"]; raw != nil && !ok {
@@ -2002,7 +1999,7 @@ func (j *ClearedChargingLimitRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ClearedChargingLimitRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ClearedChargingLimitRequest(plain)
@@ -2011,7 +2008,7 @@ func (j *ClearedChargingLimitRequest) UnmarshalJSON(b []byte) error {
 
 type ClearedChargingLimitResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ComponentCriterionEnumType string
@@ -2029,9 +2026,9 @@ var enumValues_ComponentCriterionEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ComponentCriterionEnumType) UnmarshalJSON(b []byte) error {
+func (j *ComponentCriterionEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2050,15 +2047,15 @@ func (j *ComponentCriterionEnumType) UnmarshalJSON(b []byte) error {
 
 type ComponentType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Evse corresponds to the JSON schema field "evse".
-	Evse *EVSEType `json:"evse,omitempty"`
+	Evse *EVSEType `json:"evse,omitempty,omitzero"`
 
 	// Name of instance in case the component exists as multiple instances. Case
 	// Insensitive. strongly advised to use Camel Case.
 	//
-	Instance *string `json:"instance,omitempty"`
+	Instance *string `json:"instance,omitempty,omitzero"`
 
 	// Name of the component. Name should be taken from the list of standardized
 	// component names whenever possible. Case Insensitive. strongly advised to use
@@ -2068,9 +2065,9 @@ type ComponentType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ComponentType) UnmarshalJSON(b []byte) error {
+func (j *ComponentType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["name"]; raw != nil && !ok {
@@ -2078,13 +2075,13 @@ func (j *ComponentType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ComponentType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Instance != nil && len(*plain.Instance) > 50 {
+	if plain.Instance != nil && utf8.RuneCountInString(string(*plain.Instance)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "instance", 50)
 	}
-	if len(plain.Name) > 50 {
+	if utf8.RuneCountInString(string(plain.Name)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "name", 50)
 	}
 	*j = ComponentType(plain)
@@ -2096,16 +2093,16 @@ type ComponentVariableType struct {
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
-	Variable *VariableType `json:"variable,omitempty"`
+	Variable *VariableType `json:"variable,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ComponentVariableType) UnmarshalJSON(b []byte) error {
+func (j *ComponentVariableType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["component"]; raw != nil && !ok {
@@ -2113,7 +2110,7 @@ func (j *ComponentVariableType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ComponentVariableType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ComponentVariableType(plain)
@@ -2129,7 +2126,7 @@ type CompositeScheduleType struct {
 	ChargingSchedulePeriod []ChargingSchedulePeriodType `json:"chargingSchedulePeriod"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Duration of the schedule in seconds.
 	//
@@ -2151,9 +2148,9 @@ type CompositeScheduleType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CompositeScheduleType) UnmarshalJSON(b []byte) error {
+func (j *CompositeScheduleType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingRateUnit"]; raw != nil && !ok {
@@ -2173,7 +2170,7 @@ func (j *CompositeScheduleType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CompositeScheduleType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChargingSchedulePeriod != nil && len(plain.ChargingSchedulePeriod) < 1 {
@@ -2234,9 +2231,9 @@ var enumValues_ConnectorEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ConnectorEnumType) UnmarshalJSON(b []byte) error {
+func (j *ConnectorEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2270,9 +2267,9 @@ var enumValues_ConnectorStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ConnectorStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ConnectorStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2294,7 +2291,7 @@ type ConsumptionCostType struct {
 	Cost []CostType `json:"cost"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Consumption_ Cost. Start_ Value. Numeric
 	// urn:x-oca:ocpp:uid:1:569246
@@ -2306,9 +2303,9 @@ type ConsumptionCostType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ConsumptionCostType) UnmarshalJSON(b []byte) error {
+func (j *ConsumptionCostType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["cost"]; raw != nil && !ok {
@@ -2319,7 +2316,7 @@ func (j *ConsumptionCostType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ConsumptionCostType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.Cost != nil && len(plain.Cost) < 1 {
@@ -2345,9 +2342,9 @@ var enumValues_CostKindEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CostKindEnumType) UnmarshalJSON(b []byte) error {
+func (j *CostKindEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2376,19 +2373,19 @@ type CostType struct {
 	// Values: -3..3, The amountMultiplier defines the exponent to base 10 (dec). The
 	// final value is determined by: amount * 10 ^ amountMultiplier
 	//
-	AmountMultiplier *int `json:"amountMultiplier,omitempty"`
+	AmountMultiplier *int `json:"amountMultiplier,omitempty,omitzero"`
 
 	// CostKind corresponds to the JSON schema field "costKind".
 	CostKind CostKindEnumType `json:"costKind"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CostType) UnmarshalJSON(b []byte) error {
+func (j *CostType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["amount"]; raw != nil && !ok {
@@ -2399,7 +2396,7 @@ func (j *CostType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CostType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CostType(plain)
@@ -2408,7 +2405,7 @@ func (j *CostType) UnmarshalJSON(b []byte) error {
 
 type CostUpdatedRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Current total cost, based on the information known by the CSMS, of the
 	// transaction including taxes. In the currency configured with the configuration
@@ -2424,9 +2421,9 @@ type CostUpdatedRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CostUpdatedRequest) UnmarshalJSON(b []byte) error {
+func (j *CostUpdatedRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["totalCost"]; raw != nil && !ok {
@@ -2437,10 +2434,10 @@ func (j *CostUpdatedRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CostUpdatedRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.TransactionID) > 36 {
+	if utf8.RuneCountInString(string(plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = CostUpdatedRequest(plain)
@@ -2449,7 +2446,7 @@ func (j *CostUpdatedRequest) UnmarshalJSON(b []byte) error {
 
 type CostUpdatedResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type CustomDataType struct {
@@ -2458,9 +2455,9 @@ type CustomDataType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CustomDataType) UnmarshalJSON(b []byte) error {
+func (j *CustomDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["vendorId"]; raw != nil && !ok {
@@ -2468,10 +2465,10 @@ func (j *CustomDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CustomDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.VendorID) > 255 {
+	if utf8.RuneCountInString(string(plain.VendorID)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "vendorId", 255)
 	}
 	*j = CustomDataType(plain)
@@ -2485,20 +2482,20 @@ type CustomerInformationRequest struct {
 	Clear bool `json:"clear"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// CustomerCertificate corresponds to the JSON schema field "customerCertificate".
-	CustomerCertificate *CertificateHashDataType `json:"customerCertificate,omitempty"`
+	CustomerCertificate *CertificateHashDataType `json:"customerCertificate,omitempty,omitzero"`
 
 	// A (e.g. vendor specific) identifier of the customer this request refers to.
 	// This field contains a custom identifier other than IdToken and Certificate.
 	// One of the possible identifiers (customerIdentifier, customerIdToken or
 	// customerCertificate) should be in the request message.
 	//
-	CustomerIdentifier *string `json:"customerIdentifier,omitempty"`
+	CustomerIdentifier *string `json:"customerIdentifier,omitempty,omitzero"`
 
 	// IDToken corresponds to the JSON schema field "idToken".
-	IDToken *IDTokenType `json:"idToken,omitempty"`
+	IDToken *IDTokenType `json:"idToken,omitempty,omitzero"`
 
 	// Flag indicating whether the Charging Station should return
 	// NotifyCustomerInformationRequest messages containing information about the
@@ -2513,9 +2510,9 @@ type CustomerInformationRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CustomerInformationRequest) UnmarshalJSON(b []byte) error {
+func (j *CustomerInformationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["clear"]; raw != nil && !ok {
@@ -2529,10 +2526,10 @@ func (j *CustomerInformationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CustomerInformationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.CustomerIdentifier != nil && len(*plain.CustomerIdentifier) > 64 {
+	if plain.CustomerIdentifier != nil && utf8.RuneCountInString(string(*plain.CustomerIdentifier)) > 64 {
 		return fmt.Errorf("field %s length: must be <= %d", "customerIdentifier", 64)
 	}
 	*j = CustomerInformationRequest(plain)
@@ -2541,19 +2538,19 @@ func (j *CustomerInformationRequest) UnmarshalJSON(b []byte) error {
 
 type CustomerInformationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status CustomerInformationStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CustomerInformationResponse) UnmarshalJSON(b []byte) error {
+func (j *CustomerInformationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -2561,7 +2558,7 @@ func (j *CustomerInformationResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain CustomerInformationResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = CustomerInformationResponse(plain)
@@ -2581,9 +2578,9 @@ var enumValues_CustomerInformationStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *CustomerInformationStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *CustomerInformationStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2606,23 +2603,23 @@ type DCChargingParametersType struct {
 	// Percentage of SoC at which the EV considers a fast charging process to end.
 	// (possible values: 0 - 100)
 	//
-	BulkSoC *int `json:"bulkSoC,omitempty"`
+	BulkSoC *int `json:"bulkSoC,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// DC_ Charging_ Parameters. Energy_ Amount. Energy_ Amount
 	// urn:x-oca:ocpp:uid:1:569217
 	// Amount of energy requested (in Wh). This inludes energy required for
 	// preconditioning.
 	//
-	EnergyAmount *int `json:"energyAmount,omitempty"`
+	EnergyAmount *int `json:"energyAmount,omitempty,omitzero"`
 
 	// DC_ Charging_ Parameters. EV_ Energy_ Capacity. Numeric
 	// urn:x-oca:ocpp:uid:1:569220
 	// Capacity of the electric vehicle battery (in Wh)
 	//
-	EvEnergyCapacity *int `json:"evEnergyCapacity,omitempty"`
+	EvEnergyCapacity *int `json:"evEnergyCapacity,omitempty,omitzero"`
 
 	// DC_ Charging_ Parameters. EV_ Max. Current
 	// urn:x-oca:ocpp:uid:1:569215
@@ -2636,7 +2633,7 @@ type DCChargingParametersType struct {
 	// Maximum power (in W) supported by the electric vehicle. Required for DC
 	// charging.
 	//
-	EvMaxPower *int `json:"evMaxPower,omitempty"`
+	EvMaxPower *int `json:"evMaxPower,omitempty,omitzero"`
 
 	// DC_ Charging_ Parameters. EV_ Max. Voltage
 	// urn:x-oca:ocpp:uid:1:569216
@@ -2649,19 +2646,19 @@ type DCChargingParametersType struct {
 	// Percentage of SoC at which the EV considers the battery fully charged.
 	// (possible values: 0 - 100)
 	//
-	FullSoC *int `json:"fullSoC,omitempty"`
+	FullSoC *int `json:"fullSoC,omitempty,omitzero"`
 
 	// DC_ Charging_ Parameters. State_ Of_ Charge. Numeric
 	// urn:x-oca:ocpp:uid:1:569219
 	// Energy available in the battery (in percent of the battery capacity)
 	//
-	StateOfCharge *int `json:"stateOfCharge,omitempty"`
+	StateOfCharge *int `json:"stateOfCharge,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DCChargingParametersType) UnmarshalJSON(b []byte) error {
+func (j *DCChargingParametersType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["evMaxCurrent"]; raw != nil && !ok {
@@ -2672,8 +2669,26 @@ func (j *DCChargingParametersType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DCChargingParametersType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
+	}
+	if plain.BulkSoC != nil && 100 < *plain.BulkSoC {
+		return fmt.Errorf("field %s: must be <= %v", "bulkSoC", 100)
+	}
+	if plain.BulkSoC != nil && 0 > *plain.BulkSoC {
+		return fmt.Errorf("field %s: must be >= %v", "bulkSoC", 0)
+	}
+	if plain.FullSoC != nil && 100 < *plain.FullSoC {
+		return fmt.Errorf("field %s: must be <= %v", "fullSoC", 100)
+	}
+	if plain.FullSoC != nil && 0 > *plain.FullSoC {
+		return fmt.Errorf("field %s: must be >= %v", "fullSoC", 0)
+	}
+	if plain.StateOfCharge != nil && 100 < *plain.StateOfCharge {
+		return fmt.Errorf("field %s: must be <= %v", "stateOfCharge", 100)
+	}
+	if plain.StateOfCharge != nil && 0 > *plain.StateOfCharge {
+		return fmt.Errorf("field %s: must be >= %v", "stateOfCharge", 0)
 	}
 	*j = DCChargingParametersType(plain)
 	return nil
@@ -2702,9 +2717,9 @@ var enumValues_DataEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataEnumType) UnmarshalJSON(b []byte) error {
+func (j *DataEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2723,16 +2738,16 @@ func (j *DataEnumType) UnmarshalJSON(b []byte) error {
 
 type DataTransferRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Data without specified length or format. This needs to be decided by both
 	// parties (Open to implementation).
 	//
-	Data interface{} `json:"data,omitempty"`
+	Data interface{} `json:"data,omitempty,omitzero"`
 
 	// May be used to indicate a specific message or implementation.
 	//
-	MessageID *string `json:"messageId,omitempty"`
+	MessageID *string `json:"messageId,omitempty,omitzero"`
 
 	// This identifies the Vendor specific implementation
 	//
@@ -2741,9 +2756,9 @@ type DataTransferRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataTransferRequest) UnmarshalJSON(b []byte) error {
+func (j *DataTransferRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["vendorId"]; raw != nil && !ok {
@@ -2751,13 +2766,13 @@ func (j *DataTransferRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DataTransferRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.MessageID != nil && len(*plain.MessageID) > 50 {
+	if plain.MessageID != nil && utf8.RuneCountInString(string(*plain.MessageID)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "messageId", 50)
 	}
-	if len(plain.VendorID) > 255 {
+	if utf8.RuneCountInString(string(plain.VendorID)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "vendorId", 255)
 	}
 	*j = DataTransferRequest(plain)
@@ -2766,23 +2781,23 @@ func (j *DataTransferRequest) UnmarshalJSON(b []byte) error {
 
 type DataTransferResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Data without specified length or format, in response to request.
 	//
-	Data interface{} `json:"data,omitempty"`
+	Data interface{} `json:"data,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status DataTransferStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataTransferResponse) UnmarshalJSON(b []byte) error {
+func (j *DataTransferResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -2790,7 +2805,7 @@ func (j *DataTransferResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DataTransferResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = DataTransferResponse(plain)
@@ -2812,9 +2827,9 @@ var enumValues_DataTransferStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DataTransferStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *DataTransferStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2836,13 +2851,13 @@ type DeleteCertificateRequest struct {
 	CertificateHashData CertificateHashDataType `json:"certificateHashData"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DeleteCertificateRequest) UnmarshalJSON(b []byte) error {
+func (j *DeleteCertificateRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["certificateHashData"]; raw != nil && !ok {
@@ -2850,7 +2865,7 @@ func (j *DeleteCertificateRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DeleteCertificateRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = DeleteCertificateRequest(plain)
@@ -2859,19 +2874,19 @@ func (j *DeleteCertificateRequest) UnmarshalJSON(b []byte) error {
 
 type DeleteCertificateResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status DeleteCertificateStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DeleteCertificateResponse) UnmarshalJSON(b []byte) error {
+func (j *DeleteCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -2879,7 +2894,7 @@ func (j *DeleteCertificateResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain DeleteCertificateResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = DeleteCertificateResponse(plain)
@@ -2899,9 +2914,9 @@ var enumValues_DeleteCertificateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DeleteCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *DeleteCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2937,9 +2952,9 @@ var enumValues_DisplayMessageStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *DisplayMessageStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *DisplayMessageStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -2959,10 +2974,10 @@ func (j *DisplayMessageStatusEnumType) UnmarshalJSON(b []byte) error {
 type EVSEType struct {
 	// An id to designate a specific connector (on an EVSE) by connector index number.
 	//
-	ConnectorID *int `json:"connectorId,omitempty"`
+	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Identified_ Object. MRID. Numeric_ Identifier
 	// urn:x-enexis:ecdm:uid:1:569198
@@ -2973,9 +2988,9 @@ type EVSEType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *EVSEType) UnmarshalJSON(b []byte) error {
+func (j *EVSEType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -2983,7 +2998,7 @@ func (j *EVSEType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain EVSEType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = EVSEType(plain)
@@ -3005,9 +3020,9 @@ var enumValues_EnergyTransferModeEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *EnergyTransferModeEnumType) UnmarshalJSON(b []byte) error {
+func (j *EnergyTransferModeEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3038,19 +3053,19 @@ type EventDataType struct {
 	// Refers to the Id of an event that is considered to be the cause for this event.
 	//
 	//
-	Cause *int `json:"cause,omitempty"`
+	Cause *int `json:"cause,omitempty,omitzero"`
 
 	// _Cleared_ is set to true to report the clearing of a monitored situation, i.e.
 	// a 'return to normal'.
 	//
 	//
-	Cleared *bool `json:"cleared,omitempty"`
+	Cleared *bool `json:"cleared,omitempty,omitzero"`
 
 	// Component corresponds to the JSON schema field "component".
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Identifies the event. This field can be referred to as a cause by other events.
 	//
@@ -3063,11 +3078,11 @@ type EventDataType struct {
 
 	// Technical (error) code as reported by component.
 	//
-	TechCode *string `json:"techCode,omitempty"`
+	TechCode *string `json:"techCode,omitempty,omitzero"`
 
 	// Technical detail information as reported by component.
 	//
-	TechInfo *string `json:"techInfo,omitempty"`
+	TechInfo *string `json:"techInfo,omitempty,omitzero"`
 
 	// Timestamp of the moment the report was generated.
 	//
@@ -3076,7 +3091,7 @@ type EventDataType struct {
 	// If an event notification is linked to a specific transaction, this field can be
 	// used to specify its transactionId.
 	//
-	TransactionID *string `json:"transactionId,omitempty"`
+	TransactionID *string `json:"transactionId,omitempty,omitzero"`
 
 	// Trigger corresponds to the JSON schema field "trigger".
 	Trigger EventTriggerEnumType `json:"trigger"`
@@ -3086,13 +3101,13 @@ type EventDataType struct {
 
 	// Identifies the VariableMonitoring which triggered the event.
 	//
-	VariableMonitoringID *int `json:"variableMonitoringId,omitempty"`
+	VariableMonitoringID *int `json:"variableMonitoringId,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *EventDataType) UnmarshalJSON(b []byte) error {
+func (j *EventDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["actualValue"]; raw != nil && !ok {
@@ -3118,19 +3133,19 @@ func (j *EventDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain EventDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.ActualValue) > 2500 {
+	if utf8.RuneCountInString(string(plain.ActualValue)) > 2500 {
 		return fmt.Errorf("field %s length: must be <= %d", "actualValue", 2500)
 	}
-	if plain.TechCode != nil && len(*plain.TechCode) > 50 {
+	if plain.TechCode != nil && utf8.RuneCountInString(string(*plain.TechCode)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "techCode", 50)
 	}
-	if plain.TechInfo != nil && len(*plain.TechInfo) > 500 {
+	if plain.TechInfo != nil && utf8.RuneCountInString(string(*plain.TechInfo)) > 500 {
 		return fmt.Errorf("field %s length: must be <= %d", "techInfo", 500)
 	}
-	if plain.TransactionID != nil && len(*plain.TransactionID) > 36 {
+	if plain.TransactionID != nil && utf8.RuneCountInString(string(*plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = EventDataType(plain)
@@ -3152,9 +3167,9 @@ var enumValues_EventNotificationEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *EventNotificationEnumType) UnmarshalJSON(b []byte) error {
+func (j *EventNotificationEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3184,9 +3199,9 @@ var enumValues_EventTriggerEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *EventTriggerEnumType) UnmarshalJSON(b []byte) error {
+func (j *EventTriggerEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3238,9 +3253,9 @@ var enumValues_FirmwareStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *FirmwareStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *FirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3259,23 +3274,23 @@ func (j *FirmwareStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type FirmwareStatusNotificationRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The request id that was provided in the
 	// UpdateFirmwareRequest that started this firmware update.
 	// This field is mandatory, unless the message was triggered by a
 	// TriggerMessageRequest AND there is no firmware update ongoing.
 	//
-	RequestID *int `json:"requestId,omitempty"`
+	RequestID *int `json:"requestId,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status FirmwareStatusEnumType `json:"status"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *FirmwareStatusNotificationRequest) UnmarshalJSON(b []byte) error {
+func (j *FirmwareStatusNotificationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -3283,7 +3298,7 @@ func (j *FirmwareStatusNotificationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain FirmwareStatusNotificationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = FirmwareStatusNotificationRequest(plain)
@@ -3292,18 +3307,18 @@ func (j *FirmwareStatusNotificationRequest) UnmarshalJSON(b []byte) error {
 
 type FirmwareStatusNotificationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type FirmwareType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Firmware. Install. Date_ Time
 	// urn:x-enexis:ecdm:uid:1:569462
 	// Date and time at which the firmware shall be installed.
 	//
-	InstallDateTime *time.Time `json:"installDateTime,omitempty"`
+	InstallDateTime *time.Time `json:"installDateTime,omitempty,omitzero"`
 
 	// Firmware. Location. URI
 	// urn:x-enexis:ecdm:uid:1:569460
@@ -3321,18 +3336,18 @@ type FirmwareType struct {
 	// urn:x-enexis:ecdm:uid:1:569464
 	// Base64 encoded firmware signature.
 	//
-	Signature *string `json:"signature,omitempty"`
+	Signature *string `json:"signature,omitempty,omitzero"`
 
 	// Certificate with which the firmware was signed.
 	// PEM encoded X.509 certificate.
 	//
-	SigningCertificate *string `json:"signingCertificate,omitempty"`
+	SigningCertificate *string `json:"signingCertificate,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *FirmwareType) UnmarshalJSON(b []byte) error {
+func (j *FirmwareType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["location"]; raw != nil && !ok {
@@ -3343,16 +3358,16 @@ func (j *FirmwareType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain FirmwareType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Location) > 512 {
+	if utf8.RuneCountInString(string(plain.Location)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "location", 512)
 	}
-	if plain.Signature != nil && len(*plain.Signature) > 800 {
+	if plain.Signature != nil && utf8.RuneCountInString(string(*plain.Signature)) > 800 {
 		return fmt.Errorf("field %s length: must be <= %d", "signature", 800)
 	}
-	if plain.SigningCertificate != nil && len(*plain.SigningCertificate) > 5500 {
+	if plain.SigningCertificate != nil && utf8.RuneCountInString(string(*plain.SigningCertificate)) > 5500 {
 		return fmt.Errorf("field %s length: must be <= %d", "signingCertificate", 5500)
 	}
 	*j = FirmwareType(plain)
@@ -3374,9 +3389,9 @@ var enumValues_GenericDeviceModelStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GenericDeviceModelStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GenericDeviceModelStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3404,9 +3419,9 @@ var enumValues_GenericStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GenericStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GenericStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3428,7 +3443,7 @@ type Get15118EVCertificateRequest struct {
 	Action CertificateActionEnumType `json:"action"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Raw CertificateInstallationReq request from EV, Base64 encoded.
 	//
@@ -3442,9 +3457,9 @@ type Get15118EVCertificateRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *Get15118EVCertificateRequest) UnmarshalJSON(b []byte) error {
+func (j *Get15118EVCertificateRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["action"]; raw != nil && !ok {
@@ -3458,13 +3473,13 @@ func (j *Get15118EVCertificateRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain Get15118EVCertificateRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.ExiRequest) > 5600 {
+	if utf8.RuneCountInString(string(plain.ExiRequest)) > 5600 {
 		return fmt.Errorf("field %s length: must be <= %d", "exiRequest", 5600)
 	}
-	if len(plain.Iso15118SchemaVersion) > 50 {
+	if utf8.RuneCountInString(string(plain.Iso15118SchemaVersion)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "iso15118SchemaVersion", 50)
 	}
 	*j = Get15118EVCertificateRequest(plain)
@@ -3473,7 +3488,7 @@ func (j *Get15118EVCertificateRequest) UnmarshalJSON(b []byte) error {
 
 type Get15118EVCertificateResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Raw CertificateInstallationRes response for the EV, Base64 encoded.
 	//
@@ -3483,13 +3498,13 @@ type Get15118EVCertificateResponse struct {
 	Status Iso15118EVCertificateStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *Get15118EVCertificateResponse) UnmarshalJSON(b []byte) error {
+func (j *Get15118EVCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["exiResponse"]; raw != nil && !ok {
@@ -3500,10 +3515,10 @@ func (j *Get15118EVCertificateResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain Get15118EVCertificateResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.ExiResponse) > 5600 {
+	if utf8.RuneCountInString(string(plain.ExiResponse)) > 5600 {
 		return fmt.Errorf("field %s length: must be <= %d", "exiResponse", 5600)
 	}
 	*j = Get15118EVCertificateResponse(plain)
@@ -3512,7 +3527,7 @@ func (j *Get15118EVCertificateResponse) UnmarshalJSON(b []byte) error {
 
 type GetBaseReportRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// ReportBase corresponds to the JSON schema field "reportBase".
 	ReportBase ReportBaseEnumType `json:"reportBase"`
@@ -3523,9 +3538,9 @@ type GetBaseReportRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetBaseReportRequest) UnmarshalJSON(b []byte) error {
+func (j *GetBaseReportRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["reportBase"]; raw != nil && !ok {
@@ -3536,7 +3551,7 @@ func (j *GetBaseReportRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetBaseReportRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetBaseReportRequest(plain)
@@ -3545,19 +3560,19 @@ func (j *GetBaseReportRequest) UnmarshalJSON(b []byte) error {
 
 type GetBaseReportResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericDeviceModelStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetBaseReportResponse) UnmarshalJSON(b []byte) error {
+func (j *GetBaseReportResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -3565,7 +3580,7 @@ func (j *GetBaseReportResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetBaseReportResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetBaseReportResponse(plain)
@@ -3589,9 +3604,9 @@ var enumValues_GetCertificateIDUseEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetCertificateIDUseEnumType) UnmarshalJSON(b []byte) error {
+func (j *GetCertificateIDUseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3619,9 +3634,9 @@ var enumValues_GetCertificateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GetCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3640,16 +3655,16 @@ func (j *GetCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type GetCertificateStatusRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// OcspRequestData corresponds to the JSON schema field "ocspRequestData".
 	OcspRequestData OCSPRequestDataType `json:"ocspRequestData"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetCertificateStatusRequest) UnmarshalJSON(b []byte) error {
+func (j *GetCertificateStatusRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["ocspRequestData"]; raw != nil && !ok {
@@ -3657,7 +3672,7 @@ func (j *GetCertificateStatusRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetCertificateStatusRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetCertificateStatusRequest(plain)
@@ -3666,26 +3681,26 @@ func (j *GetCertificateStatusRequest) UnmarshalJSON(b []byte) error {
 
 type GetCertificateStatusResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// OCSPResponse class as defined in &lt;&lt;ref-ocpp_security_24, IETF RFC
 	// 6960&gt;&gt;. DER encoded (as defined in &lt;&lt;ref-ocpp_security_24, IETF RFC
 	// 6960&gt;&gt;), and then base64 encoded. MAY only be omitted when status is not
 	// Accepted.
 	//
-	OcspResult *string `json:"ocspResult,omitempty"`
+	OcspResult *string `json:"ocspResult,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GetCertificateStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetCertificateStatusResponse) UnmarshalJSON(b []byte) error {
+func (j *GetCertificateStatusResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -3693,10 +3708,10 @@ func (j *GetCertificateStatusResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetCertificateStatusResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.OcspResult != nil && len(*plain.OcspResult) > 5500 {
+	if plain.OcspResult != nil && utf8.RuneCountInString(string(*plain.OcspResult)) > 5500 {
 		return fmt.Errorf("field %s length: must be <= %d", "ocspResult", 5500)
 	}
 	*j = GetCertificateStatusResponse(plain)
@@ -3714,9 +3729,9 @@ var enumValues_GetChargingProfileStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetChargingProfileStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GetChargingProfileStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3738,14 +3753,14 @@ type GetChargingProfilesRequest struct {
 	ChargingProfile ChargingProfileCriterionType `json:"chargingProfile"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// For which EVSE installed charging profiles SHALL be reported. If 0, only
 	// charging profiles installed on the Charging Station itself (the grid
 	// connection) SHALL be reported. If omitted, all installed charging profiles
 	// SHALL be reported.
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 
 	// Reference identification that is to be used by the Charging Station in the
 	// &lt;&lt;reportchargingprofilesrequest, ReportChargingProfilesRequest&gt;&gt;
@@ -3755,9 +3770,9 @@ type GetChargingProfilesRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetChargingProfilesRequest) UnmarshalJSON(b []byte) error {
+func (j *GetChargingProfilesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingProfile"]; raw != nil && !ok {
@@ -3768,7 +3783,7 @@ func (j *GetChargingProfilesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetChargingProfilesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetChargingProfilesRequest(plain)
@@ -3777,19 +3792,19 @@ func (j *GetChargingProfilesRequest) UnmarshalJSON(b []byte) error {
 
 type GetChargingProfilesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GetChargingProfileStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetChargingProfilesResponse) UnmarshalJSON(b []byte) error {
+func (j *GetChargingProfilesResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -3797,7 +3812,7 @@ func (j *GetChargingProfilesResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetChargingProfilesResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetChargingProfilesResponse(plain)
@@ -3806,10 +3821,10 @@ func (j *GetChargingProfilesResponse) UnmarshalJSON(b []byte) error {
 
 type GetCompositeScheduleRequest struct {
 	// ChargingRateUnit corresponds to the JSON schema field "chargingRateUnit".
-	ChargingRateUnit *ChargingRateUnitEnumType `json:"chargingRateUnit,omitempty"`
+	ChargingRateUnit *ChargingRateUnitEnumType `json:"chargingRateUnit,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Length of the requested schedule in seconds.
 	//
@@ -3824,9 +3839,9 @@ type GetCompositeScheduleRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetCompositeScheduleRequest) UnmarshalJSON(b []byte) error {
+func (j *GetCompositeScheduleRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["duration"]; raw != nil && !ok {
@@ -3837,7 +3852,7 @@ func (j *GetCompositeScheduleRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetCompositeScheduleRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetCompositeScheduleRequest(plain)
@@ -3846,22 +3861,22 @@ func (j *GetCompositeScheduleRequest) UnmarshalJSON(b []byte) error {
 
 type GetCompositeScheduleResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Schedule corresponds to the JSON schema field "schedule".
-	Schedule *CompositeScheduleType `json:"schedule,omitempty"`
+	Schedule *CompositeScheduleType `json:"schedule,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetCompositeScheduleResponse) UnmarshalJSON(b []byte) error {
+func (j *GetCompositeScheduleResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -3869,7 +3884,7 @@ func (j *GetCompositeScheduleResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetCompositeScheduleResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetCompositeScheduleResponse(plain)
@@ -3878,30 +3893,30 @@ func (j *GetCompositeScheduleResponse) UnmarshalJSON(b []byte) error {
 
 type GetDisplayMessagesRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// If provided the Charging Station shall return Display Messages of the given
 	// ids. This field SHALL NOT contain more ids than set in
 	// &lt;&lt;configkey-number-of-display-messages,NumberOfDisplayMessages.maxLimit&gt;&gt;
 	//
 	//
-	ID []int `json:"id,omitempty"`
+	ID []int `json:"id,omitempty,omitzero"`
 
 	// Priority corresponds to the JSON schema field "priority".
-	Priority *MessagePriorityEnumType `json:"priority,omitempty"`
+	Priority *MessagePriorityEnumType `json:"priority,omitempty,omitzero"`
 
 	// The Id of this request.
 	//
 	RequestID int `json:"requestId"`
 
 	// State corresponds to the JSON schema field "state".
-	State *MessageStateEnumType `json:"state,omitempty"`
+	State *MessageStateEnumType `json:"state,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetDisplayMessagesRequest) UnmarshalJSON(b []byte) error {
+func (j *GetDisplayMessagesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["requestId"]; raw != nil && !ok {
@@ -3909,7 +3924,7 @@ func (j *GetDisplayMessagesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetDisplayMessagesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ID != nil && len(plain.ID) < 1 {
@@ -3921,19 +3936,19 @@ func (j *GetDisplayMessagesRequest) UnmarshalJSON(b []byte) error {
 
 type GetDisplayMessagesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GetDisplayMessagesStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetDisplayMessagesResponse) UnmarshalJSON(b []byte) error {
+func (j *GetDisplayMessagesResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -3941,7 +3956,7 @@ func (j *GetDisplayMessagesResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetDisplayMessagesResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetDisplayMessagesResponse(plain)
@@ -3959,9 +3974,9 @@ var enumValues_GetDisplayMessagesStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetDisplayMessagesStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GetDisplayMessagesStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -3982,21 +3997,17 @@ type GetInstalledCertificateIdsRequest struct {
 	// Indicates the type of certificates requested. When omitted, all certificate
 	// types are requested.
 	//
-	CertificateType []GetCertificateIDUseEnumType `json:"certificateType,omitempty"`
+	CertificateType []GetCertificateIDUseEnumType `json:"certificateType,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetInstalledCertificateIdsRequest) UnmarshalJSON(b []byte) error {
-	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
-		return err
-	}
+func (j *GetInstalledCertificateIdsRequest) UnmarshalJSON(value []byte) error {
 	type Plain GetInstalledCertificateIdsRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.CertificateType != nil && len(plain.CertificateType) < 1 {
@@ -4009,22 +4020,22 @@ func (j *GetInstalledCertificateIdsRequest) UnmarshalJSON(b []byte) error {
 type GetInstalledCertificateIdsResponse struct {
 	// CertificateHashDataChain corresponds to the JSON schema field
 	// "certificateHashDataChain".
-	CertificateHashDataChain []CertificateHashDataChainType `json:"certificateHashDataChain,omitempty"`
+	CertificateHashDataChain []CertificateHashDataChainType `json:"certificateHashDataChain,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GetInstalledCertificateStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetInstalledCertificateIdsResponse) UnmarshalJSON(b []byte) error {
+func (j *GetInstalledCertificateIdsResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -4032,7 +4043,7 @@ func (j *GetInstalledCertificateIdsResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetInstalledCertificateIdsResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.CertificateHashDataChain != nil && len(plain.CertificateHashDataChain) < 1 {
@@ -4053,9 +4064,9 @@ var enumValues_GetInstalledCertificateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetInstalledCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GetInstalledCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4074,12 +4085,12 @@ func (j *GetInstalledCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type GetLocalListVersionRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type GetLocalListVersionResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains the current version number of the local authorization list in the
 	// Charging Station.
@@ -4088,9 +4099,9 @@ type GetLocalListVersionResponse struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetLocalListVersionResponse) UnmarshalJSON(b []byte) error {
+func (j *GetLocalListVersionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["versionNumber"]; raw != nil && !ok {
@@ -4098,7 +4109,7 @@ func (j *GetLocalListVersionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetLocalListVersionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetLocalListVersionResponse(plain)
@@ -4107,7 +4118,7 @@ func (j *GetLocalListVersionResponse) UnmarshalJSON(b []byte) error {
 
 type GetLogRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Log corresponds to the JSON schema field "log".
 	Log LogParametersType `json:"log"`
@@ -4123,19 +4134,19 @@ type GetLogRequest struct {
 	// before giving up. If this field is not present, it is left to Charging Station
 	// to decide how many times it wants to retry.
 	//
-	Retries *int `json:"retries,omitempty"`
+	Retries *int `json:"retries,omitempty,omitzero"`
 
 	// The interval in seconds after which a retry may be attempted. If this field is
 	// not present, it is left to Charging Station to decide how long to wait between
 	// attempts.
 	//
-	RetryInterval *int `json:"retryInterval,omitempty"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetLogRequest) UnmarshalJSON(b []byte) error {
+func (j *GetLogRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["log"]; raw != nil && !ok {
@@ -4149,7 +4160,7 @@ func (j *GetLogRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetLogRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetLogRequest(plain)
@@ -4158,24 +4169,24 @@ func (j *GetLogRequest) UnmarshalJSON(b []byte) error {
 
 type GetLogResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains the name of the log file that will be uploaded. This field is not
 	// present when no logging information is available.
 	//
-	Filename *string `json:"filename,omitempty"`
+	Filename *string `json:"filename,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status LogStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetLogResponse) UnmarshalJSON(b []byte) error {
+func (j *GetLogResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -4183,10 +4194,10 @@ func (j *GetLogResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetLogResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Filename != nil && len(*plain.Filename) > 255 {
+	if plain.Filename != nil && utf8.RuneCountInString(string(*plain.Filename)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "filename", 255)
 	}
 	*j = GetLogResponse(plain)
@@ -4195,15 +4206,15 @@ func (j *GetLogResponse) UnmarshalJSON(b []byte) error {
 
 type GetMonitoringReportRequest struct {
 	// ComponentVariable corresponds to the JSON schema field "componentVariable".
-	ComponentVariable []ComponentVariableType `json:"componentVariable,omitempty"`
+	ComponentVariable []ComponentVariableType `json:"componentVariable,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This field contains criteria for components for which a monitoring report is
 	// requested
 	//
-	MonitoringCriteria []MonitoringCriterionEnumType `json:"monitoringCriteria,omitempty"`
+	MonitoringCriteria []MonitoringCriterionEnumType `json:"monitoringCriteria,omitempty,omitzero"`
 
 	// The Id of the request.
 	//
@@ -4211,9 +4222,9 @@ type GetMonitoringReportRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetMonitoringReportRequest) UnmarshalJSON(b []byte) error {
+func (j *GetMonitoringReportRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["requestId"]; raw != nil && !ok {
@@ -4221,7 +4232,7 @@ func (j *GetMonitoringReportRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetMonitoringReportRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ComponentVariable != nil && len(plain.ComponentVariable) < 1 {
@@ -4239,19 +4250,19 @@ func (j *GetMonitoringReportRequest) UnmarshalJSON(b []byte) error {
 
 type GetMonitoringReportResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericDeviceModelStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetMonitoringReportResponse) UnmarshalJSON(b []byte) error {
+func (j *GetMonitoringReportResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -4259,7 +4270,7 @@ func (j *GetMonitoringReportResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetMonitoringReportResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetMonitoringReportResponse(plain)
@@ -4269,13 +4280,13 @@ func (j *GetMonitoringReportResponse) UnmarshalJSON(b []byte) error {
 type GetReportRequest struct {
 	// This field contains criteria for components for which a report is requested
 	//
-	ComponentCriteria []ComponentCriterionEnumType `json:"componentCriteria,omitempty"`
+	ComponentCriteria []ComponentCriterionEnumType `json:"componentCriteria,omitempty,omitzero"`
 
 	// ComponentVariable corresponds to the JSON schema field "componentVariable".
-	ComponentVariable []ComponentVariableType `json:"componentVariable,omitempty"`
+	ComponentVariable []ComponentVariableType `json:"componentVariable,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The Id of the request.
 	//
@@ -4283,9 +4294,9 @@ type GetReportRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetReportRequest) UnmarshalJSON(b []byte) error {
+func (j *GetReportRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["requestId"]; raw != nil && !ok {
@@ -4293,7 +4304,7 @@ func (j *GetReportRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetReportRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ComponentCriteria != nil && len(plain.ComponentCriteria) < 1 {
@@ -4311,19 +4322,19 @@ func (j *GetReportRequest) UnmarshalJSON(b []byte) error {
 
 type GetReportResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericDeviceModelStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetReportResponse) UnmarshalJSON(b []byte) error {
+func (j *GetReportResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -4331,7 +4342,7 @@ func (j *GetReportResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetReportResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetReportResponse(plain)
@@ -4340,25 +4351,21 @@ func (j *GetReportResponse) UnmarshalJSON(b []byte) error {
 
 type GetTransactionStatusRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The Id of the transaction for which the status is requested.
 	//
-	TransactionID *string `json:"transactionId,omitempty"`
+	TransactionID *string `json:"transactionId,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetTransactionStatusRequest) UnmarshalJSON(b []byte) error {
-	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
-		return err
-	}
+func (j *GetTransactionStatusRequest) UnmarshalJSON(value []byte) error {
 	type Plain GetTransactionStatusRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.TransactionID != nil && len(*plain.TransactionID) > 36 {
+	if plain.TransactionID != nil && utf8.RuneCountInString(string(*plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = GetTransactionStatusRequest(plain)
@@ -4367,7 +4374,7 @@ func (j *GetTransactionStatusRequest) UnmarshalJSON(b []byte) error {
 
 type GetTransactionStatusResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Whether there are still message to be delivered.
 	//
@@ -4375,13 +4382,13 @@ type GetTransactionStatusResponse struct {
 
 	// Whether the transaction is still ongoing.
 	//
-	OngoingIndicator *bool `json:"ongoingIndicator,omitempty"`
+	OngoingIndicator *bool `json:"ongoingIndicator,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetTransactionStatusResponse) UnmarshalJSON(b []byte) error {
+func (j *GetTransactionStatusResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["messagesInQueue"]; raw != nil && !ok {
@@ -4389,7 +4396,7 @@ func (j *GetTransactionStatusResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetTransactionStatusResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetTransactionStatusResponse(plain)
@@ -4398,22 +4405,22 @@ func (j *GetTransactionStatusResponse) UnmarshalJSON(b []byte) error {
 
 type GetVariableDataType struct {
 	// AttributeType corresponds to the JSON schema field "attributeType".
-	AttributeType *AttributeEnumType `json:"attributeType,omitempty"`
+	AttributeType *AttributeEnumType `json:"attributeType,omitempty,omitzero"`
 
 	// Component corresponds to the JSON schema field "component".
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
 	Variable VariableType `json:"variable"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetVariableDataType) UnmarshalJSON(b []byte) error {
+func (j *GetVariableDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["component"]; raw != nil && !ok {
@@ -4424,7 +4431,7 @@ func (j *GetVariableDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetVariableDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = GetVariableDataType(plain)
@@ -4436,10 +4443,10 @@ type GetVariableResultType struct {
 	AttributeStatus GetVariableStatusEnumType `json:"attributeStatus"`
 
 	// AttributeStatusInfo corresponds to the JSON schema field "attributeStatusInfo".
-	AttributeStatusInfo *StatusInfoType `json:"attributeStatusInfo,omitempty"`
+	AttributeStatusInfo *StatusInfoType `json:"attributeStatusInfo,omitempty,omitzero"`
 
 	// AttributeType corresponds to the JSON schema field "attributeType".
-	AttributeType *AttributeEnumType `json:"attributeType,omitempty"`
+	AttributeType *AttributeEnumType `json:"attributeType,omitempty,omitzero"`
 
 	// Value of requested attribute type of component-variable. This field can only be
 	// empty when the given status is NOT accepted.
@@ -4450,22 +4457,22 @@ type GetVariableResultType struct {
 	// EventData.actualValue. The max size of these values will always remain equal.
 	//
 	//
-	AttributeValue *string `json:"attributeValue,omitempty"`
+	AttributeValue *string `json:"attributeValue,omitempty,omitzero"`
 
 	// Component corresponds to the JSON schema field "component".
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
 	Variable VariableType `json:"variable"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetVariableResultType) UnmarshalJSON(b []byte) error {
+func (j *GetVariableResultType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["attributeStatus"]; raw != nil && !ok {
@@ -4479,10 +4486,10 @@ func (j *GetVariableResultType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetVariableResultType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.AttributeValue != nil && len(*plain.AttributeValue) > 2500 {
+	if plain.AttributeValue != nil && utf8.RuneCountInString(string(*plain.AttributeValue)) > 2500 {
 		return fmt.Errorf("field %s length: must be <= %d", "attributeValue", 2500)
 	}
 	*j = GetVariableResultType(plain)
@@ -4506,9 +4513,9 @@ var enumValues_GetVariableStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetVariableStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *GetVariableStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4527,16 +4534,16 @@ func (j *GetVariableStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type GetVariablesRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// GetVariableData corresponds to the JSON schema field "getVariableData".
 	GetVariableData []GetVariableDataType `json:"getVariableData"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetVariablesRequest) UnmarshalJSON(b []byte) error {
+func (j *GetVariablesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["getVariableData"]; raw != nil && !ok {
@@ -4544,7 +4551,7 @@ func (j *GetVariablesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetVariablesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.GetVariableData != nil && len(plain.GetVariableData) < 1 {
@@ -4556,16 +4563,16 @@ func (j *GetVariablesRequest) UnmarshalJSON(b []byte) error {
 
 type GetVariablesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// GetVariableResult corresponds to the JSON schema field "getVariableResult".
 	GetVariableResult []GetVariableResultType `json:"getVariableResult"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *GetVariablesResponse) UnmarshalJSON(b []byte) error {
+func (j *GetVariablesResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["getVariableResult"]; raw != nil && !ok {
@@ -4573,7 +4580,7 @@ func (j *GetVariablesResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain GetVariablesResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.GetVariableResult != nil && len(plain.GetVariableResult) < 1 {
@@ -4596,9 +4603,9 @@ var enumValues_HashAlgorithmEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *HashAlgorithmEnumType) UnmarshalJSON(b []byte) error {
+func (j *HashAlgorithmEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4617,7 +4624,7 @@ func (j *HashAlgorithmEnumType) UnmarshalJSON(b []byte) error {
 
 type HeartbeatRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type HeartbeatResponse struct {
@@ -4626,13 +4633,13 @@ type HeartbeatResponse struct {
 	CurrentTime time.Time `json:"currentTime"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *HeartbeatResponse) UnmarshalJSON(b []byte) error {
+func (j *HeartbeatResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["currentTime"]; raw != nil && !ok {
@@ -4640,7 +4647,7 @@ func (j *HeartbeatResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain HeartbeatResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = HeartbeatResponse(plain)
@@ -4670,9 +4677,9 @@ var enumValues_IDTokenEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *IDTokenEnumType) UnmarshalJSON(b []byte) error {
+func (j *IDTokenEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4694,26 +4701,26 @@ type IDTokenInfoType struct {
 	// urn:x-oca:ocpp:uid:1:569373
 	// Date and Time after which the token must be considered invalid.
 	//
-	CacheExpiryDateTime *time.Time `json:"cacheExpiryDateTime,omitempty"`
+	CacheExpiryDateTime *time.Time `json:"cacheExpiryDateTime,omitempty,omitzero"`
 
 	// Priority from a business point of view. Default priority is 0, The range is
 	// from -9 to 9. Higher values indicate a higher priority. The chargingPriority in
 	// &lt;&lt;transactioneventresponse,TransactionEventResponse&gt;&gt; overrules
 	// this one.
 	//
-	ChargingPriority *int `json:"chargingPriority,omitempty"`
+	ChargingPriority *int `json:"chargingPriority,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Only used when the IdToken is only valid for one or more specific EVSEs, not
 	// for the entire Charging Station.
 	//
 	//
-	EvseID []int `json:"evseId,omitempty"`
+	EvseID []int `json:"evseId,omitempty,omitzero"`
 
 	// GroupIDToken corresponds to the JSON schema field "groupIdToken".
-	GroupIDToken *IDTokenType `json:"groupIdToken,omitempty"`
+	GroupIDToken *IDTokenType `json:"groupIdToken,omitempty,omitzero"`
 
 	// ID_ Token. Language1. Language_ Code
 	// urn:x-oca:ocpp:uid:1:569374
@@ -4721,7 +4728,7 @@ type IDTokenInfoType struct {
 	// as defined in &lt;&lt;ref-RFC5646,[RFC5646]&gt;&gt;.
 	//
 	//
-	Language1 *string `json:"language1,omitempty"`
+	Language1 *string `json:"language1,omitempty,omitzero"`
 
 	// ID_ Token. Language2. Language_ Code
 	// urn:x-oca:ocpp:uid:1:569375
@@ -4729,19 +4736,19 @@ type IDTokenInfoType struct {
 	// language1 is omitted, has to be different from language1. Contains a language
 	// code as defined in &lt;&lt;ref-RFC5646,[RFC5646]&gt;&gt;.
 	//
-	Language2 *string `json:"language2,omitempty"`
+	Language2 *string `json:"language2,omitempty,omitzero"`
 
 	// PersonalMessage corresponds to the JSON schema field "personalMessage".
-	PersonalMessage *MessageContentType `json:"personalMessage,omitempty"`
+	PersonalMessage *MessageContentType `json:"personalMessage,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status AuthorizationStatusEnumType `json:"status"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *IDTokenInfoType) UnmarshalJSON(b []byte) error {
+func (j *IDTokenInfoType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -4749,16 +4756,16 @@ func (j *IDTokenInfoType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain IDTokenInfoType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.EvseID != nil && len(plain.EvseID) < 1 {
 		return fmt.Errorf("field %s length: must be >= %d", "evseId", 1)
 	}
-	if plain.Language1 != nil && len(*plain.Language1) > 8 {
+	if plain.Language1 != nil && utf8.RuneCountInString(string(*plain.Language1)) > 8 {
 		return fmt.Errorf("field %s length: must be <= %d", "language1", 8)
 	}
-	if plain.Language2 != nil && len(*plain.Language2) > 8 {
+	if plain.Language2 != nil && utf8.RuneCountInString(string(*plain.Language2)) > 8 {
 		return fmt.Errorf("field %s length: must be <= %d", "language2", 8)
 	}
 	*j = IDTokenInfoType(plain)
@@ -4767,10 +4774,10 @@ func (j *IDTokenInfoType) UnmarshalJSON(b []byte) error {
 
 type IDTokenType struct {
 	// AdditionalInfo corresponds to the JSON schema field "additionalInfo".
-	AdditionalInfo []AdditionalInfoType `json:"additionalInfo,omitempty"`
+	AdditionalInfo []AdditionalInfoType `json:"additionalInfo,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// IdToken is case insensitive. Might hold the hidden id of an RFID tag, but can
 	// for example also contain a UUID.
@@ -4782,9 +4789,9 @@ type IDTokenType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *IDTokenType) UnmarshalJSON(b []byte) error {
+func (j *IDTokenType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idToken"]; raw != nil && !ok {
@@ -4795,13 +4802,13 @@ func (j *IDTokenType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain IDTokenType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.AdditionalInfo != nil && len(plain.AdditionalInfo) < 1 {
 		return fmt.Errorf("field %s length: must be >= %d", "additionalInfo", 1)
 	}
-	if len(plain.IDToken) > 36 {
+	if utf8.RuneCountInString(string(plain.IDToken)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "idToken", 36)
 	}
 	*j = IDTokenType(plain)
@@ -4817,13 +4824,13 @@ type InstallCertificateRequest struct {
 	CertificateType InstallCertificateUseEnumType `json:"certificateType"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *InstallCertificateRequest) UnmarshalJSON(b []byte) error {
+func (j *InstallCertificateRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["certificate"]; raw != nil && !ok {
@@ -4834,10 +4841,10 @@ func (j *InstallCertificateRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain InstallCertificateRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Certificate) > 5500 {
+	if utf8.RuneCountInString(string(plain.Certificate)) > 5500 {
 		return fmt.Errorf("field %s length: must be <= %d", "certificate", 5500)
 	}
 	*j = InstallCertificateRequest(plain)
@@ -4846,19 +4853,19 @@ func (j *InstallCertificateRequest) UnmarshalJSON(b []byte) error {
 
 type InstallCertificateResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status InstallCertificateStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *InstallCertificateResponse) UnmarshalJSON(b []byte) error {
+func (j *InstallCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -4866,7 +4873,7 @@ func (j *InstallCertificateResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain InstallCertificateResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = InstallCertificateResponse(plain)
@@ -4886,9 +4893,9 @@ var enumValues_InstallCertificateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *InstallCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *InstallCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4920,9 +4927,9 @@ var enumValues_InstallCertificateUseEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *InstallCertificateUseEnumType) UnmarshalJSON(b []byte) error {
+func (j *InstallCertificateUseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4950,9 +4957,9 @@ var enumValues_Iso15118EVCertificateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *Iso15118EVCertificateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *Iso15118EVCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -4986,9 +4993,9 @@ var enumValues_LocationEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *LocationEnumType) UnmarshalJSON(b []byte) error {
+func (j *LocationEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5016,9 +5023,9 @@ var enumValues_LogEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *LogEnumType) UnmarshalJSON(b []byte) error {
+func (j *LogEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5037,21 +5044,21 @@ func (j *LogEnumType) UnmarshalJSON(b []byte) error {
 
 type LogParametersType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Log. Latest_ Timestamp. Date_ Time
 	// urn:x-enexis:ecdm:uid:1:569482
 	// This contains the date and time of the latest logging information to include in
 	// the diagnostics.
 	//
-	LatestTimestamp *time.Time `json:"latestTimestamp,omitempty"`
+	LatestTimestamp *time.Time `json:"latestTimestamp,omitempty,omitzero"`
 
 	// Log. Oldest_ Timestamp. Date_ Time
 	// urn:x-enexis:ecdm:uid:1:569477
 	// This contains the date and time of the oldest logging information to include in
 	// the diagnostics.
 	//
-	OldestTimestamp *time.Time `json:"oldestTimestamp,omitempty"`
+	OldestTimestamp *time.Time `json:"oldestTimestamp,omitempty,omitzero"`
 
 	// Log. Remote_ Location. URI
 	// urn:x-enexis:ecdm:uid:1:569484
@@ -5061,9 +5068,9 @@ type LogParametersType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *LogParametersType) UnmarshalJSON(b []byte) error {
+func (j *LogParametersType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["remoteLocation"]; raw != nil && !ok {
@@ -5071,10 +5078,10 @@ func (j *LogParametersType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain LogParametersType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.RemoteLocation) > 512 {
+	if utf8.RuneCountInString(string(plain.RemoteLocation)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "remoteLocation", 512)
 	}
 	*j = LogParametersType(plain)
@@ -5094,9 +5101,9 @@ var enumValues_LogStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *LogStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *LogStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5115,23 +5122,23 @@ func (j *LogStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type LogStatusNotificationRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The request id that was provided in GetLogRequest that started this log upload.
 	// This field is mandatory,
 	// unless the message was triggered by a TriggerMessageRequest AND there is no log
 	// upload ongoing.
 	//
-	RequestID *int `json:"requestId,omitempty"`
+	RequestID *int `json:"requestId,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status UploadLogStatusEnumType `json:"status"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *LogStatusNotificationRequest) UnmarshalJSON(b []byte) error {
+func (j *LogStatusNotificationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -5139,7 +5146,7 @@ func (j *LogStatusNotificationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain LogStatusNotificationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = LogStatusNotificationRequest(plain)
@@ -5148,7 +5155,7 @@ func (j *LogStatusNotificationRequest) UnmarshalJSON(b []byte) error {
 
 type LogStatusNotificationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type MeasurandEnumType string
@@ -5208,9 +5215,9 @@ var enumValues_MeasurandEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeasurandEnumType) UnmarshalJSON(b []byte) error {
+func (j *MeasurandEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5236,7 +5243,7 @@ type MessageContentType struct {
 	Content string `json:"content"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Format corresponds to the JSON schema field "format".
 	Format MessageFormatEnumType `json:"format"`
@@ -5246,13 +5253,13 @@ type MessageContentType struct {
 	// Message language identifier. Contains a language code as defined in
 	// &lt;&lt;ref-RFC5646,[RFC5646]&gt;&gt;.
 	//
-	Language *string `json:"language,omitempty"`
+	Language *string `json:"language,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MessageContentType) UnmarshalJSON(b []byte) error {
+func (j *MessageContentType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["content"]; raw != nil && !ok {
@@ -5263,13 +5270,13 @@ func (j *MessageContentType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MessageContentType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Content) > 512 {
+	if utf8.RuneCountInString(string(plain.Content)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "content", 512)
 	}
-	if plain.Language != nil && len(*plain.Language) > 8 {
+	if plain.Language != nil && utf8.RuneCountInString(string(*plain.Language)) > 8 {
 		return fmt.Errorf("field %s length: must be <= %d", "language", 8)
 	}
 	*j = MessageContentType(plain)
@@ -5291,9 +5298,9 @@ var enumValues_MessageFormatEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MessageFormatEnumType) UnmarshalJSON(b []byte) error {
+func (j *MessageFormatEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5312,17 +5319,17 @@ func (j *MessageFormatEnumType) UnmarshalJSON(b []byte) error {
 
 type MessageInfoType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Display corresponds to the JSON schema field "display".
-	Display *ComponentType `json:"display,omitempty"`
+	Display *ComponentType `json:"display,omitempty,omitzero"`
 
 	// Message_ Info. End. Date_ Time
 	// urn:x-enexis:ecdm:uid:1:569257
 	// Until what date-time should this message be shown, after this date/time this
 	// message SHALL be removed.
 	//
-	EndDateTime *time.Time `json:"endDateTime,omitempty"`
+	EndDateTime *time.Time `json:"endDateTime,omitempty,omitzero"`
 
 	// Identified_ Object. MRID. Numeric_ Identifier
 	// urn:x-enexis:ecdm:uid:1:569198
@@ -5341,22 +5348,22 @@ type MessageInfoType struct {
 	// urn:x-enexis:ecdm:uid:1:569256
 	// From what date-time should this message be shown. If omitted: directly.
 	//
-	StartDateTime *time.Time `json:"startDateTime,omitempty"`
+	StartDateTime *time.Time `json:"startDateTime,omitempty,omitzero"`
 
 	// State corresponds to the JSON schema field "state".
-	State *MessageStateEnumType `json:"state,omitempty"`
+	State *MessageStateEnumType `json:"state,omitempty,omitzero"`
 
 	// During which transaction shall this message be shown.
 	// Message SHALL be removed by the Charging Station after transaction has
 	// ended.
 	//
-	TransactionID *string `json:"transactionId,omitempty"`
+	TransactionID *string `json:"transactionId,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MessageInfoType) UnmarshalJSON(b []byte) error {
+func (j *MessageInfoType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -5370,10 +5377,10 @@ func (j *MessageInfoType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MessageInfoType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.TransactionID != nil && len(*plain.TransactionID) > 36 {
+	if plain.TransactionID != nil && utf8.RuneCountInString(string(*plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = MessageInfoType(plain)
@@ -5393,9 +5400,9 @@ var enumValues_MessagePriorityEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MessagePriorityEnumType) UnmarshalJSON(b []byte) error {
+func (j *MessagePriorityEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5427,9 +5434,9 @@ var enumValues_MessageStateEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MessageStateEnumType) UnmarshalJSON(b []byte) error {
+func (j *MessageStateEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5475,9 +5482,9 @@ var enumValues_MessageTriggerEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MessageTriggerEnumType) UnmarshalJSON(b []byte) error {
+func (j *MessageTriggerEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5496,7 +5503,7 @@ func (j *MessageTriggerEnumType) UnmarshalJSON(b []byte) error {
 
 type MeterValueType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// SampledValue corresponds to the JSON schema field "sampledValue".
 	SampledValue []SampledValueType `json:"sampledValue"`
@@ -5509,9 +5516,9 @@ type MeterValueType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeterValueType) UnmarshalJSON(b []byte) error {
+func (j *MeterValueType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["sampledValue"]; raw != nil && !ok {
@@ -5522,7 +5529,7 @@ func (j *MeterValueType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MeterValueType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.SampledValue != nil && len(plain.SampledValue) < 1 {
@@ -5536,7 +5543,7 @@ func (j *MeterValueType) UnmarshalJSON(b []byte) error {
 // urn:x-enexis:ecdm:uid:2:234744
 type MeterValuesRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Request_ Body. EVSEID. Numeric_ Identifier
 	// urn:x-enexis:ecdm:uid:1:571101
@@ -5550,9 +5557,9 @@ type MeterValuesRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MeterValuesRequest) UnmarshalJSON(b []byte) error {
+func (j *MeterValuesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["evseId"]; raw != nil && !ok {
@@ -5563,7 +5570,7 @@ func (j *MeterValuesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MeterValuesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.MeterValue != nil && len(plain.MeterValue) < 1 {
@@ -5575,41 +5582,37 @@ func (j *MeterValuesRequest) UnmarshalJSON(b []byte) error {
 
 type MeterValuesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ModemType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Wireless_ Communication_ Module. ICCID. CI20_ Text
 	// urn:x-oca:ocpp:uid:1:569327
 	// This contains the ICCID of the modem’s SIM card.
 	//
-	Iccid *string `json:"iccid,omitempty"`
+	Iccid *string `json:"iccid,omitempty,omitzero"`
 
 	// Wireless_ Communication_ Module. IMSI. CI20_ Text
 	// urn:x-oca:ocpp:uid:1:569328
 	// This contains the IMSI of the modem’s SIM card.
 	//
-	Imsi *string `json:"imsi,omitempty"`
+	Imsi *string `json:"imsi,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ModemType) UnmarshalJSON(b []byte) error {
-	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
-		return err
-	}
+func (j *ModemType) UnmarshalJSON(value []byte) error {
 	type Plain ModemType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Iccid != nil && len(*plain.Iccid) > 20 {
+	if plain.Iccid != nil && utf8.RuneCountInString(string(*plain.Iccid)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "iccid", 20)
 	}
-	if plain.Imsi != nil && len(*plain.Imsi) > 20 {
+	if plain.Imsi != nil && utf8.RuneCountInString(string(*plain.Imsi)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "imsi", 20)
 	}
 	*j = ModemType(plain)
@@ -5633,9 +5636,9 @@ var enumValues_MonitorEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MonitorEnumType) UnmarshalJSON(b []byte) error {
+func (j *MonitorEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5665,9 +5668,9 @@ var enumValues_MonitoringBaseEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MonitoringBaseEnumType) UnmarshalJSON(b []byte) error {
+func (j *MonitoringBaseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5697,9 +5700,9 @@ var enumValues_MonitoringCriterionEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MonitoringCriterionEnumType) UnmarshalJSON(b []byte) error {
+func (j *MonitoringCriterionEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5721,7 +5724,7 @@ type MonitoringDataType struct {
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
 	Variable VariableType `json:"variable"`
@@ -5731,9 +5734,9 @@ type MonitoringDataType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MonitoringDataType) UnmarshalJSON(b []byte) error {
+func (j *MonitoringDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["component"]; raw != nil && !ok {
@@ -5747,7 +5750,7 @@ func (j *MonitoringDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain MonitoringDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.VariableMonitoring != nil && len(plain.VariableMonitoring) < 1 {
@@ -5770,9 +5773,9 @@ var enumValues_MutabilityEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *MutabilityEnumType) UnmarshalJSON(b []byte) error {
+func (j *MutabilityEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -5791,10 +5794,10 @@ func (j *MutabilityEnumType) UnmarshalJSON(b []byte) error {
 
 type NetworkConnectionProfileType struct {
 	// Apn corresponds to the JSON schema field "apn".
-	Apn *APNType `json:"apn,omitempty"`
+	Apn *APNType `json:"apn,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Duration in seconds before a message send by the Charging Station via this
 	// network connection times-out.
@@ -5825,13 +5828,13 @@ type NetworkConnectionProfileType struct {
 	SecurityProfile int `json:"securityProfile"`
 
 	// Vpn corresponds to the JSON schema field "vpn".
-	Vpn *VPNType `json:"vpn,omitempty"`
+	Vpn *VPNType `json:"vpn,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NetworkConnectionProfileType) UnmarshalJSON(b []byte) error {
+func (j *NetworkConnectionProfileType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["messageTimeout"]; raw != nil && !ok {
@@ -5854,10 +5857,10 @@ func (j *NetworkConnectionProfileType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NetworkConnectionProfileType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.OcppCsmsUrl) > 512 {
+	if utf8.RuneCountInString(string(plain.OcppCsmsUrl)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "ocppCsmsUrl", 512)
 	}
 	*j = NetworkConnectionProfileType(plain)
@@ -5869,21 +5872,21 @@ type NotifyChargingLimitRequest struct {
 	ChargingLimit ChargingLimitType `json:"chargingLimit"`
 
 	// ChargingSchedule corresponds to the JSON schema field "chargingSchedule".
-	ChargingSchedule []ChargingScheduleType `json:"chargingSchedule,omitempty"`
+	ChargingSchedule []ChargingScheduleType `json:"chargingSchedule,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The charging schedule contained in this notification applies to an EVSE. evseId
 	// must be &gt; 0.
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyChargingLimitRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyChargingLimitRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingLimit"]; raw != nil && !ok {
@@ -5891,7 +5894,7 @@ func (j *NotifyChargingLimitRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyChargingLimitRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChargingSchedule != nil && len(plain.ChargingSchedule) < 1 {
@@ -5903,12 +5906,12 @@ func (j *NotifyChargingLimitRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyChargingLimitResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type NotifyCustomerInformationRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// (Part of) the requested data. No format specified in which the data is
 	// returned. Should be human readable.
@@ -5932,13 +5935,13 @@ type NotifyCustomerInformationRequest struct {
 	// monitoringData follows in an upcoming notifyMonitoringReportRequest message.
 	// Default value when omitted is false.
 	//
-	Tbc bool `json:"tbc,omitempty"`
+	Tbc bool `json:"tbc,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyCustomerInformationRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyCustomerInformationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["data"]; raw != nil && !ok {
@@ -5955,10 +5958,10 @@ func (j *NotifyCustomerInformationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyCustomerInformationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Data) > 512 {
+	if utf8.RuneCountInString(string(plain.Data)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "data", 512)
 	}
 	if v, ok := raw["tbc"]; !ok || v == nil {
@@ -5970,15 +5973,15 @@ func (j *NotifyCustomerInformationRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyCustomerInformationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type NotifyDisplayMessagesRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// MessageInfo corresponds to the JSON schema field "messageInfo".
-	MessageInfo []MessageInfoType `json:"messageInfo,omitempty"`
+	MessageInfo []MessageInfoType `json:"messageInfo,omitempty,omitzero"`
 
 	// The id of the
 	// &lt;&lt;getdisplaymessagesrequest,GetDisplayMessagesRequest&gt;&gt; that
@@ -5990,13 +5993,13 @@ type NotifyDisplayMessagesRequest struct {
 	// follows in an upcoming NotifyDisplayMessagesRequest message. Default value when
 	// omitted is false.
 	//
-	Tbc bool `json:"tbc,omitempty"`
+	Tbc bool `json:"tbc,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyDisplayMessagesRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyDisplayMessagesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["requestId"]; raw != nil && !ok {
@@ -6004,7 +6007,7 @@ func (j *NotifyDisplayMessagesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyDisplayMessagesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.MessageInfo != nil && len(plain.MessageInfo) < 1 {
@@ -6019,7 +6022,7 @@ func (j *NotifyDisplayMessagesRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyDisplayMessagesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type NotifyEVChargingNeedsRequest struct {
@@ -6027,7 +6030,7 @@ type NotifyEVChargingNeedsRequest struct {
 	ChargingNeeds ChargingNeedsType `json:"chargingNeeds"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Defines the EVSE and connector to which the EV is connected. EvseId may not be
 	// 0.
@@ -6036,13 +6039,13 @@ type NotifyEVChargingNeedsRequest struct {
 
 	// Contains the maximum schedule tuples the car supports per schedule.
 	//
-	MaxScheduleTuples *int `json:"maxScheduleTuples,omitempty"`
+	MaxScheduleTuples *int `json:"maxScheduleTuples,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyEVChargingNeedsRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyEVChargingNeedsRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingNeeds"]; raw != nil && !ok {
@@ -6053,7 +6056,7 @@ func (j *NotifyEVChargingNeedsRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyEVChargingNeedsRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = NotifyEVChargingNeedsRequest(plain)
@@ -6062,19 +6065,19 @@ func (j *NotifyEVChargingNeedsRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyEVChargingNeedsResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status NotifyEVChargingNeedsStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyEVChargingNeedsResponse) UnmarshalJSON(b []byte) error {
+func (j *NotifyEVChargingNeedsResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -6082,7 +6085,7 @@ func (j *NotifyEVChargingNeedsResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyEVChargingNeedsResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = NotifyEVChargingNeedsResponse(plain)
@@ -6102,9 +6105,9 @@ var enumValues_NotifyEVChargingNeedsStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyEVChargingNeedsStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *NotifyEVChargingNeedsStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6126,7 +6129,7 @@ type NotifyEVChargingScheduleRequest struct {
 	ChargingSchedule ChargingScheduleType `json:"chargingSchedule"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The charging schedule contained in this notification applies to an EVSE. EvseId
 	// must be &gt; 0.
@@ -6139,9 +6142,9 @@ type NotifyEVChargingScheduleRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyEVChargingScheduleRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyEVChargingScheduleRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingSchedule"]; raw != nil && !ok {
@@ -6155,7 +6158,7 @@ func (j *NotifyEVChargingScheduleRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyEVChargingScheduleRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = NotifyEVChargingScheduleRequest(plain)
@@ -6164,19 +6167,19 @@ func (j *NotifyEVChargingScheduleRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyEVChargingScheduleResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyEVChargingScheduleResponse) UnmarshalJSON(b []byte) error {
+func (j *NotifyEVChargingScheduleResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -6184,7 +6187,7 @@ func (j *NotifyEVChargingScheduleResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyEVChargingScheduleResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = NotifyEVChargingScheduleResponse(plain)
@@ -6193,7 +6196,7 @@ func (j *NotifyEVChargingScheduleResponse) UnmarshalJSON(b []byte) error {
 
 type NotifyEventRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// EventData corresponds to the JSON schema field "eventData".
 	EventData []EventDataType `json:"eventData"`
@@ -6210,13 +6213,13 @@ type NotifyEventRequest struct {
 	// follows in an upcoming notifyEventRequest message. Default value when omitted
 	// is false.
 	//
-	Tbc bool `json:"tbc,omitempty"`
+	Tbc bool `json:"tbc,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyEventRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyEventRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["eventData"]; raw != nil && !ok {
@@ -6230,7 +6233,7 @@ func (j *NotifyEventRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyEventRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.EventData != nil && len(plain.EventData) < 1 {
@@ -6245,19 +6248,19 @@ func (j *NotifyEventRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyEventResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type NotifyMonitoringReportRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Timestamp of the moment this message was generated at the Charging Station.
 	//
 	GeneratedAt time.Time `json:"generatedAt"`
 
 	// Monitor corresponds to the JSON schema field "monitor".
-	Monitor []MonitoringDataType `json:"monitor,omitempty"`
+	Monitor []MonitoringDataType `json:"monitor,omitempty,omitzero"`
 
 	// The id of the GetMonitoringRequest that requested this report.
 	//
@@ -6272,13 +6275,13 @@ type NotifyMonitoringReportRequest struct {
 	// monitoringData follows in an upcoming notifyMonitoringReportRequest message.
 	// Default value when omitted is false.
 	//
-	Tbc bool `json:"tbc,omitempty"`
+	Tbc bool `json:"tbc,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyMonitoringReportRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyMonitoringReportRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["generatedAt"]; raw != nil && !ok {
@@ -6292,7 +6295,7 @@ func (j *NotifyMonitoringReportRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyMonitoringReportRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.Monitor != nil && len(plain.Monitor) < 1 {
@@ -6307,19 +6310,19 @@ func (j *NotifyMonitoringReportRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyMonitoringReportResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type NotifyReportRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Timestamp of the moment this message was generated at the Charging Station.
 	//
 	GeneratedAt time.Time `json:"generatedAt"`
 
 	// ReportData corresponds to the JSON schema field "reportData".
-	ReportData []ReportDataType `json:"reportData,omitempty"`
+	ReportData []ReportDataType `json:"reportData,omitempty,omitzero"`
 
 	// The id of the GetReportRequest  or GetBaseReportRequest that requested this
 	// report
@@ -6335,13 +6338,13 @@ type NotifyReportRequest struct {
 	// is false.
 	//
 	//
-	Tbc bool `json:"tbc,omitempty"`
+	Tbc bool `json:"tbc,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *NotifyReportRequest) UnmarshalJSON(b []byte) error {
+func (j *NotifyReportRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["generatedAt"]; raw != nil && !ok {
@@ -6355,7 +6358,7 @@ func (j *NotifyReportRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain NotifyReportRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ReportData != nil && len(plain.ReportData) < 1 {
@@ -6370,7 +6373,7 @@ func (j *NotifyReportRequest) UnmarshalJSON(b []byte) error {
 
 type NotifyReportResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type OCPPInterfaceEnumType string
@@ -6396,9 +6399,9 @@ var enumValues_OCPPInterfaceEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *OCPPInterfaceEnumType) UnmarshalJSON(b []byte) error {
+func (j *OCPPInterfaceEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6426,9 +6429,9 @@ var enumValues_OCPPTransportEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *OCPPTransportEnumType) UnmarshalJSON(b []byte) error {
+func (j *OCPPTransportEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6460,9 +6463,9 @@ var enumValues_OCPPVersionEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *OCPPVersionEnumType) UnmarshalJSON(b []byte) error {
+func (j *OCPPVersionEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6481,7 +6484,7 @@ func (j *OCPPVersionEnumType) UnmarshalJSON(b []byte) error {
 
 type OCSPRequestDataType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// HashAlgorithm corresponds to the JSON schema field "hashAlgorithm".
 	HashAlgorithm HashAlgorithmEnumType `json:"hashAlgorithm"`
@@ -6506,9 +6509,9 @@ type OCSPRequestDataType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *OCSPRequestDataType) UnmarshalJSON(b []byte) error {
+func (j *OCSPRequestDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["hashAlgorithm"]; raw != nil && !ok {
@@ -6528,19 +6531,19 @@ func (j *OCSPRequestDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain OCSPRequestDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.IssuerKeyHash) > 128 {
+	if utf8.RuneCountInString(string(plain.IssuerKeyHash)) > 128 {
 		return fmt.Errorf("field %s length: must be <= %d", "issuerKeyHash", 128)
 	}
-	if len(plain.IssuerNameHash) > 128 {
+	if utf8.RuneCountInString(string(plain.IssuerNameHash)) > 128 {
 		return fmt.Errorf("field %s length: must be <= %d", "issuerNameHash", 128)
 	}
-	if len(plain.ResponderURL) > 512 {
+	if utf8.RuneCountInString(string(plain.ResponderURL)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "responderURL", 512)
 	}
-	if len(plain.SerialNumber) > 40 {
+	if utf8.RuneCountInString(string(plain.SerialNumber)) > 40 {
 		return fmt.Errorf("field %s length: must be <= %d", "serialNumber", 40)
 	}
 	*j = OCSPRequestDataType(plain)
@@ -6558,9 +6561,9 @@ var enumValues_OperationalStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *OperationalStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *OperationalStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6604,9 +6607,9 @@ var enumValues_PhaseEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *PhaseEnumType) UnmarshalJSON(b []byte) error {
+func (j *PhaseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6630,7 +6633,7 @@ type PublishFirmwareRequest struct {
 	Checksum string `json:"checksum"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains a string containing a URI pointing to a
 	// location from which to retrieve the firmware.
@@ -6646,7 +6649,7 @@ type PublishFirmwareRequest struct {
 	// present, it is left to Charging Station to decide how many times it wants to
 	// retry.
 	//
-	Retries *int `json:"retries,omitempty"`
+	Retries *int `json:"retries,omitempty,omitzero"`
 
 	// The interval in seconds
 	// after which a retry may be
@@ -6655,13 +6658,13 @@ type PublishFirmwareRequest struct {
 	// Station to decide how long to wait
 	// between attempts.
 	//
-	RetryInterval *int `json:"retryInterval,omitempty"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *PublishFirmwareRequest) UnmarshalJSON(b []byte) error {
+func (j *PublishFirmwareRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["checksum"]; raw != nil && !ok {
@@ -6675,13 +6678,13 @@ func (j *PublishFirmwareRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain PublishFirmwareRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Checksum) > 32 {
+	if utf8.RuneCountInString(string(plain.Checksum)) > 32 {
 		return fmt.Errorf("field %s length: must be <= %d", "checksum", 32)
 	}
-	if len(plain.Location) > 512 {
+	if utf8.RuneCountInString(string(plain.Location)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "location", 512)
 	}
 	*j = PublishFirmwareRequest(plain)
@@ -6690,19 +6693,19 @@ func (j *PublishFirmwareRequest) UnmarshalJSON(b []byte) error {
 
 type PublishFirmwareResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *PublishFirmwareResponse) UnmarshalJSON(b []byte) error {
+func (j *PublishFirmwareResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -6710,7 +6713,7 @@ func (j *PublishFirmwareResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain PublishFirmwareResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = PublishFirmwareResponse(plain)
@@ -6744,9 +6747,9 @@ var enumValues_PublishFirmwareStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *PublishFirmwareStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *PublishFirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6765,28 +6768,28 @@ func (j *PublishFirmwareStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type PublishFirmwareStatusNotificationRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Required if status is Published. Can be multiple URI’s, if the Local Controller
 	// supports e.g. HTTP, HTTPS, and FTP.
 	//
-	Location []string `json:"location,omitempty"`
+	Location []string `json:"location,omitempty,omitzero"`
 
 	// The request id that was
 	// provided in the
 	// PublishFirmwareRequest which
 	// triggered this action.
 	//
-	RequestID *int `json:"requestId,omitempty"`
+	RequestID *int `json:"requestId,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status PublishFirmwareStatusEnumType `json:"status"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *PublishFirmwareStatusNotificationRequest) UnmarshalJSON(b []byte) error {
+func (j *PublishFirmwareStatusNotificationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -6794,7 +6797,7 @@ func (j *PublishFirmwareStatusNotificationRequest) UnmarshalJSON(b []byte) error
 	}
 	type Plain PublishFirmwareStatusNotificationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.Location != nil && len(plain.Location) < 1 {
@@ -6806,7 +6809,7 @@ func (j *PublishFirmwareStatusNotificationRequest) UnmarshalJSON(b []byte) error
 
 type PublishFirmwareStatusNotificationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ReadingContextEnumType string
@@ -6832,9 +6835,9 @@ var enumValues_ReadingContextEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReadingContextEnumType) UnmarshalJSON(b []byte) error {
+func (j *ReadingContextEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6896,9 +6899,9 @@ var enumValues_ReasonEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReasonEnumType) UnmarshalJSON(b []byte) error {
+func (j *ReasonEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6926,9 +6929,9 @@ var enumValues_RecurrencyKindEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RecurrencyKindEnumType) UnmarshalJSON(b []byte) error {
+func (j *RecurrencyKindEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6958,9 +6961,9 @@ var enumValues_RegistrationStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RegistrationStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *RegistrationStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -6979,13 +6982,13 @@ func (j *RegistrationStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type RelativeTimeIntervalType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Relative_ Timer_ Interval. Duration. Elapsed_ Time
 	// urn:x-oca:ocpp:uid:1:569280
 	// Duration of the interval, in seconds.
 	//
-	Duration *int `json:"duration,omitempty"`
+	Duration *int `json:"duration,omitempty,omitzero"`
 
 	// Relative_ Timer_ Interval. Start. Elapsed_ Time
 	// urn:x-oca:ocpp:uid:1:569279
@@ -6995,9 +6998,9 @@ type RelativeTimeIntervalType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RelativeTimeIntervalType) UnmarshalJSON(b []byte) error {
+func (j *RelativeTimeIntervalType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["start"]; raw != nil && !ok {
@@ -7005,7 +7008,7 @@ func (j *RelativeTimeIntervalType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RelativeTimeIntervalType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = RelativeTimeIntervalType(plain)
@@ -7025,9 +7028,9 @@ var enumValues_ReportBaseEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReportBaseEnumType) UnmarshalJSON(b []byte) error {
+func (j *ReportBaseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7052,7 +7055,7 @@ type ReportChargingProfilesRequest struct {
 	ChargingProfile []ChargingProfileType `json:"chargingProfile"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The evse to which the charging profile applies. If evseId = 0, the message
 	// contains an overall limit for the Charging Station.
@@ -7070,13 +7073,13 @@ type ReportChargingProfilesRequest struct {
 	// To Be Continued. Default value when omitted: false. false indicates that there
 	// are no further messages as part of this report.
 	//
-	Tbc bool `json:"tbc,omitempty"`
+	Tbc bool `json:"tbc,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReportChargingProfilesRequest) UnmarshalJSON(b []byte) error {
+func (j *ReportChargingProfilesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingLimitSource"]; raw != nil && !ok {
@@ -7093,7 +7096,7 @@ func (j *ReportChargingProfilesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReportChargingProfilesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ChargingProfile != nil && len(plain.ChargingProfile) < 1 {
@@ -7108,7 +7111,7 @@ func (j *ReportChargingProfilesRequest) UnmarshalJSON(b []byte) error {
 
 type ReportChargingProfilesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ReportDataType struct {
@@ -7116,7 +7119,7 @@ type ReportDataType struct {
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
 	Variable VariableType `json:"variable"`
@@ -7126,13 +7129,13 @@ type ReportDataType struct {
 
 	// VariableCharacteristics corresponds to the JSON schema field
 	// "variableCharacteristics".
-	VariableCharacteristics *VariableCharacteristicsType `json:"variableCharacteristics,omitempty"`
+	VariableCharacteristics *VariableCharacteristicsType `json:"variableCharacteristics,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReportDataType) UnmarshalJSON(b []byte) error {
+func (j *ReportDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["component"]; raw != nil && !ok {
@@ -7146,7 +7149,7 @@ func (j *ReportDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReportDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.VariableAttribute != nil && len(plain.VariableAttribute) < 1 {
@@ -7170,9 +7173,9 @@ var enumValues_RequestStartStopStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RequestStartStopStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *RequestStartStopStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7191,17 +7194,17 @@ func (j *RequestStartStopStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type RequestStartTransactionRequest struct {
 	// ChargingProfile corresponds to the JSON schema field "chargingProfile".
-	ChargingProfile *ChargingProfileType `json:"chargingProfile,omitempty"`
+	ChargingProfile *ChargingProfileType `json:"chargingProfile,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Number of the EVSE on which to start the transaction. EvseId SHALL be &gt; 0
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 
 	// GroupIDToken corresponds to the JSON schema field "groupIdToken".
-	GroupIDToken *IDTokenType `json:"groupIdToken,omitempty"`
+	GroupIDToken *IDTokenType `json:"groupIdToken,omitempty,omitzero"`
 
 	// IDToken corresponds to the JSON schema field "idToken".
 	IDToken IDTokenType `json:"idToken"`
@@ -7215,9 +7218,9 @@ type RequestStartTransactionRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RequestStartTransactionRequest) UnmarshalJSON(b []byte) error {
+func (j *RequestStartTransactionRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["idToken"]; raw != nil && !ok {
@@ -7228,7 +7231,7 @@ func (j *RequestStartTransactionRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RequestStartTransactionRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = RequestStartTransactionRequest(plain)
@@ -7237,25 +7240,25 @@ func (j *RequestStartTransactionRequest) UnmarshalJSON(b []byte) error {
 
 type RequestStartTransactionResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status RequestStartStopStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 
 	// When the transaction was already started by the Charging Station before the
 	// RequestStartTransactionRequest was received, for example: cable plugged in
 	// first. This contains the transactionId of the already started transaction.
 	//
-	TransactionID *string `json:"transactionId,omitempty"`
+	TransactionID *string `json:"transactionId,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RequestStartTransactionResponse) UnmarshalJSON(b []byte) error {
+func (j *RequestStartTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -7263,10 +7266,10 @@ func (j *RequestStartTransactionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RequestStartTransactionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.TransactionID != nil && len(*plain.TransactionID) > 36 {
+	if plain.TransactionID != nil && utf8.RuneCountInString(string(*plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = RequestStartTransactionResponse(plain)
@@ -7275,7 +7278,7 @@ func (j *RequestStartTransactionResponse) UnmarshalJSON(b []byte) error {
 
 type RequestStopTransactionRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The identifier of the transaction which the Charging Station is requested to
 	// stop.
@@ -7284,9 +7287,9 @@ type RequestStopTransactionRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RequestStopTransactionRequest) UnmarshalJSON(b []byte) error {
+func (j *RequestStopTransactionRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["transactionId"]; raw != nil && !ok {
@@ -7294,10 +7297,10 @@ func (j *RequestStopTransactionRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RequestStopTransactionRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.TransactionID) > 36 {
+	if utf8.RuneCountInString(string(plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = RequestStopTransactionRequest(plain)
@@ -7306,19 +7309,19 @@ func (j *RequestStopTransactionRequest) UnmarshalJSON(b []byte) error {
 
 type RequestStopTransactionResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status RequestStartStopStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *RequestStopTransactionResponse) UnmarshalJSON(b []byte) error {
+func (j *RequestStopTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -7326,7 +7329,7 @@ func (j *RequestStopTransactionResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain RequestStopTransactionResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = RequestStopTransactionResponse(plain)
@@ -7335,7 +7338,7 @@ func (j *RequestStopTransactionResponse) UnmarshalJSON(b []byte) error {
 
 type ReservationStatusUpdateRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The ID of the reservation.
 	//
@@ -7347,9 +7350,9 @@ type ReservationStatusUpdateRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReservationStatusUpdateRequest) UnmarshalJSON(b []byte) error {
+func (j *ReservationStatusUpdateRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["reservationId"]; raw != nil && !ok {
@@ -7360,7 +7363,7 @@ func (j *ReservationStatusUpdateRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReservationStatusUpdateRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ReservationStatusUpdateRequest(plain)
@@ -7369,7 +7372,7 @@ func (j *ReservationStatusUpdateRequest) UnmarshalJSON(b []byte) error {
 
 type ReservationStatusUpdateResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type ReservationUpdateStatusEnumType string
@@ -7383,9 +7386,9 @@ var enumValues_ReservationUpdateStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReservationUpdateStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ReservationUpdateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7404,21 +7407,21 @@ func (j *ReservationUpdateStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type ReserveNowRequest struct {
 	// ConnectorType corresponds to the JSON schema field "connectorType".
-	ConnectorType *ConnectorEnumType `json:"connectorType,omitempty"`
+	ConnectorType *ConnectorEnumType `json:"connectorType,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains ID of the evse to be reserved.
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 
 	// Date and time at which the reservation expires.
 	//
 	ExpiryDateTime time.Time `json:"expiryDateTime"`
 
 	// GroupIDToken corresponds to the JSON schema field "groupIdToken".
-	GroupIDToken *IDTokenType `json:"groupIdToken,omitempty"`
+	GroupIDToken *IDTokenType `json:"groupIdToken,omitempty,omitzero"`
 
 	// Id of reservation.
 	//
@@ -7429,9 +7432,9 @@ type ReserveNowRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReserveNowRequest) UnmarshalJSON(b []byte) error {
+func (j *ReserveNowRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["expiryDateTime"]; raw != nil && !ok {
@@ -7445,7 +7448,7 @@ func (j *ReserveNowRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReserveNowRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ReserveNowRequest(plain)
@@ -7454,19 +7457,19 @@ func (j *ReserveNowRequest) UnmarshalJSON(b []byte) error {
 
 type ReserveNowResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ReserveNowStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReserveNowResponse) UnmarshalJSON(b []byte) error {
+func (j *ReserveNowResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -7474,7 +7477,7 @@ func (j *ReserveNowResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ReserveNowResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ReserveNowResponse(plain)
@@ -7498,9 +7501,9 @@ var enumValues_ReserveNowStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ReserveNowStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ReserveNowStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7528,9 +7531,9 @@ var enumValues_ResetEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetEnumType) UnmarshalJSON(b []byte) error {
+func (j *ResetEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7549,21 +7552,21 @@ func (j *ResetEnumType) UnmarshalJSON(b []byte) error {
 
 type ResetRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains the ID of a specific EVSE that needs to be reset, instead of the
 	// entire Charging Station.
 	//
-	EvseID *int `json:"evseId,omitempty"`
+	EvseID *int `json:"evseId,omitempty,omitzero"`
 
 	// Type corresponds to the JSON schema field "type".
 	Type ResetEnumType `json:"type"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetRequest) UnmarshalJSON(b []byte) error {
+func (j *ResetRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["type"]; raw != nil && !ok {
@@ -7571,7 +7574,7 @@ func (j *ResetRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ResetRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ResetRequest(plain)
@@ -7580,19 +7583,19 @@ func (j *ResetRequest) UnmarshalJSON(b []byte) error {
 
 type ResetResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ResetStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetResponse) UnmarshalJSON(b []byte) error {
+func (j *ResetResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -7600,7 +7603,7 @@ func (j *ResetResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain ResetResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = ResetResponse(plain)
@@ -7620,9 +7623,9 @@ var enumValues_ResetStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *ResetStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *ResetStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7641,10 +7644,10 @@ func (j *ResetStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type SalesTariffEntryType struct {
 	// ConsumptionCost corresponds to the JSON schema field "consumptionCost".
-	ConsumptionCost []ConsumptionCostType `json:"consumptionCost,omitempty"`
+	ConsumptionCost []ConsumptionCostType `json:"consumptionCost,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Sales_ Tariff_ Entry. E_ Price_ Level. Unsigned_ Integer
 	// urn:x-oca:ocpp:uid:1:569281
@@ -7653,7 +7656,7 @@ type SalesTariffEntryType struct {
 	// TariffEntry. Large values for the EPriceLevel represent a more expensive
 	// TariffEntry.
 	//
-	EPriceLevel *int `json:"ePriceLevel,omitempty"`
+	EPriceLevel *int `json:"ePriceLevel,omitempty,omitzero"`
 
 	// RelativeTimeInterval corresponds to the JSON schema field
 	// "relativeTimeInterval".
@@ -7661,9 +7664,9 @@ type SalesTariffEntryType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SalesTariffEntryType) UnmarshalJSON(b []byte) error {
+func (j *SalesTariffEntryType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["relativeTimeInterval"]; raw != nil && !ok {
@@ -7671,7 +7674,7 @@ func (j *SalesTariffEntryType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SalesTariffEntryType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.ConsumptionCost != nil && len(plain.ConsumptionCost) < 1 {
@@ -7680,13 +7683,16 @@ func (j *SalesTariffEntryType) UnmarshalJSON(b []byte) error {
 	if len(plain.ConsumptionCost) > 3 {
 		return fmt.Errorf("field %s length: must be <= %d", "consumptionCost", 3)
 	}
+	if plain.EPriceLevel != nil && 0 > *plain.EPriceLevel {
+		return fmt.Errorf("field %s: must be >= %v", "ePriceLevel", 0)
+	}
 	*j = SalesTariffEntryType(plain)
 	return nil
 }
 
 type SalesTariffType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Identified_ Object. MRID. Numeric_ Identifier
 	// urn:x-enexis:ecdm:uid:1:569198
@@ -7700,23 +7706,23 @@ type SalesTariffType struct {
 	// Defines the overall number of distinct price levels used across all provided
 	// SalesTariff elements.
 	//
-	NumEPriceLevels *int `json:"numEPriceLevels,omitempty"`
+	NumEPriceLevels *int `json:"numEPriceLevels,omitempty,omitzero"`
 
 	// Sales_ Tariff. Sales. Tariff_ Description
 	// urn:x-oca:ocpp:uid:1:569283
 	// A human readable title/short description of the sales tariff e.g. for HMI
 	// display purposes.
 	//
-	SalesTariffDescription *string `json:"salesTariffDescription,omitempty"`
+	SalesTariffDescription *string `json:"salesTariffDescription,omitempty,omitzero"`
 
 	// SalesTariffEntry corresponds to the JSON schema field "salesTariffEntry".
 	SalesTariffEntry []SalesTariffEntryType `json:"salesTariffEntry"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SalesTariffType) UnmarshalJSON(b []byte) error {
+func (j *SalesTariffType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -7727,10 +7733,10 @@ func (j *SalesTariffType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SalesTariffType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.SalesTariffDescription != nil && len(*plain.SalesTariffDescription) > 32 {
+	if plain.SalesTariffDescription != nil && utf8.RuneCountInString(string(*plain.SalesTariffDescription)) > 32 {
 		return fmt.Errorf("field %s length: must be <= %d", "salesTariffDescription", 32)
 	}
 	if plain.SalesTariffEntry != nil && len(plain.SalesTariffEntry) < 1 {
@@ -7745,25 +7751,25 @@ func (j *SalesTariffType) UnmarshalJSON(b []byte) error {
 
 type SampledValueType struct {
 	// Context corresponds to the JSON schema field "context".
-	Context *ReadingContextEnumType `json:"context,omitempty"`
+	Context *ReadingContextEnumType `json:"context,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Location corresponds to the JSON schema field "location".
-	Location *LocationEnumType `json:"location,omitempty"`
+	Location *LocationEnumType `json:"location,omitempty,omitzero"`
 
 	// Measurand corresponds to the JSON schema field "measurand".
-	Measurand *MeasurandEnumType `json:"measurand,omitempty"`
+	Measurand *MeasurandEnumType `json:"measurand,omitempty,omitzero"`
 
 	// Phase corresponds to the JSON schema field "phase".
-	Phase *PhaseEnumType `json:"phase,omitempty"`
+	Phase *PhaseEnumType `json:"phase,omitempty,omitzero"`
 
 	// SignedMeterValue corresponds to the JSON schema field "signedMeterValue".
-	SignedMeterValue *SignedMeterValueType `json:"signedMeterValue,omitempty"`
+	SignedMeterValue *SignedMeterValueType `json:"signedMeterValue,omitempty,omitzero"`
 
 	// UnitOfMeasure corresponds to the JSON schema field "unitOfMeasure".
-	UnitOfMeasure *UnitOfMeasureType `json:"unitOfMeasure,omitempty"`
+	UnitOfMeasure *UnitOfMeasureType `json:"unitOfMeasure,omitempty,omitzero"`
 
 	// Sampled_ Value. Value. Measure
 	// urn:x-oca:ocpp:uid:1:569260
@@ -7774,9 +7780,9 @@ type SampledValueType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SampledValueType) UnmarshalJSON(b []byte) error {
+func (j *SampledValueType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["value"]; raw != nil && !ok {
@@ -7784,7 +7790,7 @@ func (j *SampledValueType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SampledValueType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SampledValueType(plain)
@@ -7793,11 +7799,11 @@ func (j *SampledValueType) UnmarshalJSON(b []byte) error {
 
 type SecurityEventNotificationRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Additional information about the occurred security event.
 	//
-	TechInfo *string `json:"techInfo,omitempty"`
+	TechInfo *string `json:"techInfo,omitempty,omitzero"`
 
 	// Date and time at which the event occurred.
 	//
@@ -7810,9 +7816,9 @@ type SecurityEventNotificationRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SecurityEventNotificationRequest) UnmarshalJSON(b []byte) error {
+func (j *SecurityEventNotificationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["timestamp"]; raw != nil && !ok {
@@ -7823,13 +7829,13 @@ func (j *SecurityEventNotificationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SecurityEventNotificationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.TechInfo != nil && len(*plain.TechInfo) > 255 {
+	if plain.TechInfo != nil && utf8.RuneCountInString(string(*plain.TechInfo)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "techInfo", 255)
 	}
-	if len(plain.Type) > 50 {
+	if utf8.RuneCountInString(string(plain.Type)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "type", 50)
 	}
 	*j = SecurityEventNotificationRequest(plain)
@@ -7838,16 +7844,16 @@ func (j *SecurityEventNotificationRequest) UnmarshalJSON(b []byte) error {
 
 type SecurityEventNotificationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type SendLocalListRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// LocalAuthorizationList corresponds to the JSON schema field
 	// "localAuthorizationList".
-	LocalAuthorizationList []AuthorizationData `json:"localAuthorizationList,omitempty"`
+	LocalAuthorizationList []AuthorizationData `json:"localAuthorizationList,omitempty,omitzero"`
 
 	// UpdateType corresponds to the JSON schema field "updateType".
 	UpdateType UpdateEnumType `json:"updateType"`
@@ -7860,9 +7866,9 @@ type SendLocalListRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListRequest) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["updateType"]; raw != nil && !ok {
@@ -7873,7 +7879,7 @@ func (j *SendLocalListRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SendLocalListRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.LocalAuthorizationList != nil && len(plain.LocalAuthorizationList) < 1 {
@@ -7885,19 +7891,19 @@ func (j *SendLocalListRequest) UnmarshalJSON(b []byte) error {
 
 type SendLocalListResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status SendLocalListStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListResponse) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -7905,7 +7911,7 @@ func (j *SendLocalListResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SendLocalListResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SendLocalListResponse(plain)
@@ -7925,9 +7931,9 @@ var enumValues_SendLocalListStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SendLocalListStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *SendLocalListStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -7949,7 +7955,7 @@ type SetChargingProfileRequest struct {
 	ChargingProfile ChargingProfileType `json:"chargingProfile"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// For TxDefaultProfile an evseId=0 applies the profile to each individual evse.
 	// For ChargingStationMaxProfile and ChargingStationExternalConstraints an
@@ -7959,9 +7965,9 @@ type SetChargingProfileRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetChargingProfileRequest) UnmarshalJSON(b []byte) error {
+func (j *SetChargingProfileRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["chargingProfile"]; raw != nil && !ok {
@@ -7972,7 +7978,7 @@ func (j *SetChargingProfileRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetChargingProfileRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetChargingProfileRequest(plain)
@@ -7981,19 +7987,19 @@ func (j *SetChargingProfileRequest) UnmarshalJSON(b []byte) error {
 
 type SetChargingProfileResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status ChargingProfileStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetChargingProfileResponse) UnmarshalJSON(b []byte) error {
+func (j *SetChargingProfileResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -8001,7 +8007,7 @@ func (j *SetChargingProfileResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetChargingProfileResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetChargingProfileResponse(plain)
@@ -8010,16 +8016,16 @@ func (j *SetChargingProfileResponse) UnmarshalJSON(b []byte) error {
 
 type SetDisplayMessageRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Message corresponds to the JSON schema field "message".
 	Message MessageInfoType `json:"message"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetDisplayMessageRequest) UnmarshalJSON(b []byte) error {
+func (j *SetDisplayMessageRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["message"]; raw != nil && !ok {
@@ -8027,7 +8033,7 @@ func (j *SetDisplayMessageRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetDisplayMessageRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetDisplayMessageRequest(plain)
@@ -8036,19 +8042,19 @@ func (j *SetDisplayMessageRequest) UnmarshalJSON(b []byte) error {
 
 type SetDisplayMessageResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status DisplayMessageStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetDisplayMessageResponse) UnmarshalJSON(b []byte) error {
+func (j *SetDisplayMessageResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -8056,7 +8062,7 @@ func (j *SetDisplayMessageResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetDisplayMessageResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetDisplayMessageResponse(plain)
@@ -8065,16 +8071,16 @@ func (j *SetDisplayMessageResponse) UnmarshalJSON(b []byte) error {
 
 type SetMonitoringBaseRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// MonitoringBase corresponds to the JSON schema field "monitoringBase".
 	MonitoringBase MonitoringBaseEnumType `json:"monitoringBase"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringBaseRequest) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringBaseRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["monitoringBase"]; raw != nil && !ok {
@@ -8082,7 +8088,7 @@ func (j *SetMonitoringBaseRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetMonitoringBaseRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetMonitoringBaseRequest(plain)
@@ -8091,19 +8097,19 @@ func (j *SetMonitoringBaseRequest) UnmarshalJSON(b []byte) error {
 
 type SetMonitoringBaseResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericDeviceModelStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringBaseResponse) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringBaseResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -8111,7 +8117,7 @@ func (j *SetMonitoringBaseResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetMonitoringBaseResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetMonitoringBaseResponse(plain)
@@ -8123,13 +8129,13 @@ type SetMonitoringDataType struct {
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// An id SHALL only be given to replace an existing monitor. The Charging Station
 	// handles the generation of id's for new monitors.
 	//
 	//
-	ID *int `json:"id,omitempty"`
+	ID *int `json:"id,omitempty,omitzero"`
 
 	// The severity that will be assigned to an event that is triggered by this
 	// monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest
@@ -8169,7 +8175,7 @@ type SetMonitoringDataType struct {
 	// this transaction. Default = false.
 	//
 	//
-	Transaction bool `json:"transaction,omitempty"`
+	Transaction bool `json:"transaction,omitempty,omitzero"`
 
 	// Type corresponds to the JSON schema field "type".
 	Type MonitorEnumType `json:"type"`
@@ -8185,9 +8191,9 @@ type SetMonitoringDataType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringDataType) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["component"]; raw != nil && !ok {
@@ -8207,7 +8213,7 @@ func (j *SetMonitoringDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetMonitoringDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if v, ok := raw["transaction"]; !ok || v == nil {
@@ -8219,7 +8225,7 @@ func (j *SetMonitoringDataType) UnmarshalJSON(b []byte) error {
 
 type SetMonitoringLevelRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The Charging Station SHALL only report events with a severity number lower than
 	// or equal to this severity.
@@ -8259,9 +8265,9 @@ type SetMonitoringLevelRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringLevelRequest) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringLevelRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["severity"]; raw != nil && !ok {
@@ -8269,7 +8275,7 @@ func (j *SetMonitoringLevelRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetMonitoringLevelRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetMonitoringLevelRequest(plain)
@@ -8278,19 +8284,19 @@ func (j *SetMonitoringLevelRequest) UnmarshalJSON(b []byte) error {
 
 type SetMonitoringLevelResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringLevelResponse) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringLevelResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -8298,7 +8304,7 @@ func (j *SetMonitoringLevelResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetMonitoringLevelResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetMonitoringLevelResponse(plain)
@@ -8310,14 +8316,14 @@ type SetMonitoringResultType struct {
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Id given to the VariableMonitor by the Charging Station. The Id is only
 	// returned when status is accepted. Installed VariableMonitors should have unique
 	// id's but the id's of removed Installed monitors should have unique id's but the
 	// id's of removed monitors MAY be reused.
 	//
-	ID *int `json:"id,omitempty"`
+	ID *int `json:"id,omitempty,omitzero"`
 
 	// The severity that will be assigned to an event that is triggered by this
 	// monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest
@@ -8357,7 +8363,7 @@ type SetMonitoringResultType struct {
 	Status SetMonitoringStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 
 	// Type corresponds to the JSON schema field "type".
 	Type MonitorEnumType `json:"type"`
@@ -8367,9 +8373,9 @@ type SetMonitoringResultType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringResultType) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringResultType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["component"]; raw != nil && !ok {
@@ -8389,7 +8395,7 @@ func (j *SetMonitoringResultType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetMonitoringResultType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetMonitoringResultType(plain)
@@ -8415,9 +8421,9 @@ var enumValues_SetMonitoringStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetMonitoringStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *SetMonitoringStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -8443,13 +8449,13 @@ type SetNetworkProfileRequest struct {
 	ConnectionData NetworkConnectionProfileType `json:"connectionData"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetNetworkProfileRequest) UnmarshalJSON(b []byte) error {
+func (j *SetNetworkProfileRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["configurationSlot"]; raw != nil && !ok {
@@ -8460,7 +8466,7 @@ func (j *SetNetworkProfileRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetNetworkProfileRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetNetworkProfileRequest(plain)
@@ -8469,19 +8475,19 @@ func (j *SetNetworkProfileRequest) UnmarshalJSON(b []byte) error {
 
 type SetNetworkProfileResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status SetNetworkProfileStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetNetworkProfileResponse) UnmarshalJSON(b []byte) error {
+func (j *SetNetworkProfileResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -8489,7 +8495,7 @@ func (j *SetNetworkProfileResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetNetworkProfileResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetNetworkProfileResponse(plain)
@@ -8509,9 +8515,9 @@ var enumValues_SetNetworkProfileStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetNetworkProfileStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *SetNetworkProfileStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -8530,7 +8536,7 @@ func (j *SetNetworkProfileStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type SetVariableDataType struct {
 	// AttributeType corresponds to the JSON schema field "attributeType".
-	AttributeType *AttributeEnumType `json:"attributeType,omitempty"`
+	AttributeType *AttributeEnumType `json:"attributeType,omitempty,omitzero"`
 
 	// Value to be assigned to attribute of variable.
 	//
@@ -8546,16 +8552,16 @@ type SetVariableDataType struct {
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
 	Variable VariableType `json:"variable"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariableDataType) UnmarshalJSON(b []byte) error {
+func (j *SetVariableDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["attributeValue"]; raw != nil && !ok {
@@ -8569,10 +8575,10 @@ func (j *SetVariableDataType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetVariableDataType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.AttributeValue) > 1000 {
+	if utf8.RuneCountInString(string(plain.AttributeValue)) > 1000 {
 		return fmt.Errorf("field %s length: must be <= %d", "attributeValue", 1000)
 	}
 	*j = SetVariableDataType(plain)
@@ -8581,16 +8587,16 @@ func (j *SetVariableDataType) UnmarshalJSON(b []byte) error {
 
 type SetVariableMonitoringRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// SetMonitoringData corresponds to the JSON schema field "setMonitoringData".
 	SetMonitoringData []SetMonitoringDataType `json:"setMonitoringData"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariableMonitoringRequest) UnmarshalJSON(b []byte) error {
+func (j *SetVariableMonitoringRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["setMonitoringData"]; raw != nil && !ok {
@@ -8598,7 +8604,7 @@ func (j *SetVariableMonitoringRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetVariableMonitoringRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.SetMonitoringData != nil && len(plain.SetMonitoringData) < 1 {
@@ -8610,16 +8616,16 @@ func (j *SetVariableMonitoringRequest) UnmarshalJSON(b []byte) error {
 
 type SetVariableMonitoringResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// SetMonitoringResult corresponds to the JSON schema field "setMonitoringResult".
 	SetMonitoringResult []SetMonitoringResultType `json:"setMonitoringResult"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariableMonitoringResponse) UnmarshalJSON(b []byte) error {
+func (j *SetVariableMonitoringResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["setMonitoringResult"]; raw != nil && !ok {
@@ -8627,7 +8633,7 @@ func (j *SetVariableMonitoringResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetVariableMonitoringResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.SetMonitoringResult != nil && len(plain.SetMonitoringResult) < 1 {
@@ -8642,25 +8648,25 @@ type SetVariableResultType struct {
 	AttributeStatus SetVariableStatusEnumType `json:"attributeStatus"`
 
 	// AttributeStatusInfo corresponds to the JSON schema field "attributeStatusInfo".
-	AttributeStatusInfo *StatusInfoType `json:"attributeStatusInfo,omitempty"`
+	AttributeStatusInfo *StatusInfoType `json:"attributeStatusInfo,omitempty,omitzero"`
 
 	// AttributeType corresponds to the JSON schema field "attributeType".
-	AttributeType *AttributeEnumType `json:"attributeType,omitempty"`
+	AttributeType *AttributeEnumType `json:"attributeType,omitempty,omitzero"`
 
 	// Component corresponds to the JSON schema field "component".
 	Component ComponentType `json:"component"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Variable corresponds to the JSON schema field "variable".
 	Variable VariableType `json:"variable"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariableResultType) UnmarshalJSON(b []byte) error {
+func (j *SetVariableResultType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["attributeStatus"]; raw != nil && !ok {
@@ -8674,7 +8680,7 @@ func (j *SetVariableResultType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetVariableResultType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SetVariableResultType(plain)
@@ -8700,9 +8706,9 @@ var enumValues_SetVariableStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariableStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *SetVariableStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -8721,16 +8727,16 @@ func (j *SetVariableStatusEnumType) UnmarshalJSON(b []byte) error {
 
 type SetVariablesRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// SetVariableData corresponds to the JSON schema field "setVariableData".
 	SetVariableData []SetVariableDataType `json:"setVariableData"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariablesRequest) UnmarshalJSON(b []byte) error {
+func (j *SetVariablesRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["setVariableData"]; raw != nil && !ok {
@@ -8738,7 +8744,7 @@ func (j *SetVariablesRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetVariablesRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.SetVariableData != nil && len(plain.SetVariableData) < 1 {
@@ -8750,16 +8756,16 @@ func (j *SetVariablesRequest) UnmarshalJSON(b []byte) error {
 
 type SetVariablesResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// SetVariableResult corresponds to the JSON schema field "setVariableResult".
 	SetVariableResult []SetVariableResultType `json:"setVariableResult"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SetVariablesResponse) UnmarshalJSON(b []byte) error {
+func (j *SetVariablesResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["setVariableResult"]; raw != nil && !ok {
@@ -8767,7 +8773,7 @@ func (j *SetVariablesResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SetVariablesResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.SetVariableResult != nil && len(plain.SetVariableResult) < 1 {
@@ -8779,7 +8785,7 @@ func (j *SetVariablesResponse) UnmarshalJSON(b []byte) error {
 
 type SignCertificateRequest struct {
 	// CertificateType corresponds to the JSON schema field "certificateType".
-	CertificateType *CertificateSigningUseEnumType `json:"certificateType,omitempty"`
+	CertificateType *CertificateSigningUseEnumType `json:"certificateType,omitempty,omitzero"`
 
 	// The Charging Station SHALL send the public key in form of a Certificate Signing
 	// Request (CSR) as described in RFC 2986 [22] and then PEM encoded, using the
@@ -8788,13 +8794,13 @@ type SignCertificateRequest struct {
 	Csr string `json:"csr"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SignCertificateRequest) UnmarshalJSON(b []byte) error {
+func (j *SignCertificateRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["csr"]; raw != nil && !ok {
@@ -8802,10 +8808,10 @@ func (j *SignCertificateRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SignCertificateRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Csr) > 5500 {
+	if utf8.RuneCountInString(string(plain.Csr)) > 5500 {
 		return fmt.Errorf("field %s length: must be <= %d", "csr", 5500)
 	}
 	*j = SignCertificateRequest(plain)
@@ -8814,19 +8820,19 @@ func (j *SignCertificateRequest) UnmarshalJSON(b []byte) error {
 
 type SignCertificateResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status GenericStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SignCertificateResponse) UnmarshalJSON(b []byte) error {
+func (j *SignCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -8834,7 +8840,7 @@ func (j *SignCertificateResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SignCertificateResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = SignCertificateResponse(plain)
@@ -8843,7 +8849,7 @@ func (j *SignCertificateResponse) UnmarshalJSON(b []byte) error {
 
 type SignedMeterValueType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Method used to encode the meter values before applying the digital signature
 	// algorithm.
@@ -8867,9 +8873,9 @@ type SignedMeterValueType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *SignedMeterValueType) UnmarshalJSON(b []byte) error {
+func (j *SignedMeterValueType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["encodingMethod"]; raw != nil && !ok {
@@ -8886,19 +8892,19 @@ func (j *SignedMeterValueType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain SignedMeterValueType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.EncodingMethod) > 50 {
+	if utf8.RuneCountInString(string(plain.EncodingMethod)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "encodingMethod", 50)
 	}
-	if len(plain.PublicKey) > 2500 {
+	if utf8.RuneCountInString(string(plain.PublicKey)) > 2500 {
 		return fmt.Errorf("field %s length: must be <= %d", "publicKey", 2500)
 	}
-	if len(plain.SignedMeterData) > 2500 {
+	if utf8.RuneCountInString(string(plain.SignedMeterData)) > 2500 {
 		return fmt.Errorf("field %s length: must be <= %d", "signedMeterData", 2500)
 	}
-	if len(plain.SigningMethod) > 50 {
+	if utf8.RuneCountInString(string(plain.SigningMethod)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "signingMethod", 50)
 	}
 	*j = SignedMeterValueType(plain)
@@ -8908,10 +8914,10 @@ func (j *SignedMeterValueType) UnmarshalJSON(b []byte) error {
 type StatusInfoType struct {
 	// Additional text to provide detailed information.
 	//
-	AdditionalInfo *string `json:"additionalInfo,omitempty"`
+	AdditionalInfo *string `json:"additionalInfo,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// A predefined code for the reason why the status is returned in this response.
 	// The string is case-insensitive.
@@ -8920,9 +8926,9 @@ type StatusInfoType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StatusInfoType) UnmarshalJSON(b []byte) error {
+func (j *StatusInfoType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["reasonCode"]; raw != nil && !ok {
@@ -8930,13 +8936,13 @@ func (j *StatusInfoType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StatusInfoType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.AdditionalInfo != nil && len(*plain.AdditionalInfo) > 512 {
+	if plain.AdditionalInfo != nil && utf8.RuneCountInString(string(*plain.AdditionalInfo)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "additionalInfo", 512)
 	}
-	if len(plain.ReasonCode) > 20 {
+	if utf8.RuneCountInString(string(plain.ReasonCode)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "reasonCode", 20)
 	}
 	*j = StatusInfoType(plain)
@@ -8952,7 +8958,7 @@ type StatusNotificationRequest struct {
 	ConnectorStatus ConnectorStatusEnumType `json:"connectorStatus"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The id of the EVSE to which the connector belongs for which the the status is
 	// reported.
@@ -8966,9 +8972,9 @@ type StatusNotificationRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *StatusNotificationRequest) UnmarshalJSON(b []byte) error {
+func (j *StatusNotificationRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -8985,7 +8991,7 @@ func (j *StatusNotificationRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain StatusNotificationRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = StatusNotificationRequest(plain)
@@ -8994,7 +9000,7 @@ func (j *StatusNotificationRequest) UnmarshalJSON(b []byte) error {
 
 type StatusNotificationResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 type TransactionEventEnumType string
@@ -9010,9 +9016,9 @@ var enumValues_TransactionEventEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TransactionEventEnumType) UnmarshalJSON(b []byte) error {
+func (j *TransactionEventEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9032,39 +9038,39 @@ func (j *TransactionEventEnumType) UnmarshalJSON(b []byte) error {
 type TransactionEventRequest struct {
 	// The maximum current of the connected cable in Ampere (A).
 	//
-	CableMaxCurrent *int `json:"cableMaxCurrent,omitempty"`
+	CableMaxCurrent *int `json:"cableMaxCurrent,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// EventType corresponds to the JSON schema field "eventType".
 	EventType TransactionEventEnumType `json:"eventType"`
 
 	// Evse corresponds to the JSON schema field "evse".
-	Evse *EVSEType `json:"evse,omitempty"`
+	Evse *EVSEType `json:"evse,omitempty,omitzero"`
 
 	// IDToken corresponds to the JSON schema field "idToken".
-	IDToken *IDTokenType `json:"idToken,omitempty"`
+	IDToken *IDTokenType `json:"idToken,omitempty,omitzero"`
 
 	// MeterValue corresponds to the JSON schema field "meterValue".
-	MeterValue []MeterValueType `json:"meterValue,omitempty"`
+	MeterValue []MeterValueType `json:"meterValue,omitempty,omitzero"`
 
 	// If the Charging Station is able to report the number of phases used, then it
 	// SHALL provide it. When omitted the CSMS may be able to determine the number of
 	// phases used via device management.
 	//
-	NumberOfPhasesUsed *int `json:"numberOfPhasesUsed,omitempty"`
+	NumberOfPhasesUsed *int `json:"numberOfPhasesUsed,omitempty,omitzero"`
 
 	// Indication that this transaction event happened when the Charging Station was
 	// offline. Default = false, meaning: the event occurred when the Charging Station
 	// was online.
 	//
-	Offline bool `json:"offline,omitempty"`
+	Offline bool `json:"offline,omitempty,omitzero"`
 
 	// This contains the Id of the reservation that terminates as a result of this
 	// transaction.
 	//
-	ReservationID *int `json:"reservationId,omitempty"`
+	ReservationID *int `json:"reservationId,omitempty,omitzero"`
 
 	// Incremental sequence number, helps with determining if all messages of a
 	// transaction have been received.
@@ -9083,9 +9089,9 @@ type TransactionEventRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TransactionEventRequest) UnmarshalJSON(b []byte) error {
+func (j *TransactionEventRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["eventType"]; raw != nil && !ok {
@@ -9105,7 +9111,7 @@ func (j *TransactionEventRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain TransactionEventRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if plain.MeterValue != nil && len(plain.MeterValue) < 1 {
@@ -9128,13 +9134,13 @@ type TransactionEventResponse struct {
 	// &lt;&lt;transactioneventresponse,TransactionEventResponse&gt;&gt; overrules the
 	// one in &lt;&lt;cmn_idtokeninfotype,IdTokenInfoType&gt;&gt;.
 	//
-	ChargingPriority *int `json:"chargingPriority,omitempty"`
+	ChargingPriority *int `json:"chargingPriority,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// IDTokenInfo corresponds to the JSON schema field "idTokenInfo".
-	IDTokenInfo *IDTokenInfoType `json:"idTokenInfo,omitempty"`
+	IDTokenInfo *IDTokenInfoType `json:"idTokenInfo,omitempty,omitzero"`
 
 	// SHALL only be sent when charging has ended. Final total cost of this
 	// transaction, including taxes. In the currency configured with the Configuration
@@ -9143,28 +9149,28 @@ type TransactionEventResponse struct {
 	// 0.00.
 	//
 	//
-	TotalCost *float64 `json:"totalCost,omitempty"`
+	TotalCost *float64 `json:"totalCost,omitempty,omitzero"`
 
 	// UpdatedPersonalMessage corresponds to the JSON schema field
 	// "updatedPersonalMessage".
-	UpdatedPersonalMessage *MessageContentType `json:"updatedPersonalMessage,omitempty"`
+	UpdatedPersonalMessage *MessageContentType `json:"updatedPersonalMessage,omitempty,omitzero"`
 }
 
 type TransactionType struct {
 	// ChargingState corresponds to the JSON schema field "chargingState".
-	ChargingState *ChargingStateEnumType `json:"chargingState,omitempty"`
+	ChargingState *ChargingStateEnumType `json:"chargingState,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// The ID given to remote start request (&lt;&lt;requeststarttransactionrequest,
 	// RequestStartTransactionRequest&gt;&gt;. This enables to CSMS to match the
 	// started transaction to the given start request.
 	//
-	RemoteStartID *int `json:"remoteStartId,omitempty"`
+	RemoteStartID *int `json:"remoteStartId,omitempty,omitzero"`
 
 	// StoppedReason corresponds to the JSON schema field "stoppedReason".
-	StoppedReason *ReasonEnumType `json:"stoppedReason,omitempty"`
+	StoppedReason *ReasonEnumType `json:"stoppedReason,omitempty,omitzero"`
 
 	// Transaction. Time_ Spent_ Charging. Elapsed_ Time
 	// urn:x-oca:ocpp:uid:1:569415
@@ -9172,7 +9178,7 @@ type TransactionType struct {
 	// transaction (in seconds). Note that timeSpentCharging is smaller or equal to
 	// the duration of the transaction.
 	//
-	TimeSpentCharging *int `json:"timeSpentCharging,omitempty"`
+	TimeSpentCharging *int `json:"timeSpentCharging,omitempty,omitzero"`
 
 	// This contains the Id of the transaction.
 	//
@@ -9180,9 +9186,9 @@ type TransactionType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TransactionType) UnmarshalJSON(b []byte) error {
+func (j *TransactionType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["transactionId"]; raw != nil && !ok {
@@ -9190,10 +9196,10 @@ func (j *TransactionType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain TransactionType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.TransactionID) > 36 {
+	if utf8.RuneCountInString(string(plain.TransactionID)) > 36 {
 		return fmt.Errorf("field %s length: must be <= %d", "transactionId", 36)
 	}
 	*j = TransactionType(plain)
@@ -9202,19 +9208,19 @@ func (j *TransactionType) UnmarshalJSON(b []byte) error {
 
 type TriggerMessageRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Evse corresponds to the JSON schema field "evse".
-	Evse *EVSEType `json:"evse,omitempty"`
+	Evse *EVSEType `json:"evse,omitempty,omitzero"`
 
 	// RequestedMessage corresponds to the JSON schema field "requestedMessage".
 	RequestedMessage MessageTriggerEnumType `json:"requestedMessage"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TriggerMessageRequest) UnmarshalJSON(b []byte) error {
+func (j *TriggerMessageRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["requestedMessage"]; raw != nil && !ok {
@@ -9222,7 +9228,7 @@ func (j *TriggerMessageRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain TriggerMessageRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = TriggerMessageRequest(plain)
@@ -9231,19 +9237,19 @@ func (j *TriggerMessageRequest) UnmarshalJSON(b []byte) error {
 
 type TriggerMessageResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status TriggerMessageStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TriggerMessageResponse) UnmarshalJSON(b []byte) error {
+func (j *TriggerMessageResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -9251,7 +9257,7 @@ func (j *TriggerMessageResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain TriggerMessageResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = TriggerMessageResponse(plain)
@@ -9271,9 +9277,9 @@ var enumValues_TriggerMessageStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TriggerMessageStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *TriggerMessageStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9339,9 +9345,9 @@ var enumValues_TriggerReasonEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *TriggerReasonEnumType) UnmarshalJSON(b []byte) error {
+func (j *TriggerReasonEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9360,12 +9366,12 @@ func (j *TriggerReasonEnumType) UnmarshalJSON(b []byte) error {
 
 type UnitOfMeasureType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Multiplier, this value represents the exponent to base 10. I.e. multiplier 3
 	// means 10 raised to the 3rd power. Default is 0.
 	//
-	Multiplier int `json:"multiplier,omitempty"`
+	Multiplier int `json:"multiplier,omitempty,omitzero"`
 
 	// Unit of the value. Default = "Wh" if the (default) measurand is an "Energy"
 	// type.
@@ -9374,27 +9380,27 @@ type UnitOfMeasureType struct {
 	// If an applicable unit is available in that list, otherwise a "custom" unit
 	// might be used.
 	//
-	Unit string `json:"unit,omitempty"`
+	Unit string `json:"unit,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnitOfMeasureType) UnmarshalJSON(b []byte) error {
+func (j *UnitOfMeasureType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	type Plain UnitOfMeasureType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if v, ok := raw["multiplier"]; !ok || v == nil {
-		plain.Multiplier = 0.0
+		plain.Multiplier = 0
 	}
 	if v, ok := raw["unit"]; !ok || v == nil {
 		plain.Unit = "Wh"
 	}
-	if len(plain.Unit) > 20 {
+	if utf8.RuneCountInString(string(plain.Unit)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "unit", 20)
 	}
 	*j = UnitOfMeasureType(plain)
@@ -9407,7 +9413,7 @@ type UnlockConnectorRequest struct {
 	ConnectorID int `json:"connectorId"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// This contains the identifier of the EVSE for which a connector needs to be
 	// unlocked.
@@ -9416,9 +9422,9 @@ type UnlockConnectorRequest struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnlockConnectorRequest) UnmarshalJSON(b []byte) error {
+func (j *UnlockConnectorRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["connectorId"]; raw != nil && !ok {
@@ -9429,7 +9435,7 @@ func (j *UnlockConnectorRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UnlockConnectorRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UnlockConnectorRequest(plain)
@@ -9438,19 +9444,19 @@ func (j *UnlockConnectorRequest) UnmarshalJSON(b []byte) error {
 
 type UnlockConnectorResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status UnlockStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnlockConnectorResponse) UnmarshalJSON(b []byte) error {
+func (j *UnlockConnectorResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -9458,7 +9464,7 @@ func (j *UnlockConnectorResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UnlockConnectorResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UnlockConnectorResponse(plain)
@@ -9480,9 +9486,9 @@ var enumValues_UnlockStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnlockStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *UnlockStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9506,13 +9512,13 @@ type UnpublishFirmwareRequest struct {
 	Checksum string `json:"checksum"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnpublishFirmwareRequest) UnmarshalJSON(b []byte) error {
+func (j *UnpublishFirmwareRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["checksum"]; raw != nil && !ok {
@@ -9520,10 +9526,10 @@ func (j *UnpublishFirmwareRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UnpublishFirmwareRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if len(plain.Checksum) > 32 {
+	if utf8.RuneCountInString(string(plain.Checksum)) > 32 {
 		return fmt.Errorf("field %s length: must be <= %d", "checksum", 32)
 	}
 	*j = UnpublishFirmwareRequest(plain)
@@ -9532,16 +9538,16 @@ func (j *UnpublishFirmwareRequest) UnmarshalJSON(b []byte) error {
 
 type UnpublishFirmwareResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status UnpublishFirmwareStatusEnumType `json:"status"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnpublishFirmwareResponse) UnmarshalJSON(b []byte) error {
+func (j *UnpublishFirmwareResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -9549,7 +9555,7 @@ func (j *UnpublishFirmwareResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UnpublishFirmwareResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UnpublishFirmwareResponse(plain)
@@ -9569,9 +9575,9 @@ var enumValues_UnpublishFirmwareStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UnpublishFirmwareStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *UnpublishFirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9599,9 +9605,9 @@ var enumValues_UpdateEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UpdateEnumType) UnmarshalJSON(b []byte) error {
+func (j *UpdateEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9620,7 +9626,7 @@ func (j *UpdateEnumType) UnmarshalJSON(b []byte) error {
 
 type UpdateFirmwareRequest struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Firmware corresponds to the JSON schema field "firmware".
 	Firmware FirmwareType `json:"firmware"`
@@ -9633,19 +9639,19 @@ type UpdateFirmwareRequest struct {
 	// firmware before giving up. If this field is not present, it is left to Charging
 	// Station to decide how many times it wants to retry.
 	//
-	Retries *int `json:"retries,omitempty"`
+	Retries *int `json:"retries,omitempty,omitzero"`
 
 	// The interval in seconds after which a retry may be attempted. If this field is
 	// not present, it is left to Charging Station to decide how long to wait between
 	// attempts.
 	//
-	RetryInterval *int `json:"retryInterval,omitempty"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UpdateFirmwareRequest) UnmarshalJSON(b []byte) error {
+func (j *UpdateFirmwareRequest) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["firmware"]; raw != nil && !ok {
@@ -9656,7 +9662,7 @@ func (j *UpdateFirmwareRequest) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UpdateFirmwareRequest
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UpdateFirmwareRequest(plain)
@@ -9665,19 +9671,19 @@ func (j *UpdateFirmwareRequest) UnmarshalJSON(b []byte) error {
 
 type UpdateFirmwareResponse struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Status corresponds to the JSON schema field "status".
 	Status UpdateFirmwareStatusEnumType `json:"status"`
 
 	// StatusInfo corresponds to the JSON schema field "statusInfo".
-	StatusInfo *StatusInfoType `json:"statusInfo,omitempty"`
+	StatusInfo *StatusInfoType `json:"statusInfo,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UpdateFirmwareResponse) UnmarshalJSON(b []byte) error {
+func (j *UpdateFirmwareResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["status"]; raw != nil && !ok {
@@ -9685,7 +9691,7 @@ func (j *UpdateFirmwareResponse) UnmarshalJSON(b []byte) error {
 	}
 	type Plain UpdateFirmwareResponse
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = UpdateFirmwareResponse(plain)
@@ -9709,9 +9715,9 @@ var enumValues_UpdateFirmwareStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UpdateFirmwareStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *UpdateFirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9751,9 +9757,9 @@ var enumValues_UploadLogStatusEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *UploadLogStatusEnumType) UnmarshalJSON(b []byte) error {
+func (j *UploadLogStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9785,9 +9791,9 @@ var enumValues_VPNEnumType = []interface{}{
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *VPNEnumType) UnmarshalJSON(b []byte) error {
+func (j *VPNEnumType) UnmarshalJSON(value []byte) error {
 	var v string
-	if err := json.Unmarshal(b, &v); err != nil {
+	if err := json.Unmarshal(value, &v); err != nil {
 		return err
 	}
 	var ok bool
@@ -9806,13 +9812,13 @@ func (j *VPNEnumType) UnmarshalJSON(b []byte) error {
 
 type VPNType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// VPN. Group. Group_ Name
 	// urn:x-oca:ocpp:uid:1:569274
 	// VPN group.
 	//
-	Group *string `json:"group,omitempty"`
+	Group *string `json:"group,omitempty,omitzero"`
 
 	// VPN. Key. VPN_ Key
 	// urn:x-oca:ocpp:uid:1:569276
@@ -9843,9 +9849,9 @@ type VPNType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *VPNType) UnmarshalJSON(b []byte) error {
+func (j *VPNType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["key"]; raw != nil && !ok {
@@ -9865,22 +9871,22 @@ func (j *VPNType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain VPNType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Group != nil && len(*plain.Group) > 20 {
+	if plain.Group != nil && utf8.RuneCountInString(string(*plain.Group)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "group", 20)
 	}
-	if len(plain.Key) > 255 {
+	if utf8.RuneCountInString(string(plain.Key)) > 255 {
 		return fmt.Errorf("field %s length: must be <= %d", "key", 255)
 	}
-	if len(plain.Password) > 20 {
+	if utf8.RuneCountInString(string(plain.Password)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "password", 20)
 	}
-	if len(plain.Server) > 512 {
+	if utf8.RuneCountInString(string(plain.Server)) > 512 {
 		return fmt.Errorf("field %s length: must be <= %d", "server", 512)
 	}
-	if len(plain.User) > 20 {
+	if utf8.RuneCountInString(string(plain.User)) > 20 {
 		return fmt.Errorf("field %s length: must be <= %d", "user", 20)
 	}
 	*j = VPNType(plain)
@@ -9891,21 +9897,21 @@ type VariableAttributeType struct {
 	// If true, value that will never be changed by the Charging Station at runtime.
 	// Default when omitted is false.
 	//
-	Constant bool `json:"constant,omitempty"`
+	Constant bool `json:"constant,omitempty,omitzero"`
 
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Mutability corresponds to the JSON schema field "mutability".
-	Mutability *MutabilityEnumType `json:"mutability,omitempty"`
+	Mutability *MutabilityEnumType `json:"mutability,omitempty,omitzero"`
 
 	// If true, value will be persistent across system reboots or power down. Default
 	// when omitted is false.
 	//
-	Persistent bool `json:"persistent,omitempty"`
+	Persistent bool `json:"persistent,omitempty,omitzero"`
 
 	// Type corresponds to the JSON schema field "type".
-	Type *AttributeEnumType `json:"type,omitempty"`
+	Type *AttributeEnumType `json:"type,omitempty,omitzero"`
 
 	// Value of the attribute. May only be omitted when mutability is set to
 	// 'WriteOnly'.
@@ -9915,18 +9921,18 @@ type VariableAttributeType struct {
 	// to limit GetVariableResult.attributeValue, VariableAttribute.value and
 	// EventData.actualValue. The max size of these values will always remain equal.
 	//
-	Value *string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *VariableAttributeType) UnmarshalJSON(b []byte) error {
+func (j *VariableAttributeType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	type Plain VariableAttributeType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	if v, ok := raw["constant"]; !ok || v == nil {
@@ -9935,7 +9941,7 @@ func (j *VariableAttributeType) UnmarshalJSON(b []byte) error {
 	if v, ok := raw["persistent"]; !ok || v == nil {
 		plain.Persistent = false
 	}
-	if plain.Value != nil && len(*plain.Value) > 2500 {
+	if plain.Value != nil && utf8.RuneCountInString(string(*plain.Value)) > 2500 {
 		return fmt.Errorf("field %s length: must be <= %d", "value", 2500)
 	}
 	*j = VariableAttributeType(plain)
@@ -9944,7 +9950,7 @@ func (j *VariableAttributeType) UnmarshalJSON(b []byte) error {
 
 type VariableCharacteristicsType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// DataType corresponds to the JSON schema field "dataType".
 	DataType DataEnumType `json:"dataType"`
@@ -9953,11 +9959,11 @@ type VariableCharacteristicsType struct {
 	// String, OptionList, SequenceList or MemberList, this field defines the maximum
 	// length of the (CSV) string.
 	//
-	MaxLimit *float64 `json:"maxLimit,omitempty"`
+	MaxLimit *float64 `json:"maxLimit,omitempty,omitzero"`
 
 	// Minimum possible value of this variable.
 	//
-	MinLimit *float64 `json:"minLimit,omitempty"`
+	MinLimit *float64 `json:"minLimit,omitempty,omitzero"`
 
 	// Flag indicating if this variable supports monitoring.
 	//
@@ -9966,7 +9972,7 @@ type VariableCharacteristicsType struct {
 	// Unit of the variable. When the transmitted value has a unit, this field SHALL
 	// be included.
 	//
-	Unit *string `json:"unit,omitempty"`
+	Unit *string `json:"unit,omitempty,omitzero"`
 
 	// Allowed values when variable is Option/Member/SequenceList.
 	//
@@ -9988,13 +9994,13 @@ type VariableCharacteristicsType struct {
 	// remain equal.
 	//
 	//
-	ValuesList *string `json:"valuesList,omitempty"`
+	ValuesList *string `json:"valuesList,omitempty,omitzero"`
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *VariableCharacteristicsType) UnmarshalJSON(b []byte) error {
+func (j *VariableCharacteristicsType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["dataType"]; raw != nil && !ok {
@@ -10005,13 +10011,13 @@ func (j *VariableCharacteristicsType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain VariableCharacteristicsType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Unit != nil && len(*plain.Unit) > 16 {
+	if plain.Unit != nil && utf8.RuneCountInString(string(*plain.Unit)) > 16 {
 		return fmt.Errorf("field %s length: must be <= %d", "unit", 16)
 	}
-	if plain.ValuesList != nil && len(*plain.ValuesList) > 1000 {
+	if plain.ValuesList != nil && utf8.RuneCountInString(string(*plain.ValuesList)) > 1000 {
 		return fmt.Errorf("field %s length: must be <= %d", "valuesList", 1000)
 	}
 	*j = VariableCharacteristicsType(plain)
@@ -10020,7 +10026,7 @@ func (j *VariableCharacteristicsType) UnmarshalJSON(b []byte) error {
 
 type VariableMonitoringType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Identifies the monitor.
 	//
@@ -10074,9 +10080,9 @@ type VariableMonitoringType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *VariableMonitoringType) UnmarshalJSON(b []byte) error {
+func (j *VariableMonitoringType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["id"]; raw != nil && !ok {
@@ -10096,7 +10102,7 @@ func (j *VariableMonitoringType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain VariableMonitoringType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
 	*j = VariableMonitoringType(plain)
@@ -10105,12 +10111,12 @@ func (j *VariableMonitoringType) UnmarshalJSON(b []byte) error {
 
 type VariableType struct {
 	// CustomData corresponds to the JSON schema field "customData".
-	CustomData *CustomDataType `json:"customData,omitempty"`
+	CustomData *CustomDataType `json:"customData,omitempty,omitzero"`
 
 	// Name of instance in case the variable exists as multiple instances. Case
 	// Insensitive. strongly advised to use Camel Case.
 	//
-	Instance *string `json:"instance,omitempty"`
+	Instance *string `json:"instance,omitempty,omitzero"`
 
 	// Name of the variable. Name should be taken from the list of standardized
 	// variable names whenever possible. Case Insensitive. strongly advised to use
@@ -10120,9 +10126,9 @@ type VariableType struct {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-func (j *VariableType) UnmarshalJSON(b []byte) error {
+func (j *VariableType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
-	if err := json.Unmarshal(b, &raw); err != nil {
+	if err := json.Unmarshal(value, &raw); err != nil {
 		return err
 	}
 	if _, ok := raw["name"]; raw != nil && !ok {
@@ -10130,13 +10136,13 @@ func (j *VariableType) UnmarshalJSON(b []byte) error {
 	}
 	type Plain VariableType
 	var plain Plain
-	if err := json.Unmarshal(b, &plain); err != nil {
+	if err := json.Unmarshal(value, &plain); err != nil {
 		return err
 	}
-	if plain.Instance != nil && len(*plain.Instance) > 50 {
+	if plain.Instance != nil && utf8.RuneCountInString(string(*plain.Instance)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "instance", 50)
 	}
-	if len(plain.Name) > 50 {
+	if utf8.RuneCountInString(string(plain.Name)) > 50 {
 		return fmt.Errorf("field %s length: must be <= %d", "name", 50)
 	}
 	*j = VariableType(plain)
