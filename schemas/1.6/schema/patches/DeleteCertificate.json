@@ -1,0 +1,8 @@
+[
+  {
+    "op": "add",
+    "path": "/definitions/CertificateHashDataType/javaType",
+    "value": "CertificateHashData",
+    "description": "Fix to be able to generate Golang structs."
+  }
+]

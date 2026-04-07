@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+
+jobs:
+  ci:
+    runs-on:
+      group: default-large-runners
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Setup Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: go.mod
+
+      - name: Setup Task
+        uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
+
+      - name: Install tools
+        run: task install-tools
+
+      - name: Check go mod tidy
+        run: |
+          go mod tidy
+          git diff --exit-code go.mod go.sum
+
+      - name: Build
+        run: go build ./...
+
+      - name: Check generated files are up-to-date
+        run: |
+          task generate
+          git diff --exit-code gen/
