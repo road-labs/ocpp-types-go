@@ -1,6 +1,6 @@
 module github.com/eflux-platform/ocpp-types-go
 
-go 1.25.6
+go 1.26
 
 require (
 	github.com/evanphx/json-patch v0.5.2
