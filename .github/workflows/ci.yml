@@ -23,9 +23,6 @@ jobs:
       - name: Setup Task
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
 
-      - name: Install tools
-        run: task install-tools
-
       - name: Check go mod tidy
         run: |
           go mod tidy
