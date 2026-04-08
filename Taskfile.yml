@@ -5,23 +5,9 @@ tasks:
     desc: Generate OCPP protocol Go types from JSON schemas.
     dir: "{{ .TASKFILE_DIR }}"
     cmds:
-      - for: ["1.5", "1.6", "2.0.1", "2.1"]
+      - for: [ "1.5", "1.6", "2.0.1", "2.1" ]
         cmd: |
-          rm -rf ./tmp/ocppgen
-          mkdir -p ./tmp/ocppgen/
-          mkdir -p ./gen/ocpp{{ .ITEM | replace "." "" }}/
-          cp -a ./schemas/{{ .ITEM }}/schema/* ./tmp/ocppgen/
-          go run ./tools/schemas --dir-path="./tmp/ocppgen/"
-          go-jsonschema \
-          --package github.com/eflux-platform/ocpp-types-go/gen/ocpp{{ .ITEM | replace "." "" }} \
-          --capitalization ID \
-          --tags json \
-          --resolve-extension json \
-          --output ./gen/ocpp{{ .ITEM | replace "." "" }}/schema.go \
-          ./tmp/ocppgen/*.json
-          rm -rf ./tmp/ocppgen
-
-  install-tools:
-    desc: Install required code generation tools.
-    cmds:
-      - go install github.com/atombender/go-jsonschema@v0.23.0
+          go run ./cmd/generate-ocpp-types \
+          --version {{ .ITEM }} \
+          --package github.com/e-flux-platform/ocpp-types-go/gen/ocpp{{ .ITEM | replace "." "" }} \
+          --output-dir ./gen/ocpp{{ .ITEM | replace "." "" }}

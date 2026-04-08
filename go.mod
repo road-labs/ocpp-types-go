@@ -1,10 +1,20 @@
-module github.com/eflux-platform/ocpp-types-go
+module github.com/e-flux-platform/ocpp-types-go
 
 go 1.26
 
 require (
+	github.com/atombender/go-jsonschema v0.23.0
 	github.com/evanphx/json-patch v0.5.2
 	github.com/mitchellh/reflectwalk v1.0.2
+	github.com/urfave/cli/v3 v3.8.0
 )
 
-require github.com/pkg/errors v0.9.1 // indirect
+require (
+	dario.cat/mergo v1.0.2 // indirect
+	github.com/goccy/go-yaml v1.19.2 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/sanity-io/litter v1.5.8 // indirect
+	github.com/sosodev/duration v1.4.0 // indirect
+)
