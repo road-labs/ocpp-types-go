@@ -106,18 +106,25 @@ ocpp.SetChargingProfileOperation
 
 ## Code generation
 
-The structs in `gen/` are auto-generated from the JSON schemas in `schemas/` — do not edit them manually.
+The structs in `gen/` are auto-generated from JSON schemas — do not edit them manually.
 
 **Prerequisites:** [Task](https://taskfile.dev) and Go must be installed.
 
 ```bash
-# Install the code generation tool
-task install-tools
-
 # Regenerate all types from JSON schemas
 task generate
 ```
 
-The pipeline copies JSON schemas to a temp directory, runs a preprocessor (`tools/schemas`) to deduplicate shared definitions, then runs [`go-jsonschema`](https://github.com/atombender/go-jsonschema) to produce the Go structs.
+Generation is handled by `cmd/generate-ocpp-types`, which is invoked once per protocol version. The tool preprocesses the embedded JSON schemas (deduplicating shared definitions across files), then uses [`go-jsonschema`](https://github.com/atombender/go-jsonschema) to produce the Go structs.
 
-JSON patch files under `schemas/<version>/schema/patches/` can be used to customize schemas before generation.
+### Custom patches
+
+JSON patch files ([RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902)) can be applied to schemas before generation. Built-in patches live under `cmd/generate-ocpp-types/schemas/<version>/patches/`. To apply additional patches, pass a flat directory of patch files via `--patches-dir`; each file must be named after the schema it patches (e.g. `BootNotification.json`):
+
+```bash
+go run ./cmd/generate-ocpp-types \
+  --version 1.6 \
+  --package github.com/example/myrepo/gen/ocpp16 \
+  --output-dir ./gen/ocpp16 \
+  --patches-dir ./my-patches
+```
