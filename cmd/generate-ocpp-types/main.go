@@ -245,32 +245,10 @@ func preprocessSchemas(srcFS fs.FS, dstDir string, patches map[string]jsonpatch.
 	})
 }
 
-func writeJSON(path string, v any) error {
-	f, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	return enc.Encode(v)
-}
-
-type refRewriter struct{}
-
-func (refRewriter) Map(reflect.Value) error { return nil }
-
-func (refRewriter) MapElem(m, k, v reflect.Value) error {
-	if k.String() == "$ref" {
-		m.SetMapIndex(k, reflect.ValueOf("common/Definitions.json"+v.Interface().(string)))
-	}
-	return nil
-}
-
 func generate(tmpDir, pkgPath, outputFile string) error {
 	cfg := generator.Config{
 		Warner: func(msg string) {
-			fmt.Fprintf(os.Stderr, "warning: %s\n", msg)
+			_, _ = fmt.Fprintf(os.Stderr, "warning: %s\n", msg)
 		},
 		DefaultPackageName: pkgPath,
 		DefaultOutputName:  outputFile,
@@ -293,7 +271,7 @@ func generate(tmpDir, pkgPath, outputFile string) error {
 		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
 			continue
 		}
-		if err := gen.DoFile(filepath.Join(tmpDir, entry.Name())); err != nil {
+		if err = gen.DoFile(filepath.Join(tmpDir, entry.Name())); err != nil {
 			return fmt.Errorf("processing %s: %w", entry.Name(), err)
 		}
 	}
@@ -304,13 +282,35 @@ func generate(tmpDir, pkgPath, outputFile string) error {
 	}
 
 	for fileName, source := range sources {
-		if err := os.MkdirAll(filepath.Dir(fileName), 0o755); err != nil {
+		if err = os.MkdirAll(filepath.Dir(fileName), 0o755); err != nil {
 			return err
 		}
-		if err := os.WriteFile(fileName, source, 0o644); err != nil {
+		if err = os.WriteFile(fileName, source, 0o644); err != nil {
 			return err
 		}
 	}
 
+	return nil
+}
+
+func writeJSON(path string, v any) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	enc := json.NewEncoder(f)
+	enc.SetIndent("", "  ")
+	return enc.Encode(v)
+}
+
+type refRewriter struct{}
+
+func (refRewriter) Map(reflect.Value) error { return nil }
+
+func (refRewriter) MapElem(m, k, v reflect.Value) error {
+	if k.String() == "$ref" {
+		m.SetMapIndex(k, reflect.ValueOf("common/Definitions.json"+v.Interface().(string)))
+	}
 	return nil
 }
