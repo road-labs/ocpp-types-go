@@ -24,7 +24,7 @@ This is a Go type definition library for the OCPP (Open Charge Point Protocol) u
 
 ### Package Layout
 
-- **Root package (`ocpp`)** — shared abstractions: version constants (`version.go`), error codes (`error.go`), and operation routing (`operation.go`)
+- **Root package (`ocpp`)** — shared abstractions: version constants (`version.go`), error codes (`error.go`), and action routing (`action.go`)
 - **`gen/ocpp15`, `gen/ocpp16`, `gen/ocpp201`, `gen/ocpp21`** — generated `schema.go` files containing all message structs for each protocol version; package names match the directory (e.g. `package ocpp15`)
 - **`schemas/`** — source JSON schemas organized by version (`1.5/schema/`, `1.6/schema/`, etc.), including JSON patch files for schema customization
 - **`tools/schemas/`** — schema preprocessing tool run before `go-jsonschema` code generation
@@ -44,14 +44,14 @@ JSON patches in `schemas/<version>/schema/patches/` are applied during preproces
 
 OCPP 1.5/1.6 request types are named without suffix (e.g., `CancelReservation`, `Reset`). OCPP 2.0.1/2.1 request types use the `Request` suffix (e.g., `CancelReservationRequest`, `ResetRequest`). This reflects the upstream schema naming conventions.
 
-### Operation Routing
+### Action Routing
 
-`OperationToRequestStruct(operation, version)` in `operation.go` maps a `CentralSystemToChargerPointOperation` string and a `Version` to an empty struct pointer of the correct versioned type. When adding a new operation, update all four `operationToRequestStruct<version>` functions and the `IsValidCentralSystemToChargerPointOperation` switch.
+`ActionToRequestStruct(action, version)` in `action.go` maps a `CentralSystemToChargingStationAction` string and a `Version` to an empty struct pointer of the correct versioned type. When adding a new action, update all four `ActionToRequestStruct<version>` functions and the `IsValidCentralSystemToChargingStationAction` switch.
 
-### Adding a New OCPP Version or Operation
+### Adding a New OCPP Version or Action
 
 1. Add the JSON schema files under `schemas/<version>/schema/`
 2. Create the output directory `gen/ocpp<version>/`
 3. Run `task generate` to produce `schema.go`
 4. Add the new version constant to `version.go`
-5. Add operation constants to `operation.go` and update all routing switch statements
+5. Add action constants to `action.go` and update all routing switch statements

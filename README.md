@@ -47,17 +47,17 @@ req := &ocpp201.RequestStartTransactionRequest{
 }
 ```
 
-### Operation routing
+### Action routing
 
-The root `ocpp` package provides helpers for routing operations to the correct request struct by version:
+The root `ocpp` package provides helpers for routing actions to the correct request struct by version:
 
 ```go
 import "github.com/e-flux-platform/ocpp-types-go"
 
 // Returns an empty struct pointer of the correct versioned type
-s, err := ocpp.OperationToRequestStruct(ocpp.ResetOperation, ocpp.Version16)
+s, err := ocpp.ActionToRequestStruct(ocpp.ResetAction, ocpp.Version16)
 if err != nil {
-    // handle ErrUnsupportedVersion or ErrUnableToValidateOperation
+    // handle ErrUnsupportedVersion or ErrUnknownAction
 }
 
 // Unmarshal the raw JSON payload into the struct
@@ -66,10 +66,10 @@ if err := json.Unmarshal(payload, s); err != nil {
 }
 ```
 
-### Validating operations
+### Validating actions
 
 ```go
-ok := ocpp.IsValidCentralSystemToChargerPointOperation(ocpp.ResetOperation) // true
+ok := ocpp.IsValidCentralSystemToChargerPointAction(ocpp.ResetAction) // true
 ```
 
 ### Version constants
@@ -81,26 +81,26 @@ ocpp.Version201  // "ocpp2.0.1"
 ocpp.Version21   // "ocpp2.1"
 ```
 
-### Operation direction constants
+### Action direction constants
 
-Operations are typed by direction:
+Actions are typed by direction:
 
 ```go
 // Charging station → Central system
-ocpp.AuthorizeOperation
-ocpp.BootNotificationOperation
-ocpp.HeartbeatOperation
-ocpp.MeterValuesOperation
-ocpp.StartTransactionOperation
-ocpp.StopTransactionOperation
-ocpp.StatusNotificationOperation
+ocpp.AuthorizeAction
+ocpp.BootNotificationAction
+ocpp.HeartbeatAction
+ocpp.MeterValuesAction
+ocpp.StartTransactionAction
+ocpp.StopTransactionAction
+ocpp.StatusNotificationAction
 // ...
 
 // Central system → Charging station
-ocpp.ResetOperation
-ocpp.RemoteStartTransactionOperation
-ocpp.RemoteStopTransactionOperation
-ocpp.SetChargingProfileOperation
+ocpp.ResetAction
+ocpp.RemoteStartTransactionAction
+ocpp.RemoteStopTransactionAction
+ocpp.SetChargingProfileAction
 // ...
 ```
 
