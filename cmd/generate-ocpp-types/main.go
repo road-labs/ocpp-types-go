@@ -240,7 +240,7 @@ func preprocessSchemas(srcFS fs.FS, dstDir string, patches map[string]jsonpatch.
 	}
 	return writeJSON(filepath.Join(dstDir, "common", "Definitions.json"), map[string]any{
 		"$schema":     "http://json-schema.org/draft-06/schema#",
-		"$id":         "urn:roadio:OCPP:Definitions",
+		"$id":         "urn:ocpp-types-go:OCPP:Definitions",
 		"definitions": definitions,
 	})
 }
