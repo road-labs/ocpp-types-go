@@ -69,7 +69,7 @@ if err := json.Unmarshal(payload, s); err != nil {
 ### Validating actions
 
 ```go
-ok := ocpp.IsValidCentralSystemToChargerPointAction(ocpp.ResetAction) // true
+ok := ocpp.IsValidCentralSystemToChargingStationAction(ocpp.ResetAction) // true
 ```
 
 ### Version constants

@@ -5,9 +5,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-# Install code generation tools (required before first generate)
-task install-tools
-
 # Regenerate all Go types from JSON schemas
 task generate
 
@@ -24,21 +21,20 @@ This is a Go type definition library for the OCPP (Open Charge Point Protocol) u
 
 ### Package Layout
 
-- **Root package (`ocpp`)** — shared abstractions: version constants (`version.go`), error codes (`error.go`), and action routing (`action.go`)
+- **Root package (`ocpp`)** — shared abstractions: version constants (`version.go`) and action routing (`action.go`)
 - **`gen/ocpp15`, `gen/ocpp16`, `gen/ocpp201`, `gen/ocpp21`** — generated `schema.go` files containing all message structs for each protocol version; package names match the directory (e.g. `package ocpp15`)
-- **`schemas/`** — source JSON schemas organized by version (`1.5/schema/`, `1.6/schema/`, etc.), including JSON patch files for schema customization
-- **`tools/schemas/`** — schema preprocessing tool run before `go-jsonschema` code generation
+- **`cmd/generate-ocpp-types/`** — the code generator. Holds `main.go` (schema preprocessor + `go-jsonschema` driver) and the embedded `schemas/` tree organised by version (`1.5/schema/`, `1.6/schema/`, etc.) along with optional JSON patch files per version.
 
 ### Code Generation Pipeline
 
-The `schema.go` files are **auto-generated** — never edit them manually. The pipeline is:
+The `schema.go` files are **auto-generated** — never edit them manually. The pipeline (implemented in `cmd/generate-ocpp-types/main.go`) is:
 
-1. Copy JSON schemas from `schemas/<version>/schema/` to `tmp/ocppgen/`
-2. Run `tools/schemas` preprocessor — extracts duplicate definitions across schemas into a shared `common/Definitions.json`, rewrites `$ref` pointers to avoid duplicate type generation
+1. Copy JSON schemas from `cmd/generate-ocpp-types/schemas/<version>/schema/` into a temporary working directory
+2. Apply any JSON patches for that version, then extract duplicate definitions across schemas into a shared `common/Definitions.json` and rewrite `$ref` pointers to avoid duplicate type generation
 3. Run `go-jsonschema` to generate Go structs with `--capitalization ID` and `--tags json`
 4. Output lands in `gen/ocpp<version>/schema.go`
 
-JSON patches in `schemas/<version>/schema/patches/` are applied during preprocessing to customize schemas before generation.
+JSON patches live at `cmd/generate-ocpp-types/schemas/<version>/patches/` (currently only OCPP 1.6 ships a patch) and are applied during preprocessing to customise schemas before generation.
 
 ### Naming Conventions
 
@@ -50,8 +46,8 @@ OCPP 1.5/1.6 request types are named without suffix (e.g., `CancelReservation`, 
 
 ### Adding a New OCPP Version or Action
 
-1. Add the JSON schema files under `schemas/<version>/schema/`
+1. Add the JSON schema files under `cmd/generate-ocpp-types/schemas/<version>/schema/`
 2. Create the output directory `gen/ocpp<version>/`
-3. Run `task generate` to produce `schema.go`
+3. Add the new version to the `for` list in `Taskfile.yml` and run `task generate` to produce `schema.go`
 4. Add the new version constant to `version.go`
 5. Add action constants to `action.go` and update all routing switch statements

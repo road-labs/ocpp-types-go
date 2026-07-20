@@ -1,0 +1,41 @@
+ocpp-types-go
+Copyright (c) 2024 - 2026 Road B.V.
+
+This project is licensed under the MIT License. See LICENSE for details.
+
+---
+
+Third-party material redistributed in this repository:
+
+OCPP JSON Schemas
+-----------------
+
+The JSON schema files under cmd/generate-ocpp-types/schemas/ are published by
+the Open Charge Alliance (OCA) as part of the Open Charge Point Protocol
+specifications, and are redistributed here unmodified for use with the code
+generator in cmd/generate-ocpp-types.
+
+Covered schema sets:
+
+  - OCPP 1.5   (cmd/generate-ocpp-types/schemas/1.5/)
+  - OCPP 1.6   (cmd/generate-ocpp-types/schemas/1.6/)
+  - OCPP 2.0.1 (cmd/generate-ocpp-types/schemas/2.0.1/)
+  - OCPP 2.1   (cmd/generate-ocpp-types/schemas/2.1/)
+
+The OCPP 2.1 schemas are licensed by the Open Charge Alliance under the
+Creative Commons Attribution-NoDerivatives 4.0 International Public License
+(CC BY-ND 4.0):
+
+    https://creativecommons.org/licenses/by-nd/4.0/legalcode
+
+The OCPP 1.5, 1.6, and 2.0.1 schemas are distributed by the Open Charge
+Alliance under their published usage terms. See:
+
+    https://openchargealliance.org/
+
+Build-time transformations that the code generator applies to these schemas
+(patches, extraction of shared definitions, `$ref` rewriting) are performed on
+copies in a temporary directory during a `task generate` run and are not
+redistributed.
+
+OCPP is a trademark of the Open Charge Alliance.
