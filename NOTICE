@@ -1,11 +1,4 @@
-ocpp-types-go
-Copyright (c) 2024 - 2026 Road B.V.
-
-This project is licensed under the MIT License. See LICENSE for details.
-
----
-
-Third-party material redistributed in this repository:
+Third-party material redistributed in this repository.
 
 OCPP JSON Schemas
 -----------------
