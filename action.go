@@ -31,7 +31,7 @@ func (o CSMSToChargingStationAction) String() string {
 const (
 	AuthorizeAction                         ChargingStationToCSMSAction = "Authorize"
 	BootNotificationAction                  ChargingStationToCSMSAction = "BootNotification"
-	DataTransferCpToCsAction                ChargingStationToCSMSAction = "DataTransfer"
+	DataTransferCSToCSMSAction              ChargingStationToCSMSAction = "DataTransfer"
 	DiagnosticsStatusNotificationAction     ChargingStationToCSMSAction = "DiagnosticsStatusNotification"
 	FirmwareStatusNotificationAction        ChargingStationToCSMSAction = "FirmwareStatusNotification"
 	SignedFirmwareStatusNotificationAction  ChargingStationToCSMSAction = "SignedFirmwareStatusNotification"
@@ -76,7 +76,7 @@ const (
 	ChangeConfigurationAction         CSMSToChargingStationAction = "ChangeConfiguration"
 	ClearCacheAction                  CSMSToChargingStationAction = "ClearCache"
 	ClearChargingProfileAction        CSMSToChargingStationAction = "ClearChargingProfile"
-	DataTransferCsToCpAction          CSMSToChargingStationAction = "DataTransfer"
+	DataTransferCSMSToCSAction        CSMSToChargingStationAction = "DataTransfer"
 	GetCompositeScheduleAction        CSMSToChargingStationAction = "GetCompositeSchedule"
 	GetConfigurationAction            CSMSToChargingStationAction = "GetConfiguration"
 	GetDiagnosticsAction              CSMSToChargingStationAction = "GetDiagnostics"
@@ -160,7 +160,7 @@ func csmsActionToRequestStruct15(action CSMSToChargingStationAction) (any, error
 		return &types15.ChangeConfiguration{}, nil
 	case ClearCacheAction:
 		return &types15.ClearCache{}, nil
-	case DataTransferCsToCpAction:
+	case DataTransferCSMSToCSAction:
 		return &types15.DataTransfer{}, nil
 	case GetConfigurationAction:
 		return &types15.GetConfiguration{}, nil
@@ -201,7 +201,7 @@ func csmsActionToRequestStruct16(action CSMSToChargingStationAction) (any, error
 		return &types16.ClearCache{}, nil
 	case ClearChargingProfileAction:
 		return &types16.ClearChargingProfile{}, nil
-	case DataTransferCsToCpAction:
+	case DataTransferCSMSToCSAction:
 		return &types16.DataTransfer{}, nil
 	case DeleteCertificateAction:
 		return &types16.DeleteCertificate{}, nil
@@ -266,7 +266,7 @@ func csmsActionToRequestStruct201(action CSMSToChargingStationAction) (any, erro
 		return &types201.CostUpdatedRequest{}, nil
 	case CustomerInformationAction:
 		return &types201.CustomerInformationRequest{}, nil
-	case DataTransferCsToCpAction:
+	case DataTransferCSMSToCSAction:
 		return &types201.DataTransferRequest{}, nil
 	case DeleteCertificateAction:
 		return &types201.DeleteCertificateRequest{}, nil
@@ -353,7 +353,7 @@ func csmsActionToRequestStruct21(action CSMSToChargingStationAction) (any, error
 		return &types21.CostUpdatedRequest{}, nil
 	case CustomerInformationAction:
 		return &types21.CustomerInformationRequest{}, nil
-	case DataTransferCsToCpAction:
+	case DataTransferCSMSToCSAction:
 		return &types21.DataTransferRequest{}, nil
 	case DeleteCertificateAction:
 		return &types21.DeleteCertificateRequest{}, nil
@@ -471,7 +471,7 @@ func chargingStationActionToRequestStruct15(action ChargingStationToCSMSAction) 
 		return &types15.Authorize{}, nil
 	case BootNotificationAction:
 		return &types15.BootNotification{}, nil
-	case DataTransferCpToCsAction:
+	case DataTransferCSToCSMSAction:
 		return &types15.DataTransfer{}, nil
 	case DiagnosticsStatusNotificationAction:
 		return &types15.DiagnosticsStatusNotification{}, nil
@@ -498,7 +498,7 @@ func chargingStationActionToRequestStruct16(action ChargingStationToCSMSAction) 
 		return &types16.Authorize{}, nil
 	case BootNotificationAction:
 		return &types16.BootNotification{}, nil
-	case DataTransferCpToCsAction:
+	case DataTransferCSToCSMSAction:
 		return &types16.DataTransfer{}, nil
 	case DiagnosticsStatusNotificationAction:
 		return &types16.DiagnosticsStatusNotification{}, nil
@@ -535,7 +535,7 @@ func chargingStationActionToRequestStruct201(action ChargingStationToCSMSAction)
 		return &types201.BootNotificationRequest{}, nil
 	case ClearedChargingLimitAction:
 		return &types201.ClearedChargingLimitRequest{}, nil
-	case DataTransferCpToCsAction:
+	case DataTransferCSToCSMSAction:
 		return &types201.DataTransferRequest{}, nil
 	case FirmwareStatusNotificationAction:
 		return &types201.FirmwareStatusNotificationRequest{}, nil
@@ -596,7 +596,7 @@ func chargingStationActionToRequestStruct21(action ChargingStationToCSMSAction) 
 		return &types21.ClearedChargingLimitRequest{}, nil
 	case ClosePeriodicEventStreamAction:
 		return &types21.ClosePeriodicEventStreamRequest{}, nil
-	case DataTransferCpToCsAction:
+	case DataTransferCSToCSMSAction:
 		return &types21.DataTransferRequest{}, nil
 	case FirmwareStatusNotificationAction:
 		return &types21.FirmwareStatusNotificationRequest{}, nil
@@ -669,7 +669,7 @@ func IsValidChargingStationToCSMSAction(action ChargingStationToCSMSAction) bool
 	switch action {
 	case AuthorizeAction,
 		BootNotificationAction,
-		DataTransferCpToCsAction,
+		DataTransferCSToCSMSAction,
 		DiagnosticsStatusNotificationAction,
 		FirmwareStatusNotificationAction,
 		SignedFirmwareStatusNotificationAction,
@@ -721,7 +721,7 @@ func IsValidCSMSToChargingStationAction(action CSMSToChargingStationAction) bool
 		ChangeConfigurationAction,
 		ClearCacheAction,
 		ClearChargingProfileAction,
-		DataTransferCsToCpAction,
+		DataTransferCSMSToCSAction,
 		GetCompositeScheduleAction,
 		GetConfigurationAction,
 		GetDiagnosticsAction,
