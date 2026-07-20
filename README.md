@@ -49,27 +49,31 @@ req := &ocpp201.RequestStartTransactionRequest{
 
 ### Action routing
 
-The root `ocpp` package provides helpers for routing actions to the correct request struct by version:
+The root `ocpp` package provides helpers for routing actions to the correct request struct by version. There is one helper per direction:
 
 ```go
 import "github.com/e-flux-platform/ocpp-types-go"
 
-// Returns an empty struct pointer of the correct versioned type
-s, err := ocpp.ActionToRequestStruct(ocpp.ResetAction, ocpp.Version16)
+// CSMS → Charging Station
+s, err := ocpp.CSMSActionToRequestStruct(ocpp.ResetAction, ocpp.Version16)
 if err != nil {
     // handle ErrUnsupportedVersion or ErrUnknownAction
 }
 
-// Unmarshal the raw JSON payload into the struct
+// Unmarshal the raw JSON payload into the returned struct pointer
 if err := json.Unmarshal(payload, s); err != nil {
     // handle error
 }
+
+// Charging Station → CSMS
+s, err = ocpp.ChargingStationActionToRequestStruct(ocpp.BootNotificationAction, ocpp.Version16)
 ```
 
 ### Validating actions
 
 ```go
-ok := ocpp.IsValidCentralSystemToChargingStationAction(ocpp.ResetAction) // true
+ok := ocpp.IsValidCSMSToChargingStationAction(ocpp.ResetAction)         // true
+ok = ocpp.IsValidChargingStationToCSMSAction(ocpp.BootNotificationAction) // true
 ```
 
 ### Version constants
@@ -83,10 +87,10 @@ ocpp.Version21   // "ocpp2.1"
 
 ### Action direction constants
 
-Actions are typed by direction:
+Actions are typed by direction. Constants of type `ChargingStationToCSMSAction` are messages sent from the charging station; constants of type `CSMSToChargingStationAction` go the other way:
 
 ```go
-// Charging station → Central system
+// Charging Station → CSMS
 ocpp.AuthorizeAction
 ocpp.BootNotificationAction
 ocpp.HeartbeatAction
@@ -96,7 +100,7 @@ ocpp.StopTransactionAction
 ocpp.StatusNotificationAction
 // ...
 
-// Central system → Charging station
+// CSMS → Charging Station
 ocpp.ResetAction
 ocpp.RemoteStartTransactionAction
 ocpp.RemoteStopTransactionAction
@@ -106,7 +110,7 @@ ocpp.SetChargingProfileAction
 
 ## Code generation
 
-The structs in `gen/` are auto-generated from JSON schemas — do not edit them manually.
+The structs in `gen/` are auto-generated from JSON schemas - do not edit them manually.
 
 **Prerequisites:** [Task](https://taskfile.dev) and Go must be installed.
 

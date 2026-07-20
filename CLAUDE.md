@@ -42,7 +42,12 @@ OCPP 1.5/1.6 request types are named without suffix (e.g., `CancelReservation`, 
 
 ### Action Routing
 
-`ActionToRequestStruct(action, version)` in `action.go` maps a `CentralSystemToChargingStationAction` string and a `Version` to an empty struct pointer of the correct versioned type. When adding a new action, update all four `ActionToRequestStruct<version>` functions and the `IsValidCentralSystemToChargingStationAction` switch.
+`action.go` provides two dispatchers keyed by direction:
+
+- `CSMSActionToRequestStruct(action, version)` maps a `CSMSToChargingStationAction` to an empty struct pointer of the correct versioned request type.
+- `ChargingStationActionToRequestStruct(action, version)` does the same for `ChargingStationToCSMSAction`.
+
+When adding a new action, update the four version-specific routing functions for that direction (`csmsActionToRequestStruct<version>` or `chargingStationActionToRequestStruct<version>`) plus the matching validator (`IsValidCSMSToChargingStationAction` or `IsValidChargingStationToCSMSAction`).
 
 ### Adding a New OCPP Version or Action
 
@@ -50,4 +55,4 @@ OCPP 1.5/1.6 request types are named without suffix (e.g., `CancelReservation`, 
 2. Create the output directory `gen/ocpp<version>/`
 3. Add the new version to the `for` list in `Taskfile.yml` and run `task generate` to produce `schema.go`
 4. Add the new version constant to `version.go`
-5. Add action constants to `action.go` and update all routing switch statements
+5. Add action constants to `action.go` (choose the correct `ChargingStationToCSMSAction` or `CSMSToChargingStationAction` type) and update the matching routing switch statements and validator for that direction
