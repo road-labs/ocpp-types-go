@@ -6,15 +6,15 @@ Go type definitions for the [OCPP](https://www.openchargealliance.org/) (Open Ch
 
 | Version | Package |
 |---------|---------|
-| OCPP 1.5 | `github.com/e-flux-platform/ocpp-types-go/gen/ocpp15` |
-| OCPP 1.6 | `github.com/e-flux-platform/ocpp-types-go/gen/ocpp16` |
-| OCPP 2.0.1 | `github.com/e-flux-platform/ocpp-types-go/gen/ocpp201` |
-| OCPP 2.1 | `github.com/e-flux-platform/ocpp-types-go/gen/ocpp21` |
+| OCPP 1.5 | `github.com/road-labs/ocpp-types-go/gen/ocpp15` |
+| OCPP 1.6 | `github.com/road-labs/ocpp-types-go/gen/ocpp16` |
+| OCPP 2.0.1 | `github.com/road-labs/ocpp-types-go/gen/ocpp201` |
+| OCPP 2.1 | `github.com/road-labs/ocpp-types-go/gen/ocpp21` |
 
 ## Installation
 
 ```bash
-go get github.com/e-flux-platform/ocpp-types-go
+go get github.com/road-labs/ocpp-types-go
 ```
 
 ## Usage
@@ -23,9 +23,9 @@ go get github.com/e-flux-platform/ocpp-types-go
 
 ```go
 import (
-    "github.com/e-flux-platform/ocpp-types-go"
-    "github.com/e-flux-platform/ocpp-types-go/gen/ocpp16"
-    "github.com/e-flux-platform/ocpp-types-go/gen/ocpp201"
+    "github.com/road-labs/ocpp-types-go"
+    "github.com/road-labs/ocpp-types-go/gen/ocpp16"
+    "github.com/road-labs/ocpp-types-go/gen/ocpp201"
 )
 ```
 
@@ -52,7 +52,7 @@ req := &ocpp201.RequestStartTransactionRequest{
 The root `ocpp` package provides helpers for routing actions to the correct request struct by version. There is one helper per direction:
 
 ```go
-import "github.com/e-flux-platform/ocpp-types-go"
+import "github.com/road-labs/ocpp-types-go"
 
 // CSMS → Charging Station
 s, err := ocpp.CSMSActionToRequestStruct(ocpp.ResetAction, ocpp.Version16)

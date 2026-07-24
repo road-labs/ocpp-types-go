@@ -1,4 +1,4 @@
-module github.com/e-flux-platform/ocpp-types-go
+module github.com/road-labs/ocpp-types-go
 
 go 1.26
 

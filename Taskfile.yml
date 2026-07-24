@@ -9,5 +9,5 @@ tasks:
         cmd: |
           go run ./cmd/generate-ocpp-types \
           --version {{ .ITEM }} \
-          --package github.com/e-flux-platform/ocpp-types-go/gen/ocpp{{ .ITEM | replace "." "" }} \
+          --package github.com/road-labs/ocpp-types-go/gen/ocpp{{ .ITEM | replace "." "" }} \
           --output-dir ./gen/ocpp{{ .ITEM | replace "." "" }}

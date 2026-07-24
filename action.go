@@ -3,10 +3,10 @@ package ocpp
 import (
 	"errors"
 
-	types15 "github.com/e-flux-platform/ocpp-types-go/gen/ocpp15"
-	types16 "github.com/e-flux-platform/ocpp-types-go/gen/ocpp16"
-	types201 "github.com/e-flux-platform/ocpp-types-go/gen/ocpp201"
-	types21 "github.com/e-flux-platform/ocpp-types-go/gen/ocpp21"
+	types15 "github.com/road-labs/ocpp-types-go/gen/ocpp15"
+	types16 "github.com/road-labs/ocpp-types-go/gen/ocpp16"
+	types201 "github.com/road-labs/ocpp-types-go/gen/ocpp201"
+	types21 "github.com/road-labs/ocpp-types-go/gen/ocpp21"
 )
 
 var (
