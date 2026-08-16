@@ -5,7 +5,14 @@ tasks:
     desc: Generate OCPP protocol Go types from JSON schemas.
     dir: "{{ .TASKFILE_DIR }}"
     cmds:
-      - for: [ "1.5", "1.6", "2.0.1", "2.1" ]
+      - for: [ "1.5", "1.6" ]
+        cmd: |
+          go run ./cmd/generate-ocpp-types \
+          --version {{ .ITEM }} \
+          --package github.com/road-labs/ocpp-types-go/gen/ocpp{{ .ITEM | replace "." "" }} \
+          --output-dir ./gen/ocpp{{ .ITEM | replace "." "" }} \
+          --soap
+      - for: [ "2.0.1", "2.1" ]
         cmd: |
           go run ./cmd/generate-ocpp-types \
           --version {{ .ITEM }} \

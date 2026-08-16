@@ -8,26 +8,25 @@ import "math"
 import "reflect"
 import "time"
 import "unicode/utf8"
+import "encoding/xml"
 
 type Authorize struct {
-	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag string `json:"idTag"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ authorizeRequest" json:"-"`
+
+	IDTag string `json:"idTag" xml:"idTag"`
 }
 
 type AuthorizeResponse struct {
-	// IDTagInfo corresponds to the JSON schema field "idTagInfo".
-	IDTagInfo AuthorizeResponseIDTagInfo `json:"idTagInfo"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ authorizeResponse" json:"-"`
+
+	IDTagInfo AuthorizeResponseIDTagInfo `json:"idTagInfo" xml:"idTagInfo"`
 }
 
 type AuthorizeResponseIDTagInfo struct {
-	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
+	Status     AuthorizeResponseIDTagInfoStatus `json:"status" xml:"status"`
+	ExpiryDate *time.Time                       `json:"expiryDate,omitempty,omitzero" xml:"expiryDate,omitempty"`
 
-	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
-
-	// Status corresponds to the JSON schema field "status".
-	Status AuthorizeResponseIDTagInfoStatus `json:"status"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero" xml:"parentIdTag,omitempty"`
 }
 
 type AuthorizeResponseIDTagInfoStatus string
@@ -46,7 +45,6 @@ var enumValues_AuthorizeResponseIDTagInfoStatus = []interface{}{
 	"ConcurrentTx",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *AuthorizeResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -66,7 +64,6 @@ func (j *AuthorizeResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *AuthorizeResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -87,7 +84,6 @@ func (j *AuthorizeResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *AuthorizeResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -105,7 +101,6 @@ func (j *AuthorizeResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *Authorize) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -127,45 +122,31 @@ func (j *Authorize) UnmarshalJSON(value []byte) error {
 }
 
 type BootNotification struct {
-	// ChargeBoxSerialNumber corresponds to the JSON schema field
-	// "chargeBoxSerialNumber".
-	ChargeBoxSerialNumber *string `json:"chargeBoxSerialNumber,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ bootNotificationRequest" json:"-"`
 
-	// ChargePointModel corresponds to the JSON schema field "chargePointModel".
-	ChargePointModel string `json:"chargePointModel"`
+	ChargePointVendor string `json:"chargePointVendor" xml:"chargePointVendor"`
+	ChargePointModel  string `json:"chargePointModel" xml:"chargePointModel"`
 
-	// ChargePointSerialNumber corresponds to the JSON schema field
-	// "chargePointSerialNumber".
-	ChargePointSerialNumber *string `json:"chargePointSerialNumber,omitempty,omitzero"`
+	ChargePointSerialNumber *string `json:"chargePointSerialNumber,omitempty,omitzero" xml:"chargePointSerialNumber,omitempty"`
+	ChargeBoxSerialNumber   *string `json:"chargeBoxSerialNumber,omitempty,omitzero" xml:"chargeBoxSerialNumber,omitempty"`
 
-	// ChargePointVendor corresponds to the JSON schema field "chargePointVendor".
-	ChargePointVendor string `json:"chargePointVendor"`
+	FirmwareVersion *string `json:"firmwareVersion,omitempty,omitzero" xml:"firmwareVersion,omitempty"`
 
-	// FirmwareVersion corresponds to the JSON schema field "firmwareVersion".
-	FirmwareVersion *string `json:"firmwareVersion,omitempty,omitzero"`
+	Iccid *string `json:"iccid,omitempty,omitzero" xml:"iccid,omitempty"`
 
-	// Iccid corresponds to the JSON schema field "iccid".
-	Iccid *string `json:"iccid,omitempty,omitzero"`
+	Imsi *string `json:"imsi,omitempty,omitzero" xml:"imsi,omitempty"`
 
-	// Imsi corresponds to the JSON schema field "imsi".
-	Imsi *string `json:"imsi,omitempty,omitzero"`
-
-	// MeterSerialNumber corresponds to the JSON schema field "meterSerialNumber".
-	MeterSerialNumber *string `json:"meterSerialNumber,omitempty,omitzero"`
-
-	// MeterType corresponds to the JSON schema field "meterType".
-	MeterType *string `json:"meterType,omitempty,omitzero"`
+	MeterType         *string `json:"meterType,omitempty,omitzero" xml:"meterType,omitempty"`
+	MeterSerialNumber *string `json:"meterSerialNumber,omitempty,omitzero" xml:"meterSerialNumber,omitempty"`
 }
 
 type BootNotificationResponse struct {
-	// CurrentTime corresponds to the JSON schema field "currentTime".
-	CurrentTime time.Time `json:"currentTime"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ bootNotificationResponse" json:"-"`
 
-	// Interval corresponds to the JSON schema field "interval".
-	Interval int `json:"interval"`
+	Status      BootNotificationResponseStatus `json:"status" xml:"status"`
+	CurrentTime time.Time                      `json:"currentTime" xml:"currentTime"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status BootNotificationResponseStatus `json:"status"`
+	Interval int `json:"interval" xml:"interval"`
 }
 
 type BootNotificationResponseStatus string
@@ -180,7 +161,6 @@ var enumValues_BootNotificationResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *BootNotificationResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -200,7 +180,6 @@ func (j *BootNotificationResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *BootNotificationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -224,7 +203,6 @@ func (j *BootNotificationResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *BootNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -273,13 +251,15 @@ func (j *BootNotification) UnmarshalJSON(value []byte) error {
 }
 
 type CancelReservation struct {
-	// ReservationID corresponds to the JSON schema field "reservationId".
-	ReservationID int `json:"reservationId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ cancelReservationRequest" json:"-"`
+
+	ReservationID int `json:"reservationId" xml:"reservationId"`
 }
 
 type CancelReservationResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status CancelReservationResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ cancelReservationResponse" json:"-"`
+
+	Status CancelReservationResponseStatus `json:"status" xml:"status"`
 }
 
 type CancelReservationResponseStatus string
@@ -292,7 +272,6 @@ var enumValues_CancelReservationResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CancelReservationResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -312,7 +291,6 @@ func (j *CancelReservationResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CancelReservationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -330,7 +308,6 @@ func (j *CancelReservationResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CancelReservation) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -349,20 +326,15 @@ func (j *CancelReservation) UnmarshalJSON(value []byte) error {
 }
 
 type CertificateHashDataType struct {
-	// HashAlgorithm corresponds to the JSON schema field "hashAlgorithm".
-	HashAlgorithm HashAlgorithmEnumType `json:"hashAlgorithm"`
+	HashAlgorithm HashAlgorithmEnumType `json:"hashAlgorithm" xml:"hashAlgorithm"`
 
-	// IssuerKeyHash corresponds to the JSON schema field "issuerKeyHash".
-	IssuerKeyHash string `json:"issuerKeyHash"`
+	IssuerKeyHash string `json:"issuerKeyHash" xml:"issuerKeyHash"`
 
-	// IssuerNameHash corresponds to the JSON schema field "issuerNameHash".
-	IssuerNameHash string `json:"issuerNameHash"`
+	IssuerNameHash string `json:"issuerNameHash" xml:"issuerNameHash"`
 
-	// SerialNumber corresponds to the JSON schema field "serialNumber".
-	SerialNumber string `json:"serialNumber"`
+	SerialNumber string `json:"serialNumber" xml:"serialNumber"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CertificateHashDataType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -399,16 +371,13 @@ func (j *CertificateHashDataType) UnmarshalJSON(value []byte) error {
 }
 
 type CertificateSigned struct {
-	// CertificateChain corresponds to the JSON schema field "certificateChain".
-	CertificateChain string `json:"certificateChain"`
+	CertificateChain string `json:"certificateChain" xml:"certificateChain"`
 }
 
 type CertificateSignedResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status CertificateSignedStatusEnumType `json:"status"`
+	Status CertificateSignedStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CertificateSignedResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -436,7 +405,6 @@ var enumValues_CertificateSignedStatusEnumType = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CertificateSignedStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -456,7 +424,6 @@ func (j *CertificateSignedStatusEnumType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CertificateSigned) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -487,7 +454,6 @@ var enumValues_CertificateUseEnumType = []interface{}{
 	"ManufacturerRootCertificate",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *CertificateUseEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -508,16 +474,17 @@ func (j *CertificateUseEnumType) UnmarshalJSON(value []byte) error {
 }
 
 type ChangeAvailability struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ changeAvailabilityRequest" json:"-"`
 
-	// Type corresponds to the JSON schema field "type".
-	Type ChangeAvailabilityType `json:"type"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
+
+	Type ChangeAvailabilityType `json:"type" xml:"type"`
 }
 
 type ChangeAvailabilityResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status ChangeAvailabilityResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ changeAvailabilityResponse" json:"-"`
+
+	Status ChangeAvailabilityResponseStatus `json:"status" xml:"status"`
 }
 
 type ChangeAvailabilityResponseStatus string
@@ -532,7 +499,6 @@ var enumValues_ChangeAvailabilityResponseStatus = []interface{}{
 	"Scheduled",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeAvailabilityResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -552,7 +518,6 @@ func (j *ChangeAvailabilityResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeAvailabilityResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -580,7 +545,6 @@ var enumValues_ChangeAvailabilityType = []interface{}{
 	"Operative",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeAvailabilityType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -600,7 +564,6 @@ func (j *ChangeAvailabilityType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeAvailability) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -622,16 +585,17 @@ func (j *ChangeAvailability) UnmarshalJSON(value []byte) error {
 }
 
 type ChangeConfiguration struct {
-	// Key corresponds to the JSON schema field "key".
-	Key string `json:"key"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ changeConfigurationRequest" json:"-"`
 
-	// Value corresponds to the JSON schema field "value".
-	Value string `json:"value"`
+	Key string `json:"key" xml:"key"`
+
+	Value string `json:"value" xml:"value"`
 }
 
 type ChangeConfigurationResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status ChangeConfigurationResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ changeConfigurationResponse" json:"-"`
+
+	Status ChangeConfigurationResponseStatus `json:"status" xml:"status"`
 }
 
 type ChangeConfigurationResponseStatus string
@@ -648,7 +612,6 @@ var enumValues_ChangeConfigurationResponseStatus = []interface{}{
 	"NotSupported",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeConfigurationResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -668,7 +631,6 @@ func (j *ChangeConfigurationResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeConfigurationResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -686,7 +648,6 @@ func (j *ChangeConfigurationResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ChangeConfiguration) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -713,11 +674,14 @@ func (j *ChangeConfiguration) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-type ClearCache map[string]interface{}
+type ClearCache struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ clearCacheRequest" json:"-"`
+}
 
 type ClearCacheResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status ClearCacheResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ clearCacheResponse" json:"-"`
+
+	Status ClearCacheResponseStatus `json:"status" xml:"status"`
 }
 
 type ClearCacheResponseStatus string
@@ -730,7 +694,6 @@ var enumValues_ClearCacheResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ClearCacheResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -750,7 +713,6 @@ func (j *ClearCacheResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ClearCacheResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -769,18 +731,13 @@ func (j *ClearCacheResponse) UnmarshalJSON(value []byte) error {
 }
 
 type ClearChargingProfile struct {
-	// ChargingProfilePurpose corresponds to the JSON schema field
-	// "chargingProfilePurpose".
-	ChargingProfilePurpose *ClearChargingProfileChargingProfilePurpose `json:"chargingProfilePurpose,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ clearChargingProfileRequest" json:"-"`
 
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
+	ID                     *int                                        `json:"id,omitempty,omitzero" xml:"id,omitempty"`
+	ConnectorID            *int                                        `json:"connectorId,omitempty,omitzero" xml:"connectorId,omitempty"`
+	ChargingProfilePurpose *ClearChargingProfileChargingProfilePurpose `json:"chargingProfilePurpose,omitempty,omitzero" xml:"chargingProfilePurpose,omitempty"`
 
-	// ID corresponds to the JSON schema field "id".
-	ID *int `json:"id,omitempty,omitzero"`
-
-	// StackLevel corresponds to the JSON schema field "stackLevel".
-	StackLevel *int `json:"stackLevel,omitempty,omitzero"`
+	StackLevel *int `json:"stackLevel,omitempty,omitzero" xml:"stackLevel,omitempty"`
 }
 
 type ClearChargingProfileChargingProfilePurpose string
@@ -795,7 +752,6 @@ var enumValues_ClearChargingProfileChargingProfilePurpose = []interface{}{
 	"TxProfile",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ClearChargingProfileChargingProfilePurpose) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -816,8 +772,9 @@ func (j *ClearChargingProfileChargingProfilePurpose) UnmarshalJSON(value []byte)
 }
 
 type ClearChargingProfileResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status ClearChargingProfileResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ clearChargingProfileResponse" json:"-"`
+
+	Status ClearChargingProfileResponseStatus `json:"status" xml:"status"`
 }
 
 type ClearChargingProfileResponseStatus string
@@ -830,7 +787,6 @@ var enumValues_ClearChargingProfileResponseStatus = []interface{}{
 	"Unknown",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ClearChargingProfileResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -850,7 +806,6 @@ func (j *ClearChargingProfileResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ClearChargingProfileResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -869,22 +824,20 @@ func (j *ClearChargingProfileResponse) UnmarshalJSON(value []byte) error {
 }
 
 type DataTransfer struct {
-	// Data corresponds to the JSON schema field "data".
-	Data *string `json:"data,omitempty,omitzero"`
+	XMLName xml.Name `xml:"dataTransferRequest" json:"-"`
+	Xmlns   string   `xml:"xmlns,attr,omitempty" json:"-"`
 
-	// MessageID corresponds to the JSON schema field "messageId".
-	MessageID *string `json:"messageId,omitempty,omitzero"`
-
-	// VendorID corresponds to the JSON schema field "vendorId".
-	VendorID string `json:"vendorId"`
+	VendorID  string  `json:"vendorId" xml:"vendorId"`
+	MessageID *string `json:"messageId,omitempty,omitzero" xml:"messageId,omitempty"`
+	Data      *string `json:"data,omitempty,omitzero" xml:"data,omitempty"`
 }
 
 type DataTransferResponse struct {
-	// Data corresponds to the JSON schema field "data".
-	Data *string `json:"data,omitempty,omitzero"`
+	XMLName xml.Name `xml:"dataTransferResponse" json:"-"`
+	Xmlns   string   `xml:"xmlns,attr,omitempty" json:"-"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status DataTransferResponseStatus `json:"status"`
+	Status DataTransferResponseStatus `json:"status" xml:"status"`
+	Data   *string                    `json:"data,omitempty,omitzero" xml:"data,omitempty"`
 }
 
 type DataTransferResponseStatus string
@@ -901,7 +854,6 @@ var enumValues_DataTransferResponseStatus = []interface{}{
 	"UnknownVendorId",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DataTransferResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -921,7 +873,6 @@ func (j *DataTransferResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DataTransferResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -939,7 +890,6 @@ func (j *DataTransferResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DataTransfer) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -964,16 +914,13 @@ func (j *DataTransfer) UnmarshalJSON(value []byte) error {
 }
 
 type DeleteCertificate struct {
-	// CertificateHashData corresponds to the JSON schema field "certificateHashData".
-	CertificateHashData CertificateHashDataType `json:"certificateHashData"`
+	CertificateHashData CertificateHashDataType `json:"certificateHashData" xml:"certificateHashData"`
 }
 
 type DeleteCertificateResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status DeleteCertificateStatusEnumType `json:"status"`
+	Status DeleteCertificateStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DeleteCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1003,7 +950,6 @@ var enumValues_DeleteCertificateStatusEnumType = []interface{}{
 	"NotFound",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DeleteCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1023,7 +969,6 @@ func (j *DeleteCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DeleteCertificate) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1042,11 +987,14 @@ func (j *DeleteCertificate) UnmarshalJSON(value []byte) error {
 }
 
 type DiagnosticsStatusNotification struct {
-	// Status corresponds to the JSON schema field "status".
-	Status DiagnosticsStatusNotificationStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ diagnosticsStatusNotificationRequest" json:"-"`
+
+	Status DiagnosticsStatusNotificationStatus `json:"status" xml:"status"`
 }
 
-type DiagnosticsStatusNotificationResponse map[string]interface{}
+type DiagnosticsStatusNotificationResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ diagnosticsStatusNotificationResponse" json:"-"`
+}
 
 type DiagnosticsStatusNotificationStatus string
 
@@ -1062,7 +1010,6 @@ var enumValues_DiagnosticsStatusNotificationStatus = []interface{}{
 	"Uploading",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DiagnosticsStatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1082,7 +1029,6 @@ func (j *DiagnosticsStatusNotificationStatus) UnmarshalJSON(value []byte) error 
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *DiagnosticsStatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1101,19 +1047,14 @@ func (j *DiagnosticsStatusNotification) UnmarshalJSON(value []byte) error {
 }
 
 type ExtendedTriggerMessage struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
-
-	// RequestedMessage corresponds to the JSON schema field "requestedMessage".
-	RequestedMessage MessageTriggerEnumType `json:"requestedMessage"`
+	RequestedMessage MessageTriggerEnumType `json:"requestedMessage" xml:"requestedMessage"`
+	ConnectorID      *int                   `json:"connectorId,omitempty,omitzero" xml:"connectorId,omitempty"`
 }
 
 type ExtendedTriggerMessageResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status TriggerMessageStatusEnumType `json:"status"`
+	Status TriggerMessageStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ExtendedTriggerMessageResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1131,7 +1072,6 @@ func (j *ExtendedTriggerMessageResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ExtendedTriggerMessage) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1183,7 +1123,6 @@ var enumValues_FirmwareStatusEnumType = []interface{}{
 	"SignatureVerified",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *FirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1204,11 +1143,14 @@ func (j *FirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 }
 
 type FirmwareStatusNotification struct {
-	// Status corresponds to the JSON schema field "status".
-	Status FirmwareStatusNotificationStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ firmwareStatusNotificationRequest" json:"-"`
+
+	Status FirmwareStatusNotificationStatus `json:"status" xml:"status"`
 }
 
-type FirmwareStatusNotificationResponse map[string]interface{}
+type FirmwareStatusNotificationResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ firmwareStatusNotificationResponse" json:"-"`
+}
 
 type FirmwareStatusNotificationStatus string
 
@@ -1230,7 +1172,6 @@ var enumValues_FirmwareStatusNotificationStatus = []interface{}{
 	"Installed",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *FirmwareStatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1250,7 +1191,6 @@ func (j *FirmwareStatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *FirmwareStatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1269,23 +1209,17 @@ func (j *FirmwareStatusNotification) UnmarshalJSON(value []byte) error {
 }
 
 type FirmwareType struct {
-	// InstallDateTime corresponds to the JSON schema field "installDateTime".
-	InstallDateTime *time.Time `json:"installDateTime,omitempty,omitzero"`
+	InstallDateTime *time.Time `json:"installDateTime,omitempty,omitzero" xml:"installDateTime,omitempty"`
 
-	// Location corresponds to the JSON schema field "location".
-	Location string `json:"location"`
+	Location string `json:"location" xml:"location"`
 
-	// RetrieveDateTime corresponds to the JSON schema field "retrieveDateTime".
-	RetrieveDateTime time.Time `json:"retrieveDateTime"`
+	RetrieveDateTime time.Time `json:"retrieveDateTime" xml:"retrieveDateTime"`
 
-	// Signature corresponds to the JSON schema field "signature".
-	Signature string `json:"signature"`
+	Signature string `json:"signature" xml:"signature"`
 
-	// SigningCertificate corresponds to the JSON schema field "signingCertificate".
-	SigningCertificate string `json:"signingCertificate"`
+	SigningCertificate string `json:"signingCertificate" xml:"signingCertificate"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *FirmwareType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1331,7 +1265,6 @@ var enumValues_GenericStatusEnumType = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GenericStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1352,14 +1285,12 @@ func (j *GenericStatusEnumType) UnmarshalJSON(value []byte) error {
 }
 
 type GetCompositeSchedule struct {
-	// ChargingRateUnit corresponds to the JSON schema field "chargingRateUnit".
-	ChargingRateUnit *GetCompositeScheduleChargingRateUnit `json:"chargingRateUnit,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getCompositeScheduleRequest" json:"-"`
 
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
 
-	// Duration corresponds to the JSON schema field "duration".
-	Duration int `json:"duration"`
+	Duration         int                                   `json:"duration" xml:"duration"`
+	ChargingRateUnit *GetCompositeScheduleChargingRateUnit `json:"chargingRateUnit,omitempty,omitzero" xml:"chargingRateUnit,omitempty"`
 }
 
 type GetCompositeScheduleChargingRateUnit string
@@ -1372,7 +1303,6 @@ var enumValues_GetCompositeScheduleChargingRateUnit = []interface{}{
 	"W",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeScheduleChargingRateUnit) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1393,35 +1323,24 @@ func (j *GetCompositeScheduleChargingRateUnit) UnmarshalJSON(value []byte) error
 }
 
 type GetCompositeScheduleResponse struct {
-	// ChargingSchedule corresponds to the JSON schema field "chargingSchedule".
-	ChargingSchedule *GetCompositeScheduleResponseChargingSchedule `json:"chargingSchedule,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getCompositeScheduleResponse" json:"-"`
 
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
+	Status      GetCompositeScheduleResponseStatus `json:"status" xml:"status"`
+	ConnectorID *int                               `json:"connectorId,omitempty,omitzero" xml:"connectorId,omitempty"`
 
-	// ScheduleStart corresponds to the JSON schema field "scheduleStart".
-	ScheduleStart *time.Time `json:"scheduleStart,omitempty,omitzero"`
-
-	// Status corresponds to the JSON schema field "status".
-	Status GetCompositeScheduleResponseStatus `json:"status"`
+	ScheduleStart    *time.Time                                    `json:"scheduleStart,omitempty,omitzero" xml:"scheduleStart,omitempty"`
+	ChargingSchedule *GetCompositeScheduleResponseChargingSchedule `json:"chargingSchedule,omitempty,omitzero" xml:"chargingSchedule,omitempty"`
 }
 
 type GetCompositeScheduleResponseChargingSchedule struct {
-	// ChargingRateUnit corresponds to the JSON schema field "chargingRateUnit".
-	ChargingRateUnit GetCompositeScheduleResponseChargingScheduleChargingRateUnit `json:"chargingRateUnit"`
+	Duration *int `json:"duration,omitempty,omitzero" xml:"duration,omitempty"`
 
-	// ChargingSchedulePeriod corresponds to the JSON schema field
-	// "chargingSchedulePeriod".
-	ChargingSchedulePeriod []GetCompositeScheduleResponseChargingScheduleChargingSchedulePeriodElem `json:"chargingSchedulePeriod"`
+	StartSchedule    *time.Time                                                   `json:"startSchedule,omitempty,omitzero" xml:"startSchedule,omitempty"`
+	ChargingRateUnit GetCompositeScheduleResponseChargingScheduleChargingRateUnit `json:"chargingRateUnit" xml:"chargingRateUnit"`
 
-	// Duration corresponds to the JSON schema field "duration".
-	Duration *int `json:"duration,omitempty,omitzero"`
+	ChargingSchedulePeriod []GetCompositeScheduleResponseChargingScheduleChargingSchedulePeriodElem `json:"chargingSchedulePeriod" xml:"chargingSchedulePeriod"`
 
-	// MinChargingRate corresponds to the JSON schema field "minChargingRate".
-	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero"`
-
-	// StartSchedule corresponds to the JSON schema field "startSchedule".
-	StartSchedule *time.Time `json:"startSchedule,omitempty,omitzero"`
+	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero" xml:"minChargingRate,omitempty"`
 }
 
 type GetCompositeScheduleResponseChargingScheduleChargingRateUnit string
@@ -1434,7 +1353,6 @@ var enumValues_GetCompositeScheduleResponseChargingScheduleChargingRateUnit = []
 	"W",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeScheduleResponseChargingScheduleChargingRateUnit) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1455,17 +1373,12 @@ func (j *GetCompositeScheduleResponseChargingScheduleChargingRateUnit) Unmarshal
 }
 
 type GetCompositeScheduleResponseChargingScheduleChargingSchedulePeriodElem struct {
-	// Limit corresponds to the JSON schema field "limit".
-	Limit float64 `json:"limit"`
+	StartPeriod int     `json:"startPeriod" xml:"startPeriod"`
+	Limit       float64 `json:"limit" xml:"limit"`
 
-	// NumberPhases corresponds to the JSON schema field "numberPhases".
-	NumberPhases *int `json:"numberPhases,omitempty,omitzero"`
-
-	// StartPeriod corresponds to the JSON schema field "startPeriod".
-	StartPeriod int `json:"startPeriod"`
+	NumberPhases *int `json:"numberPhases,omitempty,omitzero" xml:"numberPhases,omitempty"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeScheduleResponseChargingScheduleChargingSchedulePeriodElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1492,7 +1405,6 @@ func (j *GetCompositeScheduleResponseChargingScheduleChargingSchedulePeriodElem)
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeScheduleResponseChargingSchedule) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1529,7 +1441,6 @@ var enumValues_GetCompositeScheduleResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeScheduleResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1549,7 +1460,6 @@ func (j *GetCompositeScheduleResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeScheduleResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1567,7 +1477,6 @@ func (j *GetCompositeScheduleResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetCompositeSchedule) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1589,30 +1498,27 @@ func (j *GetCompositeSchedule) UnmarshalJSON(value []byte) error {
 }
 
 type GetConfiguration struct {
-	// Key corresponds to the JSON schema field "key".
-	Key []string `json:"key,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getConfigurationRequest" json:"-"`
+
+	Key []string `json:"key,omitempty,omitzero" xml:"key,omitempty"`
 }
 
 type GetConfigurationResponse struct {
-	// ConfigurationKey corresponds to the JSON schema field "configurationKey".
-	ConfigurationKey []GetConfigurationResponseConfigurationKeyElem `json:"configurationKey,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getConfigurationResponse" json:"-"`
 
-	// UnknownKey corresponds to the JSON schema field "unknownKey".
-	UnknownKey []string `json:"unknownKey,omitempty,omitzero"`
+	ConfigurationKey []GetConfigurationResponseConfigurationKeyElem `json:"configurationKey,omitempty,omitzero" xml:"configurationKey,omitempty"`
+
+	UnknownKey []string `json:"unknownKey,omitempty,omitzero" xml:"unknownKey,omitempty"`
 }
 
 type GetConfigurationResponseConfigurationKeyElem struct {
-	// Key corresponds to the JSON schema field "key".
-	Key string `json:"key"`
+	Key string `json:"key" xml:"key"`
 
-	// Readonly corresponds to the JSON schema field "readonly".
-	Readonly bool `json:"readonly"`
+	Readonly bool `json:"readonly" xml:"readonly"`
 
-	// Value corresponds to the JSON schema field "value".
-	Value *string `json:"value,omitempty,omitzero"`
+	Value *string `json:"value,omitempty,omitzero" xml:"value,omitempty"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetConfigurationResponseConfigurationKeyElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1640,28 +1546,24 @@ func (j *GetConfigurationResponseConfigurationKeyElem) UnmarshalJSON(value []byt
 }
 
 type GetDiagnostics struct {
-	// Location corresponds to the JSON schema field "location".
-	Location string `json:"location"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getDiagnosticsRequest" json:"-"`
 
-	// Retries corresponds to the JSON schema field "retries".
-	Retries *int `json:"retries,omitempty,omitzero"`
+	Location string `json:"location" xml:"location"`
 
-	// RetryInterval corresponds to the JSON schema field "retryInterval".
-	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
+	StartTime *time.Time `json:"startTime,omitempty,omitzero" xml:"startTime,omitempty"`
 
-	// StartTime corresponds to the JSON schema field "startTime".
-	StartTime *time.Time `json:"startTime,omitempty,omitzero"`
+	StopTime *time.Time `json:"stopTime,omitempty,omitzero" xml:"stopTime,omitempty"`
+	Retries  *int       `json:"retries,omitempty,omitzero" xml:"retries,omitempty"`
 
-	// StopTime corresponds to the JSON schema field "stopTime".
-	StopTime *time.Time `json:"stopTime,omitempty,omitzero"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero" xml:"retryInterval,omitempty"`
 }
 
 type GetDiagnosticsResponse struct {
-	// FileName corresponds to the JSON schema field "fileName".
-	FileName *string `json:"fileName,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getDiagnosticsResponse" json:"-"`
+
+	FileName *string `json:"fileName,omitempty,omitzero" xml:"fileName,omitempty"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetDiagnosticsResponse) UnmarshalJSON(value []byte) error {
 	type Plain GetDiagnosticsResponse
 	var plain Plain
@@ -1675,7 +1577,6 @@ func (j *GetDiagnosticsResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetDiagnostics) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1694,19 +1595,15 @@ func (j *GetDiagnostics) UnmarshalJSON(value []byte) error {
 }
 
 type GetInstalledCertificateIds struct {
-	// CertificateType corresponds to the JSON schema field "certificateType".
-	CertificateType CertificateUseEnumType `json:"certificateType"`
+	CertificateType CertificateUseEnumType `json:"certificateType" xml:"certificateType"`
 }
 
 type GetInstalledCertificateIdsResponse struct {
-	// CertificateHashData corresponds to the JSON schema field "certificateHashData".
-	CertificateHashData []CertificateHashDataType `json:"certificateHashData,omitempty,omitzero"`
+	CertificateHashData []CertificateHashDataType `json:"certificateHashData,omitempty,omitzero" xml:"certificateHashData,omitempty"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status GetInstalledCertificateStatusEnumType `json:"status"`
+	Status GetInstalledCertificateStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetInstalledCertificateIdsResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1727,7 +1624,6 @@ func (j *GetInstalledCertificateIdsResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetInstalledCertificateIds) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1755,7 +1651,6 @@ var enumValues_GetInstalledCertificateStatusEnumType = []interface{}{
 	"NotFound",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetInstalledCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1775,14 +1670,16 @@ func (j *GetInstalledCertificateStatusEnumType) UnmarshalJSON(value []byte) erro
 	return nil
 }
 
-type GetLocalListVersion map[string]interface{}
-
-type GetLocalListVersionResponse struct {
-	// ListVersion corresponds to the JSON schema field "listVersion".
-	ListVersion int `json:"listVersion"`
+type GetLocalListVersion struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getLocalListVersionRequest" json:"-"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
+type GetLocalListVersionResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ getLocalListVersionResponse" json:"-"`
+
+	ListVersion int `json:"listVersion" xml:"listVersion"`
+}
+
 func (j *GetLocalListVersionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1801,31 +1698,23 @@ func (j *GetLocalListVersionResponse) UnmarshalJSON(value []byte) error {
 }
 
 type GetLog struct {
-	// Log corresponds to the JSON schema field "log".
-	Log LogParametersType `json:"log"`
+	Log LogParametersType `json:"log" xml:"log"`
 
-	// LogType corresponds to the JSON schema field "logType".
-	LogType LogEnumType `json:"logType"`
+	LogType LogEnumType `json:"logType" xml:"logType"`
 
-	// RequestID corresponds to the JSON schema field "requestId".
-	RequestID int `json:"requestId"`
+	RequestID int `json:"requestId" xml:"requestId"`
 
-	// Retries corresponds to the JSON schema field "retries".
-	Retries *int `json:"retries,omitempty,omitzero"`
+	Retries *int `json:"retries,omitempty,omitzero" xml:"retries,omitempty"`
 
-	// RetryInterval corresponds to the JSON schema field "retryInterval".
-	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero" xml:"retryInterval,omitempty"`
 }
 
 type GetLogResponse struct {
-	// Filename corresponds to the JSON schema field "filename".
-	Filename *string `json:"filename,omitempty,omitzero"`
+	Filename *string `json:"filename,omitempty,omitzero" xml:"filename,omitempty"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status LogStatusEnumType `json:"status"`
+	Status LogStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetLogResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1846,7 +1735,6 @@ func (j *GetLogResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *GetLog) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1882,7 +1770,6 @@ var enumValues_HashAlgorithmEnumType = []interface{}{
 	"SHA512",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *HashAlgorithmEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1902,14 +1789,16 @@ func (j *HashAlgorithmEnumType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-type Heartbeat map[string]interface{}
-
-type HeartbeatResponse struct {
-	// CurrentTime corresponds to the JSON schema field "currentTime".
-	CurrentTime time.Time `json:"currentTime"`
+type Heartbeat struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ heartbeatRequest" json:"-"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
+type HeartbeatResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ heartbeatResponse" json:"-"`
+
+	CurrentTime time.Time `json:"currentTime" xml:"currentTime"`
+}
+
 func (j *HeartbeatResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1928,19 +1817,15 @@ func (j *HeartbeatResponse) UnmarshalJSON(value []byte) error {
 }
 
 type InstallCertificate struct {
-	// Certificate corresponds to the JSON schema field "certificate".
-	Certificate string `json:"certificate"`
+	Certificate string `json:"certificate" xml:"certificate"`
 
-	// CertificateType corresponds to the JSON schema field "certificateType".
-	CertificateType CertificateUseEnumType `json:"certificateType"`
+	CertificateType CertificateUseEnumType `json:"certificateType" xml:"certificateType"`
 }
 
 type InstallCertificateResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status InstallCertificateStatusEnumType `json:"status"`
+	Status InstallCertificateStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *InstallCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -1970,7 +1855,6 @@ var enumValues_InstallCertificateStatusEnumType = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *InstallCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -1990,7 +1874,6 @@ func (j *InstallCertificateStatusEnumType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *InstallCertificate) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2024,7 +1907,6 @@ var enumValues_LogEnumType = []interface{}{
 	"SecurityLog",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *LogEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2045,17 +1927,13 @@ func (j *LogEnumType) UnmarshalJSON(value []byte) error {
 }
 
 type LogParametersType struct {
-	// LatestTimestamp corresponds to the JSON schema field "latestTimestamp".
-	LatestTimestamp *time.Time `json:"latestTimestamp,omitempty,omitzero"`
+	LatestTimestamp *time.Time `json:"latestTimestamp,omitempty,omitzero" xml:"latestTimestamp,omitempty"`
 
-	// OldestTimestamp corresponds to the JSON schema field "oldestTimestamp".
-	OldestTimestamp *time.Time `json:"oldestTimestamp,omitempty,omitzero"`
+	OldestTimestamp *time.Time `json:"oldestTimestamp,omitempty,omitzero" xml:"oldestTimestamp,omitempty"`
 
-	// RemoteLocation corresponds to the JSON schema field "remoteLocation".
-	RemoteLocation string `json:"remoteLocation"`
+	RemoteLocation string `json:"remoteLocation" xml:"remoteLocation"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *LogParametersType) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2088,7 +1966,6 @@ var enumValues_LogStatusEnumType = []interface{}{
 	"AcceptedCanceled",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *LogStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2109,16 +1986,13 @@ func (j *LogStatusEnumType) UnmarshalJSON(value []byte) error {
 }
 
 type LogStatusNotification struct {
-	// RequestID corresponds to the JSON schema field "requestId".
-	RequestID *int `json:"requestId,omitempty,omitzero"`
+	RequestID *int `json:"requestId,omitempty,omitzero" xml:"requestId,omitempty"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status UploadLogStatusEnumType `json:"status"`
+	Status UploadLogStatusEnumType `json:"status" xml:"status"`
 }
 
 type LogStatusNotificationResponse map[string]interface{}
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *LogStatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2156,7 +2030,6 @@ var enumValues_MessageTriggerEnumType = []interface{}{
 	"StatusNotification",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MessageTriggerEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2177,45 +2050,31 @@ func (j *MessageTriggerEnumType) UnmarshalJSON(value []byte) error {
 }
 
 type MeterValues struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ meterValuesRequest" json:"-"`
 
-	// MeterValue corresponds to the JSON schema field "meterValue".
-	MeterValue []MeterValuesMeterValueElem `json:"meterValue"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
 
-	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID *int `json:"transactionId,omitempty,omitzero"`
+	TransactionID *int                        `json:"transactionId,omitempty,omitzero" xml:"transactionId,omitempty"`
+	MeterValue    []MeterValuesMeterValueElem `json:"meterValue" xml:"meterValue"`
 }
 
 type MeterValuesMeterValueElem struct {
-	// SampledValue corresponds to the JSON schema field "sampledValue".
-	SampledValue []MeterValuesMeterValueElemSampledValueElem `json:"sampledValue"`
-
-	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp time.Time `json:"timestamp"`
+	Timestamp    time.Time                                   `json:"timestamp" xml:"timestamp"`
+	SampledValue []MeterValuesMeterValueElemSampledValueElem `json:"sampledValue" xml:"sampledValue"`
 }
 
 type MeterValuesMeterValueElemSampledValueElem struct {
-	// Context corresponds to the JSON schema field "context".
-	Context *MeterValuesMeterValueElemSampledValueElemContext `json:"context,omitempty,omitzero"`
+	Value   string                                            `json:"value" xml:"value"`
+	Context *MeterValuesMeterValueElemSampledValueElemContext `json:"context,omitempty,omitzero" xml:"context,omitempty"`
 
-	// Format corresponds to the JSON schema field "format".
-	Format *MeterValuesMeterValueElemSampledValueElemFormat `json:"format,omitempty,omitzero"`
+	Format *MeterValuesMeterValueElemSampledValueElemFormat `json:"format,omitempty,omitzero" xml:"format,omitempty"`
 
-	// Location corresponds to the JSON schema field "location".
-	Location *MeterValuesMeterValueElemSampledValueElemLocation `json:"location,omitempty,omitzero"`
+	Measurand *MeterValuesMeterValueElemSampledValueElemMeasurand `json:"measurand,omitempty,omitzero" xml:"measurand,omitempty"`
 
-	// Measurand corresponds to the JSON schema field "measurand".
-	Measurand *MeterValuesMeterValueElemSampledValueElemMeasurand `json:"measurand,omitempty,omitzero"`
+	Phase    *MeterValuesMeterValueElemSampledValueElemPhase    `json:"phase,omitempty,omitzero" xml:"phase,omitempty"`
+	Location *MeterValuesMeterValueElemSampledValueElemLocation `json:"location,omitempty,omitzero" xml:"location,omitempty"`
 
-	// Phase corresponds to the JSON schema field "phase".
-	Phase *MeterValuesMeterValueElemSampledValueElemPhase `json:"phase,omitempty,omitzero"`
-
-	// Unit corresponds to the JSON schema field "unit".
-	Unit *MeterValuesMeterValueElemSampledValueElemUnit `json:"unit,omitempty,omitzero"`
-
-	// Value corresponds to the JSON schema field "value".
-	Value string `json:"value"`
+	Unit *MeterValuesMeterValueElemSampledValueElemUnit `json:"unit,omitempty,omitzero" xml:"unit,omitempty"`
 }
 
 type MeterValuesMeterValueElemSampledValueElemContext string
@@ -2240,7 +2099,6 @@ var enumValues_MeterValuesMeterValueElemSampledValueElemContext = []interface{}{
 	"Other",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElemContext) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2270,7 +2128,6 @@ var enumValues_MeterValuesMeterValueElemSampledValueElemFormat = []interface{}{
 	"SignedData",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElemFormat) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2306,7 +2163,6 @@ var enumValues_MeterValuesMeterValueElemSampledValueElemLocation = []interface{}
 	"Body",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElemLocation) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2376,7 +2232,6 @@ var enumValues_MeterValuesMeterValueElemSampledValueElemMeasurand = []interface{
 	"RPM",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElemMeasurand) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2422,7 +2277,6 @@ var enumValues_MeterValuesMeterValueElemSampledValueElemPhase = []interface{}{
 	"L3-L1",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElemPhase) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2482,7 +2336,6 @@ var enumValues_MeterValuesMeterValueElemSampledValueElemUnit = []interface{}{
 	"Percent",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElemUnit) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2502,7 +2355,6 @@ func (j *MeterValuesMeterValueElemSampledValueElemUnit) UnmarshalJSON(value []by
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElemSampledValueElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2520,7 +2372,6 @@ func (j *MeterValuesMeterValueElemSampledValueElem) UnmarshalJSON(value []byte) 
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValuesMeterValueElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2541,9 +2392,10 @@ func (j *MeterValuesMeterValueElem) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-type MeterValuesResponse map[string]interface{}
+type MeterValuesResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ meterValuesResponse" json:"-"`
+}
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *MeterValues) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2565,44 +2417,28 @@ func (j *MeterValues) UnmarshalJSON(value []byte) error {
 }
 
 type RemoteStartTransaction struct {
-	// ChargingProfile corresponds to the JSON schema field "chargingProfile".
-	ChargingProfile *RemoteStartTransactionChargingProfile `json:"chargingProfile,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ remoteStartTransactionRequest" json:"-"`
 
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
+	ConnectorID *int `json:"connectorId,omitempty,omitzero" xml:"connectorId,omitempty"`
 
-	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag string `json:"idTag"`
+	IDTag           string                                 `json:"idTag" xml:"idTag"`
+	ChargingProfile *RemoteStartTransactionChargingProfile `json:"chargingProfile,omitempty,omitzero" xml:"chargingProfile,omitempty"`
 }
 
 type RemoteStartTransactionChargingProfile struct {
-	// ChargingProfileID corresponds to the JSON schema field "chargingProfileId".
-	ChargingProfileID int `json:"chargingProfileId"`
+	ChargingProfileID int `json:"chargingProfileId" xml:"chargingProfileId"`
 
-	// ChargingProfileKind corresponds to the JSON schema field "chargingProfileKind".
-	ChargingProfileKind RemoteStartTransactionChargingProfileChargingProfileKind `json:"chargingProfileKind"`
+	TransactionID          *int                                                        `json:"transactionId,omitempty,omitzero" xml:"transactionId,omitempty"`
+	StackLevel             int                                                         `json:"stackLevel" xml:"stackLevel"`
+	ChargingProfilePurpose RemoteStartTransactionChargingProfileChargingProfilePurpose `json:"chargingProfilePurpose" xml:"chargingProfilePurpose"`
+	ChargingProfileKind    RemoteStartTransactionChargingProfileChargingProfileKind    `json:"chargingProfileKind" xml:"chargingProfileKind"`
 
-	// ChargingProfilePurpose corresponds to the JSON schema field
-	// "chargingProfilePurpose".
-	ChargingProfilePurpose RemoteStartTransactionChargingProfileChargingProfilePurpose `json:"chargingProfilePurpose"`
+	RecurrencyKind *RemoteStartTransactionChargingProfileRecurrencyKind `json:"recurrencyKind,omitempty,omitzero" xml:"recurrencyKind,omitempty"`
 
-	// ChargingSchedule corresponds to the JSON schema field "chargingSchedule".
-	ChargingSchedule RemoteStartTransactionChargingProfileChargingSchedule `json:"chargingSchedule"`
+	ValidFrom *time.Time `json:"validFrom,omitempty,omitzero" xml:"validFrom,omitempty"`
 
-	// RecurrencyKind corresponds to the JSON schema field "recurrencyKind".
-	RecurrencyKind *RemoteStartTransactionChargingProfileRecurrencyKind `json:"recurrencyKind,omitempty,omitzero"`
-
-	// StackLevel corresponds to the JSON schema field "stackLevel".
-	StackLevel int `json:"stackLevel"`
-
-	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID *int `json:"transactionId,omitempty,omitzero"`
-
-	// ValidFrom corresponds to the JSON schema field "validFrom".
-	ValidFrom *time.Time `json:"validFrom,omitempty,omitzero"`
-
-	// ValidTo corresponds to the JSON schema field "validTo".
-	ValidTo *time.Time `json:"validTo,omitempty,omitzero"`
+	ValidTo          *time.Time                                            `json:"validTo,omitempty,omitzero" xml:"validTo,omitempty"`
+	ChargingSchedule RemoteStartTransactionChargingProfileChargingSchedule `json:"chargingSchedule" xml:"chargingSchedule"`
 }
 
 type RemoteStartTransactionChargingProfileChargingProfileKind string
@@ -2617,7 +2453,6 @@ var enumValues_RemoteStartTransactionChargingProfileChargingProfileKind = []inte
 	"Relative",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfileChargingProfileKind) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2649,7 +2484,6 @@ var enumValues_RemoteStartTransactionChargingProfileChargingProfilePurpose = []i
 	"TxProfile",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfileChargingProfilePurpose) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2670,21 +2504,14 @@ func (j *RemoteStartTransactionChargingProfileChargingProfilePurpose) UnmarshalJ
 }
 
 type RemoteStartTransactionChargingProfileChargingSchedule struct {
-	// ChargingRateUnit corresponds to the JSON schema field "chargingRateUnit".
-	ChargingRateUnit RemoteStartTransactionChargingProfileChargingScheduleChargingRateUnit `json:"chargingRateUnit"`
+	Duration *int `json:"duration,omitempty,omitzero" xml:"duration,omitempty"`
 
-	// ChargingSchedulePeriod corresponds to the JSON schema field
-	// "chargingSchedulePeriod".
-	ChargingSchedulePeriod []RemoteStartTransactionChargingProfileChargingScheduleChargingSchedulePeriodElem `json:"chargingSchedulePeriod"`
+	StartSchedule    *time.Time                                                            `json:"startSchedule,omitempty,omitzero" xml:"startSchedule,omitempty"`
+	ChargingRateUnit RemoteStartTransactionChargingProfileChargingScheduleChargingRateUnit `json:"chargingRateUnit" xml:"chargingRateUnit"`
 
-	// Duration corresponds to the JSON schema field "duration".
-	Duration *int `json:"duration,omitempty,omitzero"`
+	ChargingSchedulePeriod []RemoteStartTransactionChargingProfileChargingScheduleChargingSchedulePeriodElem `json:"chargingSchedulePeriod" xml:"chargingSchedulePeriod"`
 
-	// MinChargingRate corresponds to the JSON schema field "minChargingRate".
-	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero"`
-
-	// StartSchedule corresponds to the JSON schema field "startSchedule".
-	StartSchedule *time.Time `json:"startSchedule,omitempty,omitzero"`
+	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero" xml:"minChargingRate,omitempty"`
 }
 
 type RemoteStartTransactionChargingProfileChargingScheduleChargingRateUnit string
@@ -2697,7 +2524,6 @@ var enumValues_RemoteStartTransactionChargingProfileChargingScheduleChargingRate
 	"W",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfileChargingScheduleChargingRateUnit) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2718,17 +2544,12 @@ func (j *RemoteStartTransactionChargingProfileChargingScheduleChargingRateUnit) 
 }
 
 type RemoteStartTransactionChargingProfileChargingScheduleChargingSchedulePeriodElem struct {
-	// Limit corresponds to the JSON schema field "limit".
-	Limit float64 `json:"limit"`
+	StartPeriod int     `json:"startPeriod" xml:"startPeriod"`
+	Limit       float64 `json:"limit" xml:"limit"`
 
-	// NumberPhases corresponds to the JSON schema field "numberPhases".
-	NumberPhases *int `json:"numberPhases,omitempty,omitzero"`
-
-	// StartPeriod corresponds to the JSON schema field "startPeriod".
-	StartPeriod int `json:"startPeriod"`
+	NumberPhases *int `json:"numberPhases,omitempty,omitzero" xml:"numberPhases,omitempty"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfileChargingScheduleChargingSchedulePeriodElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2755,7 +2576,6 @@ func (j *RemoteStartTransactionChargingProfileChargingScheduleChargingSchedulePe
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfileChargingSchedule) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2792,7 +2612,6 @@ var enumValues_RemoteStartTransactionChargingProfileRecurrencyKind = []interface
 	"Weekly",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfileRecurrencyKind) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2812,7 +2631,6 @@ func (j *RemoteStartTransactionChargingProfileRecurrencyKind) UnmarshalJSON(valu
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionChargingProfile) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2843,8 +2661,9 @@ func (j *RemoteStartTransactionChargingProfile) UnmarshalJSON(value []byte) erro
 }
 
 type RemoteStartTransactionResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status RemoteStartTransactionResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ remoteStartTransactionResponse" json:"-"`
+
+	Status RemoteStartTransactionResponseStatus `json:"status" xml:"status"`
 }
 
 type RemoteStartTransactionResponseStatus string
@@ -2857,7 +2676,6 @@ var enumValues_RemoteStartTransactionResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2877,7 +2695,6 @@ func (j *RemoteStartTransactionResponseStatus) UnmarshalJSON(value []byte) error
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2895,7 +2712,6 @@ func (j *RemoteStartTransactionResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStartTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2917,13 +2733,15 @@ func (j *RemoteStartTransaction) UnmarshalJSON(value []byte) error {
 }
 
 type RemoteStopTransaction struct {
-	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID int `json:"transactionId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ remoteStopTransactionRequest" json:"-"`
+
+	TransactionID int `json:"transactionId" xml:"transactionId"`
 }
 
 type RemoteStopTransactionResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status RemoteStopTransactionResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ remoteStopTransactionResponse" json:"-"`
+
+	Status RemoteStopTransactionResponseStatus `json:"status" xml:"status"`
 }
 
 type RemoteStopTransactionResponseStatus string
@@ -2936,7 +2754,6 @@ var enumValues_RemoteStopTransactionResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStopTransactionResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -2956,7 +2773,6 @@ func (j *RemoteStopTransactionResponseStatus) UnmarshalJSON(value []byte) error 
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStopTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2974,7 +2790,6 @@ func (j *RemoteStopTransactionResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *RemoteStopTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -2993,25 +2808,23 @@ func (j *RemoteStopTransaction) UnmarshalJSON(value []byte) error {
 }
 
 type ReserveNow struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ reserveNowRequest" json:"-"`
 
-	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate time.Time `json:"expiryDate"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
 
-	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag string `json:"idTag"`
+	ExpiryDate time.Time `json:"expiryDate" xml:"expiryDate"`
 
-	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
+	IDTag string `json:"idTag" xml:"idTag"`
 
-	// ReservationID corresponds to the JSON schema field "reservationId".
-	ReservationID int `json:"reservationId"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero" xml:"parentIdTag,omitempty"`
+
+	ReservationID int `json:"reservationId" xml:"reservationId"`
 }
 
 type ReserveNowResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status ReserveNowResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ reserveNowResponse" json:"-"`
+
+	Status ReserveNowResponseStatus `json:"status" xml:"status"`
 }
 
 type ReserveNowResponseStatus string
@@ -3030,7 +2843,6 @@ var enumValues_ReserveNowResponseStatus = []interface{}{
 	"Unavailable",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ReserveNowResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3050,7 +2862,6 @@ func (j *ReserveNowResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ReserveNowResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3068,7 +2879,6 @@ func (j *ReserveNowResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ReserveNow) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3102,13 +2912,15 @@ func (j *ReserveNow) UnmarshalJSON(value []byte) error {
 }
 
 type Reset struct {
-	// Type corresponds to the JSON schema field "type".
-	Type ResetType `json:"type"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ resetRequest" json:"-"`
+
+	Type ResetType `json:"type" xml:"type"`
 }
 
 type ResetResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status ResetResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ resetResponse" json:"-"`
+
+	Status ResetResponseStatus `json:"status" xml:"status"`
 }
 
 type ResetResponseStatus string
@@ -3121,7 +2933,6 @@ var enumValues_ResetResponseStatus = []interface{}{
 	"Rejected",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ResetResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3141,7 +2952,6 @@ func (j *ResetResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ResetResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3169,7 +2979,6 @@ var enumValues_ResetType = []interface{}{
 	"Soft",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *ResetType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3189,7 +2998,6 @@ func (j *ResetType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *Reset) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3208,19 +3016,15 @@ func (j *Reset) UnmarshalJSON(value []byte) error {
 }
 
 type SecurityEventNotification struct {
-	// TechInfo corresponds to the JSON schema field "techInfo".
-	TechInfo *string `json:"techInfo,omitempty,omitzero"`
+	TechInfo *string `json:"techInfo,omitempty,omitzero" xml:"techInfo,omitempty"`
 
-	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp time.Time `json:"timestamp"`
+	Timestamp time.Time `json:"timestamp" xml:"timestamp"`
 
-	// Type corresponds to the JSON schema field "type".
-	Type string `json:"type"`
+	Type string `json:"type" xml:"type"`
 }
 
 type SecurityEventNotificationResponse map[string]interface{}
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SecurityEventNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3248,34 +3052,26 @@ func (j *SecurityEventNotification) UnmarshalJSON(value []byte) error {
 }
 
 type SendLocalList struct {
-	// ListVersion corresponds to the JSON schema field "listVersion".
-	ListVersion int `json:"listVersion"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ sendLocalListRequest" json:"-"`
 
-	// LocalAuthorizationList corresponds to the JSON schema field
-	// "localAuthorizationList".
-	LocalAuthorizationList []SendLocalListLocalAuthorizationListElem `json:"localAuthorizationList,omitempty,omitzero"`
+	ListVersion int `json:"listVersion" xml:"listVersion"`
 
-	// UpdateType corresponds to the JSON schema field "updateType".
-	UpdateType SendLocalListUpdateType `json:"updateType"`
+	LocalAuthorizationList []SendLocalListLocalAuthorizationListElem `json:"localAuthorizationList,omitempty,omitzero" xml:"localAuthorizationList,omitempty"`
+
+	UpdateType SendLocalListUpdateType `json:"updateType" xml:"updateType"`
 }
 
 type SendLocalListLocalAuthorizationListElem struct {
-	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag string `json:"idTag"`
+	IDTag string `json:"idTag" xml:"idTag"`
 
-	// IDTagInfo corresponds to the JSON schema field "idTagInfo".
-	IDTagInfo *SendLocalListLocalAuthorizationListElemIDTagInfo `json:"idTagInfo,omitempty,omitzero"`
+	IDTagInfo *SendLocalListLocalAuthorizationListElemIDTagInfo `json:"idTagInfo,omitempty,omitzero" xml:"idTagInfo,omitempty"`
 }
 
 type SendLocalListLocalAuthorizationListElemIDTagInfo struct {
-	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
+	Status     SendLocalListLocalAuthorizationListElemIDTagInfoStatus `json:"status" xml:"status"`
+	ExpiryDate *time.Time                                             `json:"expiryDate,omitempty,omitzero" xml:"expiryDate,omitempty"`
 
-	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
-
-	// Status corresponds to the JSON schema field "status".
-	Status SendLocalListLocalAuthorizationListElemIDTagInfoStatus `json:"status"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero" xml:"parentIdTag,omitempty"`
 }
 
 type SendLocalListLocalAuthorizationListElemIDTagInfoStatus string
@@ -3294,7 +3090,6 @@ var enumValues_SendLocalListLocalAuthorizationListElemIDTagInfoStatus = []interf
 	"ConcurrentTx",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalListLocalAuthorizationListElemIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3314,7 +3109,6 @@ func (j *SendLocalListLocalAuthorizationListElemIDTagInfoStatus) UnmarshalJSON(v
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalListLocalAuthorizationListElemIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3335,7 +3129,6 @@ func (j *SendLocalListLocalAuthorizationListElemIDTagInfo) UnmarshalJSON(value [
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalListLocalAuthorizationListElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3357,8 +3150,9 @@ func (j *SendLocalListLocalAuthorizationListElem) UnmarshalJSON(value []byte) er
 }
 
 type SendLocalListResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status SendLocalListResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ sendLocalListResponse" json:"-"`
+
+	Status SendLocalListResponseStatus `json:"status" xml:"status"`
 }
 
 type SendLocalListResponseStatus string
@@ -3375,7 +3169,6 @@ var enumValues_SendLocalListResponseStatus = []interface{}{
 	"VersionMismatch",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalListResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3395,7 +3188,6 @@ func (j *SendLocalListResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalListResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3423,7 +3215,6 @@ var enumValues_SendLocalListUpdateType = []interface{}{
 	"Full",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalListUpdateType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3443,7 +3234,6 @@ func (j *SendLocalListUpdateType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SendLocalList) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3465,41 +3255,27 @@ func (j *SendLocalList) UnmarshalJSON(value []byte) error {
 }
 
 type SetChargingProfile struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ setChargingProfileRequest" json:"-"`
 
-	// CsChargingProfiles corresponds to the JSON schema field "csChargingProfiles".
-	CsChargingProfiles SetChargingProfileCsChargingProfiles `json:"csChargingProfiles"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
+
+	CsChargingProfiles SetChargingProfileCsChargingProfiles `json:"csChargingProfiles" xml:"csChargingProfiles"`
 }
 
 type SetChargingProfileCsChargingProfiles struct {
-	// ChargingProfileID corresponds to the JSON schema field "chargingProfileId".
-	ChargingProfileID int `json:"chargingProfileId"`
+	ChargingProfileID int `json:"chargingProfileId" xml:"chargingProfileId"`
 
-	// ChargingProfileKind corresponds to the JSON schema field "chargingProfileKind".
-	ChargingProfileKind SetChargingProfileCsChargingProfilesChargingProfileKind `json:"chargingProfileKind"`
+	TransactionID          *int                                                       `json:"transactionId,omitempty,omitzero" xml:"transactionId,omitempty"`
+	StackLevel             int                                                        `json:"stackLevel" xml:"stackLevel"`
+	ChargingProfilePurpose SetChargingProfileCsChargingProfilesChargingProfilePurpose `json:"chargingProfilePurpose" xml:"chargingProfilePurpose"`
+	ChargingProfileKind    SetChargingProfileCsChargingProfilesChargingProfileKind    `json:"chargingProfileKind" xml:"chargingProfileKind"`
 
-	// ChargingProfilePurpose corresponds to the JSON schema field
-	// "chargingProfilePurpose".
-	ChargingProfilePurpose SetChargingProfileCsChargingProfilesChargingProfilePurpose `json:"chargingProfilePurpose"`
+	RecurrencyKind *SetChargingProfileCsChargingProfilesRecurrencyKind `json:"recurrencyKind,omitempty,omitzero" xml:"recurrencyKind,omitempty"`
 
-	// ChargingSchedule corresponds to the JSON schema field "chargingSchedule".
-	ChargingSchedule SetChargingProfileCsChargingProfilesChargingSchedule `json:"chargingSchedule"`
+	ValidFrom *time.Time `json:"validFrom,omitempty,omitzero" xml:"validFrom,omitempty"`
 
-	// RecurrencyKind corresponds to the JSON schema field "recurrencyKind".
-	RecurrencyKind *SetChargingProfileCsChargingProfilesRecurrencyKind `json:"recurrencyKind,omitempty,omitzero"`
-
-	// StackLevel corresponds to the JSON schema field "stackLevel".
-	StackLevel int `json:"stackLevel"`
-
-	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID *int `json:"transactionId,omitempty,omitzero"`
-
-	// ValidFrom corresponds to the JSON schema field "validFrom".
-	ValidFrom *time.Time `json:"validFrom,omitempty,omitzero"`
-
-	// ValidTo corresponds to the JSON schema field "validTo".
-	ValidTo *time.Time `json:"validTo,omitempty,omitzero"`
+	ValidTo          *time.Time                                           `json:"validTo,omitempty,omitzero" xml:"validTo,omitempty"`
+	ChargingSchedule SetChargingProfileCsChargingProfilesChargingSchedule `json:"chargingSchedule" xml:"chargingSchedule"`
 }
 
 type SetChargingProfileCsChargingProfilesChargingProfileKind string
@@ -3514,7 +3290,6 @@ var enumValues_SetChargingProfileCsChargingProfilesChargingProfileKind = []inter
 	"Relative",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfilesChargingProfileKind) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3546,7 +3321,6 @@ var enumValues_SetChargingProfileCsChargingProfilesChargingProfilePurpose = []in
 	"TxProfile",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfilesChargingProfilePurpose) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3567,21 +3341,14 @@ func (j *SetChargingProfileCsChargingProfilesChargingProfilePurpose) UnmarshalJS
 }
 
 type SetChargingProfileCsChargingProfilesChargingSchedule struct {
-	// ChargingRateUnit corresponds to the JSON schema field "chargingRateUnit".
-	ChargingRateUnit SetChargingProfileCsChargingProfilesChargingScheduleChargingRateUnit `json:"chargingRateUnit"`
+	Duration *int `json:"duration,omitempty,omitzero" xml:"duration,omitempty"`
 
-	// ChargingSchedulePeriod corresponds to the JSON schema field
-	// "chargingSchedulePeriod".
-	ChargingSchedulePeriod []SetChargingProfileCsChargingProfilesChargingScheduleChargingSchedulePeriodElem `json:"chargingSchedulePeriod"`
+	StartSchedule    *time.Time                                                           `json:"startSchedule,omitempty,omitzero" xml:"startSchedule,omitempty"`
+	ChargingRateUnit SetChargingProfileCsChargingProfilesChargingScheduleChargingRateUnit `json:"chargingRateUnit" xml:"chargingRateUnit"`
 
-	// Duration corresponds to the JSON schema field "duration".
-	Duration *int `json:"duration,omitempty,omitzero"`
+	ChargingSchedulePeriod []SetChargingProfileCsChargingProfilesChargingScheduleChargingSchedulePeriodElem `json:"chargingSchedulePeriod" xml:"chargingSchedulePeriod"`
 
-	// MinChargingRate corresponds to the JSON schema field "minChargingRate".
-	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero"`
-
-	// StartSchedule corresponds to the JSON schema field "startSchedule".
-	StartSchedule *time.Time `json:"startSchedule,omitempty,omitzero"`
+	MinChargingRate *float64 `json:"minChargingRate,omitempty,omitzero" xml:"minChargingRate,omitempty"`
 }
 
 type SetChargingProfileCsChargingProfilesChargingScheduleChargingRateUnit string
@@ -3594,7 +3361,6 @@ var enumValues_SetChargingProfileCsChargingProfilesChargingScheduleChargingRateU
 	"W",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfilesChargingScheduleChargingRateUnit) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3615,17 +3381,12 @@ func (j *SetChargingProfileCsChargingProfilesChargingScheduleChargingRateUnit) U
 }
 
 type SetChargingProfileCsChargingProfilesChargingScheduleChargingSchedulePeriodElem struct {
-	// Limit corresponds to the JSON schema field "limit".
-	Limit float64 `json:"limit"`
+	StartPeriod int     `json:"startPeriod" xml:"startPeriod"`
+	Limit       float64 `json:"limit" xml:"limit"`
 
-	// NumberPhases corresponds to the JSON schema field "numberPhases".
-	NumberPhases *int `json:"numberPhases,omitempty,omitzero"`
-
-	// StartPeriod corresponds to the JSON schema field "startPeriod".
-	StartPeriod int `json:"startPeriod"`
+	NumberPhases *int `json:"numberPhases,omitempty,omitzero" xml:"numberPhases,omitempty"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfilesChargingScheduleChargingSchedulePeriodElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3652,7 +3413,6 @@ func (j *SetChargingProfileCsChargingProfilesChargingScheduleChargingSchedulePer
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfilesChargingSchedule) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3689,7 +3449,6 @@ var enumValues_SetChargingProfileCsChargingProfilesRecurrencyKind = []interface{
 	"Weekly",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfilesRecurrencyKind) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3709,7 +3468,6 @@ func (j *SetChargingProfileCsChargingProfilesRecurrencyKind) UnmarshalJSON(value
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileCsChargingProfiles) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3740,8 +3498,9 @@ func (j *SetChargingProfileCsChargingProfiles) UnmarshalJSON(value []byte) error
 }
 
 type SetChargingProfileResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status SetChargingProfileResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ setChargingProfileResponse" json:"-"`
+
+	Status SetChargingProfileResponseStatus `json:"status" xml:"status"`
 }
 
 type SetChargingProfileResponseStatus string
@@ -3756,7 +3515,6 @@ var enumValues_SetChargingProfileResponseStatus = []interface{}{
 	"NotSupported",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -3776,7 +3534,6 @@ func (j *SetChargingProfileResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfileResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3794,7 +3551,6 @@ func (j *SetChargingProfileResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SetChargingProfile) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3816,16 +3572,13 @@ func (j *SetChargingProfile) UnmarshalJSON(value []byte) error {
 }
 
 type SignCertificate struct {
-	// Csr corresponds to the JSON schema field "csr".
-	Csr string `json:"csr"`
+	Csr string `json:"csr" xml:"csr"`
 }
 
 type SignCertificateResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status GenericStatusEnumType `json:"status"`
+	Status GenericStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SignCertificateResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3843,7 +3596,6 @@ func (j *SignCertificateResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SignCertificate) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3865,16 +3617,13 @@ func (j *SignCertificate) UnmarshalJSON(value []byte) error {
 }
 
 type SignedFirmwareStatusNotification struct {
-	// RequestID corresponds to the JSON schema field "requestId".
-	RequestID *int `json:"requestId,omitempty,omitzero"`
+	RequestID *int `json:"requestId,omitempty,omitzero" xml:"requestId,omitempty"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status FirmwareStatusEnumType `json:"status"`
+	Status FirmwareStatusEnumType `json:"status" xml:"status"`
 }
 
 type SignedFirmwareStatusNotificationResponse map[string]interface{}
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SignedFirmwareStatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3893,25 +3642,19 @@ func (j *SignedFirmwareStatusNotification) UnmarshalJSON(value []byte) error {
 }
 
 type SignedUpdateFirmware struct {
-	// Firmware corresponds to the JSON schema field "firmware".
-	Firmware FirmwareType `json:"firmware"`
+	Firmware FirmwareType `json:"firmware" xml:"firmware"`
 
-	// RequestID corresponds to the JSON schema field "requestId".
-	RequestID int `json:"requestId"`
+	RequestID int `json:"requestId" xml:"requestId"`
 
-	// Retries corresponds to the JSON schema field "retries".
-	Retries *int `json:"retries,omitempty,omitzero"`
+	Retries *int `json:"retries,omitempty,omitzero" xml:"retries,omitempty"`
 
-	// RetryInterval corresponds to the JSON schema field "retryInterval".
-	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero" xml:"retryInterval,omitempty"`
 }
 
 type SignedUpdateFirmwareResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status UpdateFirmwareStatusEnumType `json:"status"`
+	Status UpdateFirmwareStatusEnumType `json:"status" xml:"status"`
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SignedUpdateFirmwareResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3929,7 +3672,6 @@ func (j *SignedUpdateFirmwareResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *SignedUpdateFirmware) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -3951,39 +3693,30 @@ func (j *SignedUpdateFirmware) UnmarshalJSON(value []byte) error {
 }
 
 type StartTransaction struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ startTransactionRequest" json:"-"`
 
-	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag string `json:"idTag"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
 
-	// MeterStart corresponds to the JSON schema field "meterStart".
-	MeterStart int `json:"meterStart"`
+	IDTag string `json:"idTag" xml:"idTag"`
 
-	// ReservationID corresponds to the JSON schema field "reservationId".
-	ReservationID *int `json:"reservationId,omitempty,omitzero"`
+	Timestamp  time.Time `json:"timestamp" xml:"timestamp"`
+	MeterStart int       `json:"meterStart" xml:"meterStart"`
 
-	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp time.Time `json:"timestamp"`
+	ReservationID *int `json:"reservationId,omitempty,omitzero" xml:"reservationId,omitempty"`
 }
 
 type StartTransactionResponse struct {
-	// IDTagInfo corresponds to the JSON schema field "idTagInfo".
-	IDTagInfo StartTransactionResponseIDTagInfo `json:"idTagInfo"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ startTransactionResponse" json:"-"`
 
-	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID int `json:"transactionId"`
+	TransactionID int                               `json:"transactionId" xml:"transactionId"`
+	IDTagInfo     StartTransactionResponseIDTagInfo `json:"idTagInfo" xml:"idTagInfo"`
 }
 
 type StartTransactionResponseIDTagInfo struct {
-	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
+	Status     StartTransactionResponseIDTagInfoStatus `json:"status" xml:"status"`
+	ExpiryDate *time.Time                              `json:"expiryDate,omitempty,omitzero" xml:"expiryDate,omitempty"`
 
-	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
-
-	// Status corresponds to the JSON schema field "status".
-	Status StartTransactionResponseIDTagInfoStatus `json:"status"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero" xml:"parentIdTag,omitempty"`
 }
 
 type StartTransactionResponseIDTagInfoStatus string
@@ -4002,7 +3735,6 @@ var enumValues_StartTransactionResponseIDTagInfoStatus = []interface{}{
 	"ConcurrentTx",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StartTransactionResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4022,7 +3754,6 @@ func (j *StartTransactionResponseIDTagInfoStatus) UnmarshalJSON(value []byte) er
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StartTransactionResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4043,7 +3774,6 @@ func (j *StartTransactionResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StartTransactionResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4064,7 +3794,6 @@ func (j *StartTransactionResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StartTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4095,26 +3824,19 @@ func (j *StartTransaction) UnmarshalJSON(value []byte) error {
 }
 
 type StatusNotification struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ statusNotificationRequest" json:"-"`
 
-	// ErrorCode corresponds to the JSON schema field "errorCode".
-	ErrorCode StatusNotificationErrorCode `json:"errorCode"`
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
 
-	// Info corresponds to the JSON schema field "info".
-	Info *string `json:"info,omitempty,omitzero"`
+	Status    StatusNotificationStatus    `json:"status" xml:"status"`
+	ErrorCode StatusNotificationErrorCode `json:"errorCode" xml:"errorCode"`
 
-	// Status corresponds to the JSON schema field "status".
-	Status StatusNotificationStatus `json:"status"`
+	Info *string `json:"info,omitempty,omitzero" xml:"info,omitempty"`
 
-	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp *time.Time `json:"timestamp,omitempty,omitzero"`
+	Timestamp *time.Time `json:"timestamp,omitempty,omitzero" xml:"timestamp,omitempty"`
 
-	// VendorErrorCode corresponds to the JSON schema field "vendorErrorCode".
-	VendorErrorCode *string `json:"vendorErrorCode,omitempty,omitzero"`
-
-	// VendorID corresponds to the JSON schema field "vendorId".
-	VendorID *string `json:"vendorId,omitempty,omitzero"`
+	VendorID        *string `json:"vendorId,omitempty,omitzero" xml:"vendorId,omitempty"`
+	VendorErrorCode *string `json:"vendorErrorCode,omitempty,omitzero" xml:"vendorErrorCode,omitempty"`
 }
 
 type StatusNotificationErrorCode string
@@ -4155,7 +3877,6 @@ var enumValues_StatusNotificationErrorCode = []interface{}{
 	"WeakSignal",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StatusNotificationErrorCode) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4175,7 +3896,9 @@ func (j *StatusNotificationErrorCode) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-type StatusNotificationResponse map[string]interface{}
+type StatusNotificationResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ statusNotificationResponse" json:"-"`
+}
 
 type StatusNotificationStatus string
 
@@ -4201,7 +3924,6 @@ var enumValues_StatusNotificationStatus = []interface{}{
 	"Faulted",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4221,7 +3943,6 @@ func (j *StatusNotificationStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StatusNotification) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4255,23 +3976,17 @@ func (j *StatusNotification) UnmarshalJSON(value []byte) error {
 }
 
 type StopTransaction struct {
-	// IDTag corresponds to the JSON schema field "idTag".
-	IDTag *string `json:"idTag,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ stopTransactionRequest" json:"-"`
 
-	// MeterStop corresponds to the JSON schema field "meterStop".
-	MeterStop int `json:"meterStop"`
+	TransactionID int     `json:"transactionId" xml:"transactionId"`
+	IDTag         *string `json:"idTag,omitempty,omitzero" xml:"idTag,omitempty"`
 
-	// Reason corresponds to the JSON schema field "reason".
-	Reason *StopTransactionReason `json:"reason,omitempty,omitzero"`
+	Timestamp time.Time `json:"timestamp" xml:"timestamp"`
+	MeterStop int       `json:"meterStop" xml:"meterStop"`
 
-	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp time.Time `json:"timestamp"`
+	Reason *StopTransactionReason `json:"reason,omitempty,omitzero" xml:"reason,omitempty"`
 
-	// TransactionData corresponds to the JSON schema field "transactionData".
-	TransactionData []StopTransactionTransactionDataElem `json:"transactionData,omitempty,omitzero"`
-
-	// TransactionID corresponds to the JSON schema field "transactionId".
-	TransactionID int `json:"transactionId"`
+	TransactionData []StopTransactionTransactionDataElem `json:"transactionData,omitempty,omitzero" xml:"transactionData,omitempty"`
 }
 
 type StopTransactionReason string
@@ -4302,7 +4017,6 @@ var enumValues_StopTransactionReason = []interface{}{
 	"DeAuthorized",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionReason) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4323,19 +4037,16 @@ func (j *StopTransactionReason) UnmarshalJSON(value []byte) error {
 }
 
 type StopTransactionResponse struct {
-	// IDTagInfo corresponds to the JSON schema field "idTagInfo".
-	IDTagInfo *StopTransactionResponseIDTagInfo `json:"idTagInfo,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cs/2015/10/ stopTransactionResponse" json:"-"`
+
+	IDTagInfo *StopTransactionResponseIDTagInfo `json:"idTagInfo,omitempty,omitzero" xml:"idTagInfo,omitempty"`
 }
 
 type StopTransactionResponseIDTagInfo struct {
-	// ExpiryDate corresponds to the JSON schema field "expiryDate".
-	ExpiryDate *time.Time `json:"expiryDate,omitempty,omitzero"`
+	Status     StopTransactionResponseIDTagInfoStatus `json:"status" xml:"status"`
+	ExpiryDate *time.Time                             `json:"expiryDate,omitempty,omitzero" xml:"expiryDate,omitempty"`
 
-	// ParentIDTag corresponds to the JSON schema field "parentIdTag".
-	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero"`
-
-	// Status corresponds to the JSON schema field "status".
-	Status StopTransactionResponseIDTagInfoStatus `json:"status"`
+	ParentIDTag *string `json:"parentIdTag,omitempty,omitzero" xml:"parentIdTag,omitempty"`
 }
 
 type StopTransactionResponseIDTagInfoStatus string
@@ -4354,7 +4065,6 @@ var enumValues_StopTransactionResponseIDTagInfoStatus = []interface{}{
 	"ConcurrentTx",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionResponseIDTagInfoStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4374,7 +4084,6 @@ func (j *StopTransactionResponseIDTagInfoStatus) UnmarshalJSON(value []byte) err
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4396,34 +4105,22 @@ func (j *StopTransactionResponseIDTagInfo) UnmarshalJSON(value []byte) error {
 }
 
 type StopTransactionTransactionDataElem struct {
-	// SampledValue corresponds to the JSON schema field "sampledValue".
-	SampledValue []StopTransactionTransactionDataElemSampledValueElem `json:"sampledValue"`
-
-	// Timestamp corresponds to the JSON schema field "timestamp".
-	Timestamp time.Time `json:"timestamp"`
+	Timestamp    time.Time                                            `json:"timestamp" xml:"timestamp"`
+	SampledValue []StopTransactionTransactionDataElemSampledValueElem `json:"sampledValue" xml:"sampledValue"`
 }
 
 type StopTransactionTransactionDataElemSampledValueElem struct {
-	// Context corresponds to the JSON schema field "context".
-	Context *StopTransactionTransactionDataElemSampledValueElemContext `json:"context,omitempty,omitzero"`
+	Value   string                                                     `json:"value" xml:"value"`
+	Context *StopTransactionTransactionDataElemSampledValueElemContext `json:"context,omitempty,omitzero" xml:"context,omitempty"`
 
-	// Format corresponds to the JSON schema field "format".
-	Format *StopTransactionTransactionDataElemSampledValueElemFormat `json:"format,omitempty,omitzero"`
+	Format *StopTransactionTransactionDataElemSampledValueElemFormat `json:"format,omitempty,omitzero" xml:"format,omitempty"`
 
-	// Location corresponds to the JSON schema field "location".
-	Location *StopTransactionTransactionDataElemSampledValueElemLocation `json:"location,omitempty,omitzero"`
+	Measurand *StopTransactionTransactionDataElemSampledValueElemMeasurand `json:"measurand,omitempty,omitzero" xml:"measurand,omitempty"`
 
-	// Measurand corresponds to the JSON schema field "measurand".
-	Measurand *StopTransactionTransactionDataElemSampledValueElemMeasurand `json:"measurand,omitempty,omitzero"`
+	Phase    *StopTransactionTransactionDataElemSampledValueElemPhase    `json:"phase,omitempty,omitzero" xml:"phase,omitempty"`
+	Location *StopTransactionTransactionDataElemSampledValueElemLocation `json:"location,omitempty,omitzero" xml:"location,omitempty"`
 
-	// Phase corresponds to the JSON schema field "phase".
-	Phase *StopTransactionTransactionDataElemSampledValueElemPhase `json:"phase,omitempty,omitzero"`
-
-	// Unit corresponds to the JSON schema field "unit".
-	Unit *StopTransactionTransactionDataElemSampledValueElemUnit `json:"unit,omitempty,omitzero"`
-
-	// Value corresponds to the JSON schema field "value".
-	Value string `json:"value"`
+	Unit *StopTransactionTransactionDataElemSampledValueElemUnit `json:"unit,omitempty,omitzero" xml:"unit,omitempty"`
 }
 
 type StopTransactionTransactionDataElemSampledValueElemContext string
@@ -4448,7 +4145,6 @@ var enumValues_StopTransactionTransactionDataElemSampledValueElemContext = []int
 	"Other",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElemContext) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4478,7 +4174,6 @@ var enumValues_StopTransactionTransactionDataElemSampledValueElemFormat = []inte
 	"SignedData",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElemFormat) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4514,7 +4209,6 @@ var enumValues_StopTransactionTransactionDataElemSampledValueElemLocation = []in
 	"Body",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElemLocation) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4584,7 +4278,6 @@ var enumValues_StopTransactionTransactionDataElemSampledValueElemMeasurand = []i
 	"RPM",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElemMeasurand) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4630,7 +4323,6 @@ var enumValues_StopTransactionTransactionDataElemSampledValueElemPhase = []inter
 	"L3-L1",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElemPhase) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4690,7 +4382,6 @@ var enumValues_StopTransactionTransactionDataElemSampledValueElemUnit = []interf
 	"Percent",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElemUnit) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4710,7 +4401,6 @@ func (j *StopTransactionTransactionDataElemSampledValueElemUnit) UnmarshalJSON(v
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElemSampledValueElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4728,7 +4418,6 @@ func (j *StopTransactionTransactionDataElemSampledValueElem) UnmarshalJSON(value
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransactionTransactionDataElem) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4749,7 +4438,6 @@ func (j *StopTransactionTransactionDataElem) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *StopTransaction) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4777,11 +4465,10 @@ func (j *StopTransaction) UnmarshalJSON(value []byte) error {
 }
 
 type TriggerMessage struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID *int `json:"connectorId,omitempty,omitzero"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ triggerMessageRequest" json:"-"`
 
-	// RequestedMessage corresponds to the JSON schema field "requestedMessage".
-	RequestedMessage TriggerMessageRequestedMessage `json:"requestedMessage"`
+	RequestedMessage TriggerMessageRequestedMessage `json:"requestedMessage" xml:"requestedMessage"`
+	ConnectorID      *int                           `json:"connectorId,omitempty,omitzero" xml:"connectorId,omitempty"`
 }
 
 type TriggerMessageRequestedMessage string
@@ -4802,7 +4489,6 @@ var enumValues_TriggerMessageRequestedMessage = []interface{}{
 	"StatusNotification",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *TriggerMessageRequestedMessage) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4823,8 +4509,9 @@ func (j *TriggerMessageRequestedMessage) UnmarshalJSON(value []byte) error {
 }
 
 type TriggerMessageResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status TriggerMessageResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ triggerMessageResponse" json:"-"`
+
+	Status TriggerMessageResponseStatus `json:"status" xml:"status"`
 }
 
 type TriggerMessageResponseStatus string
@@ -4839,7 +4526,6 @@ var enumValues_TriggerMessageResponseStatus = []interface{}{
 	"NotImplemented",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *TriggerMessageResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4859,7 +4545,6 @@ func (j *TriggerMessageResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *TriggerMessageResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4889,7 +4574,6 @@ var enumValues_TriggerMessageStatusEnumType = []interface{}{
 	"NotImplemented",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *TriggerMessageStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4909,7 +4593,6 @@ func (j *TriggerMessageStatusEnumType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *TriggerMessage) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4928,13 +4611,15 @@ func (j *TriggerMessage) UnmarshalJSON(value []byte) error {
 }
 
 type UnlockConnector struct {
-	// ConnectorID corresponds to the JSON schema field "connectorId".
-	ConnectorID int `json:"connectorId"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ unlockConnectorRequest" json:"-"`
+
+	ConnectorID int `json:"connectorId" xml:"connectorId"`
 }
 
 type UnlockConnectorResponse struct {
-	// Status corresponds to the JSON schema field "status".
-	Status UnlockConnectorResponseStatus `json:"status"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ unlockConnectorResponse" json:"-"`
+
+	Status UnlockConnectorResponseStatus `json:"status" xml:"status"`
 }
 
 type UnlockConnectorResponseStatus string
@@ -4949,7 +4634,6 @@ var enumValues_UnlockConnectorResponseStatus = []interface{}{
 	"NotSupported",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *UnlockConnectorResponseStatus) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -4969,7 +4653,6 @@ func (j *UnlockConnectorResponseStatus) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *UnlockConnectorResponse) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -4987,7 +4670,6 @@ func (j *UnlockConnectorResponse) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *UnlockConnector) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -5006,20 +4688,19 @@ func (j *UnlockConnector) UnmarshalJSON(value []byte) error {
 }
 
 type UpdateFirmware struct {
-	// Location corresponds to the JSON schema field "location".
-	Location string `json:"location"`
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ updateFirmwareRequest" json:"-"`
 
-	// Retries corresponds to the JSON schema field "retries".
-	Retries *int `json:"retries,omitempty,omitzero"`
+	RetrieveDate time.Time `json:"retrieveDate" xml:"retrieveDate"`
+	Location     string    `json:"location" xml:"location"`
 
-	// RetrieveDate corresponds to the JSON schema field "retrieveDate".
-	RetrieveDate time.Time `json:"retrieveDate"`
+	Retries *int `json:"retries,omitempty,omitzero" xml:"retries,omitempty"`
 
-	// RetryInterval corresponds to the JSON schema field "retryInterval".
-	RetryInterval *int `json:"retryInterval,omitempty,omitzero"`
+	RetryInterval *int `json:"retryInterval,omitempty,omitzero" xml:"retryInterval,omitempty"`
 }
 
-type UpdateFirmwareResponse map[string]interface{}
+type UpdateFirmwareResponse struct {
+	XMLName xml.Name `xml:"urn://Ocpp/Cp/2015/10/ updateFirmwareResponse" json:"-"`
+}
 
 type UpdateFirmwareStatusEnumType string
 
@@ -5037,7 +4718,6 @@ var enumValues_UpdateFirmwareStatusEnumType = []interface{}{
 	"RevokedCertificate",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *UpdateFirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -5057,7 +4737,6 @@ func (j *UpdateFirmwareStatusEnumType) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *UpdateFirmware) UnmarshalJSON(value []byte) error {
 	var raw map[string]interface{}
 	if err := json.Unmarshal(value, &raw); err != nil {
@@ -5098,7 +4777,6 @@ var enumValues_UploadLogStatusEnumType = []interface{}{
 	"Uploading",
 }
 
-// UnmarshalJSON implements json.Unmarshaler.
 func (j *UploadLogStatusEnumType) UnmarshalJSON(value []byte) error {
 	var v string
 	if err := json.Unmarshal(value, &v); err != nil {
@@ -5116,4 +4794,20 @@ func (j *UploadLogStatusEnumType) UnmarshalJSON(value []byte) error {
 	}
 	*j = UploadLogStatusEnumType(v)
 	return nil
+}
+func (d *DataTransfer) FromChargePoint() *DataTransfer {
+	d.Xmlns = "urn://Ocpp/Cs/2015/10/"
+	return d
+}
+func (d *DataTransfer) FromCentralSystem() *DataTransfer {
+	d.Xmlns = "urn://Ocpp/Cp/2015/10/"
+	return d
+}
+func (d *DataTransferResponse) FromChargePoint() *DataTransferResponse {
+	d.Xmlns = "urn://Ocpp/Cs/2015/10/"
+	return d
+}
+func (d *DataTransferResponse) FromCentralSystem() *DataTransferResponse {
+	d.Xmlns = "urn://Ocpp/Cp/2015/10/"
+	return d
 }
