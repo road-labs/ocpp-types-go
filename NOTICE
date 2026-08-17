@@ -31,4 +31,24 @@ Build-time transformations that the code generator applies to these schemas
 copies in a temporary directory during a `task generate` run and are not
 redistributed.
 
+OCPP WSDLs
+----------
+
+The WSDL files under cmd/generate-ocpp-types/wsdl/ are published by the Open
+Charge Alliance (OCA) as part of the OCPP 1.5 and 1.6 SOAP transport bindings,
+and are redistributed here unmodified. The code generator reads them at build
+time to derive per-message XML namespace URNs and element names, which are then
+baked into the generated Go types so a single struct set works for both OCPP-J
+(JSON over WebSocket) and OCPP-S (SOAP over HTTP).
+
+Covered WSDL sets:
+
+  - OCPP 1.5 (cmd/generate-ocpp-types/wsdl/1.5/)
+  - OCPP 1.6 (cmd/generate-ocpp-types/wsdl/1.6/)
+
+The OCPP 1.5 and 1.6 WSDLs are distributed by the Open Charge Alliance under
+their published usage terms. See:
+
+    https://openchargealliance.org/
+
 OCPP is a trademark of the Open Charge Alliance.

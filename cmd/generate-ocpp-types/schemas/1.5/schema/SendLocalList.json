@@ -6,7 +6,7 @@
     "listVersion": {
       "type": "integer"
     },
-    "localAuthorizationList": {
+    "localAuthorisationList": {
       "type": "array",
       "items": {
         "type": "object",
@@ -57,6 +57,9 @@
         "Differential",
         "Full"
       ]
+    },
+    "hash": {
+      "type": "string"
     }
   },
   "additionalProperties": false,
